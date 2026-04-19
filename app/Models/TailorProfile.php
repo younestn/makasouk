@@ -21,6 +21,12 @@ class TailorProfile extends Model
         'location',
     ];
 
+    protected $attributes = [
+        'status' => 'offline',
+        'average_rating' => 0,
+        'total_reviews' => 0,
+    ];
+
     protected function casts(): array
     {
         return [

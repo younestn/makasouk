@@ -11,6 +11,17 @@ class Order extends Model
 {
     use HasFactory;
 
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_SEARCHING_FOR_TAILOR = 'searching_for_tailor';
+    public const STATUS_NO_TAILORS_AVAILABLE = 'no_tailors_available';
+    public const STATUS_ACCEPTED = 'accepted';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_READY_FOR_DELIVERY = 'ready_for_delivery';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED_BY_CUSTOMER = 'cancelled_by_customer';
+    public const STATUS_CANCELLED_BY_TAILOR = 'cancelled_by_tailor';
+    public const STATUS_CANCELLED = 'cancelled';
+
     protected $fillable = [
         'customer_id',
         'tailor_id',
