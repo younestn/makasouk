@@ -5,10 +5,43 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
     use HasFactory;
+
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_SEARCHING_FOR_TAILOR = 'searching_for_tailor';
+    public const STATUS_NO_TAILORS_AVAILABLE = 'no_tailors_available';
+    public const STATUS_ACCEPTED = 'accepted';
+    public const STATUS_PROCESSING = 'processing';
+    public const STATUS_READY_FOR_DELIVERY = 'ready_for_delivery';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_CANCELLED_BY_CUSTOMER = 'cancelled_by_customer';
+    public const STATUS_CANCELLED_BY_TAILOR = 'cancelled_by_tailor';
+    public const STATUS_CANCELLED = 'cancelled';
+
+
+
+    /**
+     * @return array<int, string>
+     */
+    public static function allStatuses(): array
+    {
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_SEARCHING_FOR_TAILOR,
+            self::STATUS_NO_TAILORS_AVAILABLE,
+            self::STATUS_ACCEPTED,
+            self::STATUS_PROCESSING,
+            self::STATUS_READY_FOR_DELIVERY,
+            self::STATUS_COMPLETED,
+            self::STATUS_CANCELLED_BY_CUSTOMER,
+            self::STATUS_CANCELLED_BY_TAILOR,
+            self::STATUS_CANCELLED,
+        ];
+    }
 
     protected $fillable = [
         'customer_id',
@@ -19,6 +52,7 @@ class Order extends Model
         'delivery_longitude',
         'delivery_location',
         'status',
+        'cancellation_reason',
         'accepted_at',
     ];
 
@@ -45,5 +79,10 @@ class Order extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
     }
 }

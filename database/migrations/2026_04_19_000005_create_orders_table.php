@@ -16,9 +16,19 @@ return new class extends Migration {
             $table->decimal('delivery_latitude', 10, 7);
             $table->decimal('delivery_longitude', 10, 7);
             $table->point('delivery_location')->nullable();
-            $table->enum('status', ['pending', 'broadcasting', 'accepted', 'in_progress', 'completed', 'cancelled'])
-                ->default('pending')
-                ->index();
+            $table->enum('status', [
+                'pending',
+                'searching_for_tailor',
+                'no_tailors_available',
+                'accepted',
+                'processing',
+                'ready_for_delivery',
+                'completed',
+                'cancelled_by_customer',
+                'cancelled_by_tailor',
+                'cancelled', // compatibility fallback (legacy/manual admin cancellation)
+            ])->default('pending')->index();
+            $table->text('cancellation_reason')->nullable();
             $table->timestamp('accepted_at')->nullable();
             $table->timestamps();
 

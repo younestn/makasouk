@@ -12,11 +12,25 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_CUSTOMER = 'customer';
+    public const ROLE_TAILOR = 'tailor';
+
+    /**
+     * @return array<int, string>
+     */
+    public static function roles(): array
+    {
+        return [self::ROLE_ADMIN, self::ROLE_CUSTOMER, self::ROLE_TAILOR];
+    }
+
     protected $fillable = [
         'name',
         'email',
         'password',
         'role',
+        'is_suspended',
+        'approved_at',
     ];
 
     protected $hidden = [
@@ -28,6 +42,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'approved_at' => 'datetime',
+            'is_suspended' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -50,5 +66,15 @@ class User extends Authenticatable
     public function createdProducts(): HasMany
     {
         return $this->hasMany(Product::class, 'created_by_admin_id');
+    }
+
+    public function writtenReviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'customer_id');
+    }
+
+    public function receivedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'tailor_id');
     }
 }
