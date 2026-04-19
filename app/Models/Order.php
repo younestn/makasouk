@@ -22,6 +22,27 @@ class Order extends Model
     public const STATUS_CANCELLED_BY_TAILOR = 'cancelled_by_tailor';
     public const STATUS_CANCELLED = 'cancelled';
 
+
+
+    /**
+     * @return array<int, string>
+     */
+    public static function allStatuses(): array
+    {
+        return [
+            self::STATUS_PENDING,
+            self::STATUS_SEARCHING_FOR_TAILOR,
+            self::STATUS_NO_TAILORS_AVAILABLE,
+            self::STATUS_ACCEPTED,
+            self::STATUS_PROCESSING,
+            self::STATUS_READY_FOR_DELIVERY,
+            self::STATUS_COMPLETED,
+            self::STATUS_CANCELLED_BY_CUSTOMER,
+            self::STATUS_CANCELLED_BY_TAILOR,
+            self::STATUS_CANCELLED,
+        ];
+    }
+
     protected $fillable = [
         'customer_id',
         'tailor_id',

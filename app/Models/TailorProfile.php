@@ -10,6 +10,9 @@ class TailorProfile extends Model
 {
     use HasFactory;
 
+    public const STATUS_ONLINE = 'online';
+    public const STATUS_OFFLINE = 'offline';
+
     protected $fillable = [
         'user_id',
         'category_id',
@@ -22,7 +25,7 @@ class TailorProfile extends Model
     ];
 
     protected $attributes = [
-        'status' => 'offline',
+        'status' => self::STATUS_OFFLINE,
         'average_rating' => 0,
         'total_reviews' => 0,
     ];

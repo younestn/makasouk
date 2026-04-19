@@ -26,7 +26,7 @@ return new class extends Migration {
                 'completed',
                 'cancelled_by_customer',
                 'cancelled_by_tailor',
-                'cancelled', // legacy/administrative fallback status
+                'cancelled', // compatibility fallback (legacy/manual admin cancellation)
             ])->default('pending')->index();
             $table->text('cancellation_reason')->nullable();
             $table->timestamp('accepted_at')->nullable();

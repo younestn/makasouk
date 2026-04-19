@@ -16,6 +16,14 @@ class User extends Authenticatable
     public const ROLE_CUSTOMER = 'customer';
     public const ROLE_TAILOR = 'tailor';
 
+    /**
+     * @return array<int, string>
+     */
+    public static function roles(): array
+    {
+        return [self::ROLE_ADMIN, self::ROLE_CUSTOMER, self::ROLE_TAILOR];
+    }
+
     protected $fillable = [
         'name',
         'email',
