@@ -12,21 +12,23 @@ class AuthApiTest extends TestCase
 
     public function test_register_login_logout_flow(): void
     {
-        $register = $this->postJson('/api/auth/register', [
-            'name' => 'Customer One',
-            'email' => 'customer1@example.com',
-            'password' => 'Password@123',
-            'password_confirmation' => 'Password@123',
-            'role' => User::ROLE_CUSTOMER,
-        ]);
+      $register = $this->postJson('/api/auth/register', [
+    'name' => 'Customer One',
+    'email' => 'customer1@makasouk.test',
+    'password' => 'Password@123',
+    'password_confirmation' => 'Password@123',
+    'role' => User::ROLE_CUSTOMER,
+]);
 
-        $register->assertCreated()->assertJsonStructure(['token', 'user' => ['id', 'email']]);
+$register->assertCreated()->assertJsonStructure([
+    'token',
+    'user' => ['id', 'email'],
+]);
 
-        $login = $this->postJson('/api/auth/login', [
-            'email' => 'customer1@example.com',
-            'password' => 'Password@123',
-        ]);
-
+$login = $this->postJson('/api/auth/login', [
+    'email' => 'customer1@makasouk.test',
+    'password' => 'Password@123',
+]);
         $token = $login->assertOk()->json('token');
 
         $this->getJson('/api/auth/me', ['Authorization' => 'Bearer '.$token])
