@@ -1,0 +1,93 @@
+@import '/vendor/filament/filament/resources/css/theme.css';
+
+.fi-body.fi-panel-admin {
+    --primary-50: 239 246 255;
+    --primary-100: 219 234 254;
+    --primary-500: 37 99 235;
+    --primary-600: 29 78 216;
+    --primary-700: 30 64 175;
+}
+
+.fi-panel-admin .fi-sidebar {
+    background: linear-gradient(180deg, #0b1220 0%, #0f172a 100%);
+}
+
+.fi-panel-admin .fi-sidebar-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    box-shadow: none;
+}
+
+.fi-panel-admin .fi-logo,
+.fi-panel-admin .fi-sidebar-header a {
+    color: #f8fafc;
+}
+
+.fi-panel-admin .fi-sidebar-nav {
+    padding-top: 1.4rem;
+}
+
+.fi-panel-admin .fi-sidebar-group-label {
+    color: rgba(226, 232, 240, 0.72);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.fi-panel-admin .fi-sidebar-item-button {
+    border-radius: 0.75rem;
+    color: rgba(226, 232, 240, 0.94);
+    transition: all 0.2s ease-in-out;
+}
+
+.fi-panel-admin .fi-sidebar-item-button:hover {
+    background: rgba(59, 130, 246, 0.18);
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.fi-panel-admin .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    background: rgba(37, 99, 235, 0.28);
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(148, 197, 255, 0.35);
+}
+
+.fi-panel-admin .fi-topbar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.dark .fi-panel-admin .fi-topbar {
+    background: rgba(3, 7, 18, 0.7);
+}
+
+.fi-panel-admin .fi-section,
+.fi-panel-admin .fi-wi-widget {
+    border-radius: 1rem;
+}
+
+.fi-panel-admin .fi-section {
+    box-shadow: 0 8px 28px -26px rgba(15, 23, 42, 0.55);
+}
+
+.fi-panel-admin .fi-wi-stats-overview-stat {
+    border-radius: 0.9rem;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.fi-panel-admin .fi-wi-stats-overview-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -26px rgba(15, 23, 42, 0.85);
+}
+
+.fi-panel-admin .mk-admin-quick-action {
+    min-height: 84px;
+}
+
+.fi-panel-admin .fi-ta-table table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.fi-panel-admin .fi-ta-table table tbody tr:hover {
+    background-color: rgba(37, 99, 235, 0.03);
+}

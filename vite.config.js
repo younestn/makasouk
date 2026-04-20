@@ -1,32 +1,43 @@
-import { defineConfig, loadEnv } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import laravel from 'laravel-vite-plugin';
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import laravel from 'laravel-vite-plugin'
+import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+    const isVitest = mode === 'test' || !!process.env.VITEST
 
-  return {
-    plugins: [
-      laravel({
-        input: ['resources/css/app.css', 'resources/js/main.js', 'resources/js/public/main.js'],
-        refresh: true,
-      }),
-      vue(),
-    ],
-    resolve: {
-      alias: {
-        '@': '/resources/js',
-      },
-    },
-    server: {
-      host: env.VITE_DEV_SERVER_HOST || '127.0.0.1',
-      port: Number(env.VITE_DEV_SERVER_PORT || 5173),
-      strictPort: true,
-    },
-    test: {
-      environment: 'jsdom',
-      globals: true,
-      exclude: ['tests/e2e/**', 'node_modules/**', 'vendor/**'],
-    },
-  };
-});
+    return {
+        plugins: [
+            !isVitest &&
+                laravel({
+                    input: [
+                        'resources/css/app.css',
+                        'resources/js/main.js',
+                        'resources/css/filament/admin/theme.css',
+                    ],
+                    refresh: true,
+                }),
+            vue(),
+        ].filter(Boolean),
+
+        resolve: {
+            alias: {
+                '@': fileURLToPath(new URL('./resources/js', import.meta.url)),
+            },
+        },
+
+        test: {
+            environment: 'jsdom',
+            globals: true,
+            include: [
+                'resources/js/**/*.{test,spec}.js',
+                'resources/js/**/__tests__/**/*.js',
+            ],
+            exclude: [
+                'tests/e2e/**',
+                'node_modules/**',
+                'vendor/**',
+            ],
+        },
+    }
+})
