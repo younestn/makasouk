@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +18,11 @@ class CustomerOrderApiTest extends TestCase
         $customer = User::factory()->create(['role' => User::ROLE_CUSTOMER]);
         $category = Category::factory()->create();
         $admin = User::factory()->admin()->create();
-        $product = Product::factory()->create(['category_id' => $category->id, 'created_by_admin_id' => $admin->id]);
+        $product = Product::factory()->create([
+            'category_id' => $category->id,
+            'created_by_admin_id' => $admin->id,
+            'is_active' => true,
+        ]);
 
         $this->actingAs($customer, 'sanctum')
             ->postJson('/api/customer/orders', [
@@ -26,6 +31,20 @@ class CustomerOrderApiTest extends TestCase
                 'customer_location' => ['latitude' => 33.5731, 'longitude' => -7.5898],
             ])
             ->assertCreated()
-            ->assertJsonStructure(['status', 'order']);
+            ->assertJsonStructure(['message', 'data', 'meta']);
+    }
+
+    public function test_customer_can_cancel_order_in_allowed_status(): void
+    {
+        $customer = User::factory()->create(['role' => User::ROLE_CUSTOMER]);
+        $order = Order::factory()->create([
+            'customer_id' => $customer->id,
+            'status' => Order::STATUS_SEARCHING_FOR_TAILOR,
+        ]);
+
+        $this->actingAs($customer, 'sanctum')
+            ->patchJson("/api/customer/orders/{$order->id}/cancel", ['reason' => 'changed mind'])
+            ->assertOk()
+            ->assertJsonPath('data.status', Order::STATUS_CANCELLED_BY_CUSTOMER);
     }
 }

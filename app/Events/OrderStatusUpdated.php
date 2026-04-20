@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Order;
+use App\Support\RealtimeOrderPayload;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -30,12 +31,9 @@ class OrderStatusUpdated implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'order_id' => $this->order->id,
-            'status' => $this->order->status,
-            'tailor_id' => $this->order->tailor_id,
-            'tailor_name' => $this->order->tailor?->name,
-            'product_name' => $this->order->product?->name,
-            'updated_at' => optional($this->order->updated_at)?->toISOString(),
+            'event' => $this->broadcastAs(),
+            'occurred_at' => now()->toISOString(),
+            'order' => RealtimeOrderPayload::withParticipantSummary($this->order),
         ];
     }
 }

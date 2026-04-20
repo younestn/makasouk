@@ -11,11 +11,21 @@ class ReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'rating' => $this->rating,
-            'comment' => $this->comment,
+            'order_id' => $this->order_id,
             'customer_id' => $this->customer_id,
             'tailor_id' => $this->tailor_id,
+            'rating' => (int) $this->rating,
+            'comment' => $this->comment,
+            'customer' => $this->whenLoaded('customer', fn (): array => [
+                'id' => $this->customer->id,
+                'name' => $this->customer->name,
+            ]),
+            'tailor' => $this->whenLoaded('tailor', fn (): array => [
+                'id' => $this->tailor->id,
+                'name' => $this->tailor->name,
+            ]),
             'created_at' => optional($this->created_at)?->toISOString(),
+            'updated_at' => optional($this->updated_at)?->toISOString(),
         ];
     }
 }

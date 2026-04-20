@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Order;
+use App\Support\RealtimeOrderPayload;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -43,23 +44,13 @@ class OrderCreated implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'order_id' => $this->order->id,
-            'status' => $this->order->status,
-            'product' => [
-                'id' => $this->order->product?->id,
-                'name' => $this->order->product?->name,
-                'category_id' => $this->order->product?->category_id,
-                'category_name' => $this->order->product?->category?->name,
-                'price' => $this->order->product?->price,
-                'pricing_type' => $this->order->product?->pricing_type,
+            'event' => $this->broadcastAs(),
+            'occurred_at' => now()->toISOString(),
+            'order' => RealtimeOrderPayload::withProductAndDelivery($this->order),
+            'meta' => [
+                'notified_tailor_ids' => $this->tailorIds,
+                'distances_by_tailor_id' => $this->distancesByTailorId,
             ],
-            'measurements' => $this->order->measurements,
-            'delivery' => [
-                'latitude' => $this->order->delivery_latitude,
-                'longitude' => $this->order->delivery_longitude,
-            ],
-            'distances_by_tailor_id' => $this->distancesByTailorId,
-            'created_at' => optional($this->order->created_at)?->toISOString(),
         ];
     }
 }

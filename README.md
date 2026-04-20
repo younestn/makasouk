@@ -5,7 +5,7 @@
 - Composer 2+
 - PostgreSQL 14+ with PostGIS extension
 - Redis 6+
-- Node.js 20+ (optional, only if frontend assets are needed)
+- Node.js 20+ (required for the Phase 5 Vue web client)
 
 ## PostgreSQL + PostGIS setup
 ```sql
@@ -89,7 +89,7 @@ php artisan test --filter=Filament
 php artisan test
 ```
 
-`npm run build` is a backend-safe no-op in this repository (there is no customer/tailor frontend bundle in this stage).
+The no-op frontend build from earlier phases has been replaced in Phase 5 by a real Vue/Vite build.
 
 ### Safety safeguards
 - Panel access enforced by `User::canAccessPanel()`.
@@ -98,3 +98,74 @@ php artisan test
 - Category delete is blocked when products or tailor profiles still reference the category.
 - Orders remain observability-first (list/view, no arbitrary status mutation).
 - Review moderation delete action is intentionally disabled in this stage.
+
+## Phase 4 Client Integration Contract
+
+Integration docs:
+- API contract: `docs/integration/api-contract.md`
+- Realtime contract: `docs/integration/realtime-contract.md`
+
+### Integration-ready API additions
+- Catalog: `/api/catalog/categories`, `/api/catalog/products`, `/api/catalog/products/{product}`
+- Customer: `/api/customer/orders-active`
+- Tailor: `/api/tailor/profile`, `/api/tailor/availability`, `/api/tailor/orders-active`
+
+### Realtime contract (Reverb + Sanctum)
+- Private channels:
+  - `private-customer.{customerId}`
+  - `private-tailor.{tailorId}`
+  - `private-admin.{adminId}`
+- Order events:
+  - `order.created`
+  - `order.accepted`
+  - `order.status_updated`
+  - `order.cancelled_by_customer`
+  - `order.cancelled_by_tailor`
+
+### Order lifecycle quick reference
+- Main statuses:
+  - `searching_for_tailor`, `no_tailors_available`, `accepted`, `processing`, `ready_for_delivery`, `completed`, `cancelled_by_customer`, `cancelled_by_tailor`, `cancelled`
+- Tailor transitions:
+  - `accepted -> processing -> ready_for_delivery -> completed`
+- Customer cancel window:
+  - `searching_for_tailor`, `accepted`, `processing`
+- Tailor cancel window:
+  - `accepted`, `processing`, `ready_for_delivery`
+
+## Phase 5 Web Client Foundation (Vue)
+
+### SPA entry
+- Web client base path: `/app`
+- Login page: `/app/login`
+- Admin users are redirected to `/admin-panel`
+
+### Frontend commands
+```bash
+npm install
+npm run dev
+npm run build
+npm run test
+```
+
+### Frontend environment variables
+Add these to `.env`:
+
+```env
+VITE_SPA_BASE=/app/
+VITE_API_BASE_URL=/api
+VITE_BROADCAST_AUTH_ENDPOINT=/broadcasting/auth
+VITE_REVERB_KEY=makasouk-key
+VITE_REVERB_HOST=127.0.0.1
+VITE_REVERB_PORT=8080
+VITE_REVERB_SCHEME=http
+```
+
+### What Phase 5 implements
+- Vue 3 + Vite SPA shell with router + Pinia state.
+- Auth flow with token bootstrap via `/api/auth/me`.
+- Customer shell: catalog, create order, active/history orders, details, review/cancel actions.
+- Tailor shell: dashboard, active orders, detail actions (accept/update/cancel), availability/profile pages.
+- Realtime client integration with Echo/Reverb private channels.
+
+### Phase 5 doc
+- `docs/integration/web-client-foundation.md`

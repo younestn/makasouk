@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Order;
+use App\Support\RealtimeOrderPayload;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -33,9 +34,12 @@ class OrderCancelled implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'order_id' => $this->order->id,
-            'status' => $this->order->status,
-            'reason' => $this->order->cancellation_reason,
+            'event' => $this->broadcastAs(),
+            'occurred_at' => now()->toISOString(),
+            'order' => RealtimeOrderPayload::base($this->order),
+            'meta' => [
+                'cancelled_by' => 'customer',
+            ],
         ];
     }
 }

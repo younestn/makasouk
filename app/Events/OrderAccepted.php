@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Order;
+use App\Support\RealtimeOrderPayload;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
@@ -27,10 +28,14 @@ class OrderAccepted implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        return array_map(
+        $tailorChannels = array_map(
             static fn (int $tailorId): PrivateChannel => new PrivateChannel("tailor.{$tailorId}"),
             $this->notifiedTailorIds,
         );
+
+        $tailorChannels[] = new PrivateChannel("customer.{$this->order->customer_id}");
+
+        return $tailorChannels;
     }
 
     public function broadcastAs(): string
@@ -41,10 +46,13 @@ class OrderAccepted implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'order_id' => $this->order->id,
-            'status' => $this->order->status,
-            'accepted_by_tailor_id' => $this->acceptedByTailorId,
-            'accepted_at' => optional($this->order->accepted_at)?->toISOString(),
+            'event' => $this->broadcastAs(),
+            'occurred_at' => now()->toISOString(),
+            'order' => RealtimeOrderPayload::withParticipantSummary($this->order),
+            'meta' => [
+                'accepted_by_tailor_id' => $this->acceptedByTailorId,
+                'notified_tailor_ids' => $this->notifiedTailorIds,
+            ],
         ];
     }
 }

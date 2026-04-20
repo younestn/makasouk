@@ -11,6 +11,7 @@ use App\Http\Requests\Tailor\CancelOrderRequest;
 use App\Http\Requests\Tailor\UpdateOrderStatusRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Support\OrderLifecycle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,11 +24,16 @@ class OrderController extends Controller
         $this->authorize('acceptByTailor', $order);
         $tailorId = (int) $request->user()->id;
 
-        $result = DB::transaction(function () use ($order, $tailorId) {
+        $result = DB::transaction(function () use ($order, $tailorId): array {
             $lockedOrder = Order::query()->whereKey($order->id)->lockForUpdate()->firstOrFail();
 
             if ($lockedOrder->tailor_id !== null) {
-                return ['success' => false, 'status' => 409, 'message' => 'عذراً، تم أخذ الطلب', 'order' => $lockedOrder];
+                return [
+                    'success' => false,
+                    'status' => 409,
+                    'message' => 'Order is already accepted by another tailor.',
+                    'order' => $lockedOrder,
+                ];
             }
 
             $lockedOrder->update([
@@ -36,11 +42,19 @@ class OrderController extends Controller
                 'accepted_at' => now(),
             ]);
 
-            return ['success' => true, 'status' => 200, 'message' => 'تم قبول الطلب بنجاح', 'order' => $lockedOrder->fresh(['customer', 'tailor', 'product'])];
+            return [
+                'success' => true,
+                'status' => 200,
+                'message' => 'Order accepted successfully.',
+                'order' => $lockedOrder->fresh(['customer', 'tailor', 'product.category']),
+            ];
         });
 
         if (! $result['success']) {
-            return response()->json(['message' => $result['message'], 'order' => new OrderResource($result['order'])], $result['status']);
+            return response()->json([
+                'message' => $result['message'],
+                'data' => new OrderResource($result['order']),
+            ], $result['status']);
         }
 
         $notifiedTailorIds = collect($request->validated('notified_tailor_ids', []))
@@ -52,63 +66,94 @@ class OrderController extends Controller
 
         Event::dispatch(new OrderAccepted($result['order'], $tailorId, $notifiedTailorIds));
 
-        return response()->json(['message' => $result['message'], 'order' => new OrderResource($result['order'])]);
+        return response()->json([
+            'message' => $result['message'],
+            'data' => new OrderResource($result['order']),
+        ]);
     }
 
     public function updateStatus(UpdateOrderStatusRequest $request, Order $order): JsonResponse
     {
         $this->authorize('updateByTailor', $order);
 
-        $allowedTransitions = [
-            Order::STATUS_ACCEPTED => [Order::STATUS_PROCESSING],
-            Order::STATUS_PROCESSING => [Order::STATUS_READY_FOR_DELIVERY],
-            Order::STATUS_READY_FOR_DELIVERY => [Order::STATUS_COMPLETED],
-        ];
-
         $nextStatus = $request->validated('status');
         $currentStatus = (string) $order->status;
 
-        if (! isset($allowedTransitions[$currentStatus]) || ! in_array($nextStatus, $allowedTransitions[$currentStatus], true)) {
+        if (! OrderLifecycle::canTailorTransition($currentStatus, $nextStatus)) {
             return response()->json([
-                'message' => 'الانتقال بين الحالات غير مسموح',
-                'current_status' => $currentStatus,
-                'allowed_next_statuses' => $allowedTransitions[$currentStatus] ?? [],
+                'message' => 'Status transition is not allowed.',
+                'meta' => [
+                    'current_status' => $currentStatus,
+                    'allowed_next_statuses' => OrderLifecycle::allowedTailorNextStatuses($currentStatus),
+                ],
             ], 422);
         }
 
         $order->update(['status' => $nextStatus]);
-        $order->refresh();
+        $order->refresh()->load(['customer', 'tailor', 'product.category', 'review']);
 
         Event::dispatch(new OrderStatusUpdated($order));
 
-        return response()->json(['message' => 'تم تحديث حالة الطلب بنجاح', 'order' => new OrderResource($order)]);
+        return response()->json([
+            'message' => 'Order status updated successfully.',
+            'data' => new OrderResource($order),
+        ]);
     }
 
     public function cancel(CancelOrderRequest $request, Order $order): JsonResponse
     {
         $this->authorize('cancelByTailor', $order);
 
-        if (! in_array($order->status, [Order::STATUS_ACCEPTED, Order::STATUS_PROCESSING, Order::STATUS_READY_FOR_DELIVERY], true)) {
-            return response()->json(['message' => 'لا يمكن إلغاء هذا الطلب في حالته الحالية.'], 422);
+        if (! in_array($order->status, OrderLifecycle::tailorCancellableStatuses(), true)) {
+            return response()->json([
+                'message' => 'Order cannot be cancelled from its current status.',
+                'meta' => [
+                    'current_status' => $order->status,
+                    'allowed_cancel_statuses' => OrderLifecycle::tailorCancellableStatuses(),
+                ],
+            ], 422);
         }
 
-        $order->update(['status' => Order::STATUS_CANCELLED_BY_TAILOR, 'cancellation_reason' => $request->validated('reason')]);
-        $order->refresh();
+        $order->update([
+            'status' => Order::STATUS_CANCELLED_BY_TAILOR,
+            'cancellation_reason' => $request->validated('reason'),
+        ]);
+
+        $order->refresh()->load(['customer', 'tailor', 'product.category', 'review']);
 
         Event::dispatch(new OrderCancelledByTailor($order));
 
-        return response()->json(['message' => 'تم إلغاء الطلب من طرف الخياط.', 'order' => new OrderResource($order)]);
+        return response()->json([
+            'message' => 'Order cancelled by tailor.',
+            'data' => new OrderResource($order),
+        ]);
     }
 
-    public function history(Request $request): JsonResponse
+    public function active(Request $request)
     {
         $orders = Order::query()
             ->where('tailor_id', $request->user()->id)
-            ->where('status', Order::STATUS_COMPLETED)
+            ->whereIn('status', OrderLifecycle::tailorActiveStatuses())
+            ->with(['customer', 'product.category'])
+            ->latest('updated_at')
+            ->paginate(20);
+
+        return OrderResource::collection($orders)->additional([
+            'meta' => ['scope' => 'active'],
+        ]);
+    }
+
+    public function history(Request $request)
+    {
+        $orders = Order::query()
+            ->where('tailor_id', $request->user()->id)
+            ->whereIn('status', OrderLifecycle::tailorHistoryStatuses())
             ->with(['customer', 'product.category', 'review'])
             ->latest('updated_at')
             ->paginate(20);
 
-        return response()->json(OrderResource::collection($orders));
+        return OrderResource::collection($orders)->additional([
+            'meta' => ['scope' => 'history'],
+        ]);
     }
 }

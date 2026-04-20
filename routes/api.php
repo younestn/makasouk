@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
 use App\Http\Controllers\Tailor\OrderController as TailorOrderController;
@@ -22,7 +23,14 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
     });
 
+    Route::prefix('catalog')->group(function () {
+        Route::get('categories', [CatalogController::class, 'categories']);
+        Route::get('products', [CatalogController::class, 'products']);
+        Route::get('products/{product}', [CatalogController::class, 'showProduct']);
+    });
+
     Route::prefix('customer')->group(function () {
+        Route::get('orders-active', [CustomerOrderController::class, 'active']);
         Route::post('orders', [CustomerOrderController::class, 'store']);
         Route::get('orders/{order}', [CustomerOrderController::class, 'show']);
         Route::patch('orders/{order}/cancel', [CustomerOrderController::class, 'cancel']);
@@ -31,6 +39,9 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     });
 
     Route::prefix('tailor')->middleware('tailor.approved')->group(function () {
+        Route::get('profile', [TailorProfileController::class, 'show']);
+        Route::get('availability', [TailorProfileController::class, 'availability']);
+        Route::get('orders-active', [TailorOrderController::class, 'active']);
         Route::post('orders/{order}/accept', [TailorOrderController::class, 'acceptOrder']);
         Route::patch('orders/{order}/status', [TailorOrderController::class, 'updateStatus']);
         Route::patch('orders/{order}/cancel', [TailorOrderController::class, 'cancel']);

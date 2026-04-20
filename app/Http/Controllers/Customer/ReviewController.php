@@ -17,15 +17,15 @@ class ReviewController extends Controller
     {
         $this->authorize('create', [Review::class, $order]);
 
-        if ($order->status !== 'completed') {
-            return response()->json(['message' => 'لا يمكن تقييم الطلب قبل اكتماله.'], 422);
+        if ($order->status !== Order::STATUS_COMPLETED) {
+            return response()->json(['message' => 'Order must be completed before review submission.'], 422);
         }
 
         if ($order->review()->exists()) {
-            return response()->json(['message' => 'تم تقييم هذا الطلب مسبقاً.'], 409);
+            return response()->json(['message' => 'Review already exists for this order.'], 409);
         }
 
-        $review = DB::transaction(function () use ($order, $request) {
+        $review = DB::transaction(function () use ($order, $request): Review {
             $data = $request->validated();
 
             $createdReview = Review::query()->create([
@@ -54,8 +54,10 @@ class ReviewController extends Controller
             return $createdReview;
         });
 
+        $review->loadMissing(['customer', 'tailor']);
+
         return response()->json([
-            'message' => 'تم حفظ التقييم بنجاح',
+            'message' => 'Review submitted successfully.',
             'data' => new ReviewResource($review),
         ], 201);
     }

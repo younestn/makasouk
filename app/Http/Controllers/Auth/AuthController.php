@@ -28,7 +28,11 @@ class AuthController extends Controller
 
         $token = $user->createToken($data['device_name'] ?? 'api-token')->plainTextToken;
 
-        return response()->json(['token' => $token, 'user' => new UserResource($user)], 201);
+        return response()->json([
+            'message' => 'Registered successfully.',
+            'token' => $token,
+            'data' => new UserResource($user),
+        ], 201);
     }
 
     public function login(LoginRequest $request): JsonResponse
@@ -46,12 +50,18 @@ class AuthController extends Controller
 
         $token = $user->createToken($data['device_name'] ?? 'api-token')->plainTextToken;
 
-        return response()->json(['token' => $token, 'user' => new UserResource($user)]);
+        return response()->json([
+            'message' => 'Logged in successfully.',
+            'token' => $token,
+            'data' => new UserResource($user),
+        ]);
     }
 
     public function me(Request $request): JsonResponse
     {
-        return response()->json(['user' => new UserResource($request->user()->load('tailorProfile'))]);
+        $user = $request->user()->load('tailorProfile.category');
+
+        return response()->json(['data' => new UserResource($user)]);
     }
 
     public function logout(Request $request): JsonResponse
