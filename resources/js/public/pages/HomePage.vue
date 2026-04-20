@@ -2,12 +2,9 @@
   <section class="hero">
     <div class="container hero-grid">
       <div class="stack">
-        <span class="badge badge-info">Makasouk Marketplace</span>
-        <h1 class="hero-title">Book trusted tailoring and track each order in real time.</h1>
-        <p class="hero-subtitle">
-          Makasouk connects customers with nearby tailors through a practical order flow, clear status updates,
-          and realtime progress across every step.
-        </p>
+        <span class="badge badge-info">{{ t('public.home_badge') }}</span>
+        <h1 class="hero-title">{{ t('public.home_title') }}</h1>
+        <p class="hero-subtitle">{{ t('public.home_subtitle') }}</p>
 
         <div class="actions">
           <UiButton as="a" href="/app/login" variant="primary">Start in App</UiButton>
@@ -124,4 +121,7 @@ import UiButton from '@/components/ui/UiButton.vue';
 import UiCard from '@/components/ui/UiCard.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import UiStatBlock from '@/components/ui/UiStatBlock.vue';
+import { useI18n } from '@/composables/useI18n';
+
+const { t } = useI18n();
 </script>

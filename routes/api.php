@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('profile', [TailorProfileController::class, 'show']);
         Route::get('availability', [TailorProfileController::class, 'availability']);
         Route::get('orders-active', [TailorOrderController::class, 'active']);
+        Route::get('orders/{order}', [TailorOrderController::class, 'show']);
         Route::post('orders/{order}/accept', [TailorOrderController::class, 'acceptOrder']);
         Route::patch('orders/{order}/status', [TailorOrderController::class, 'updateStatus']);
         Route::patch('orders/{order}/cancel', [TailorOrderController::class, 'cancel']);

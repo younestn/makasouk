@@ -2,7 +2,7 @@
   <section class="stack">
     <div class="actions">
       <RouterLink class="btn" :to="{ name: 'tailorActiveOrders' }">Back to Active Orders</RouterLink>
-      <RouterLink class="btn" :to="{ name: 'tailorDashboard' }">Dashboard</RouterLink>
+      <RouterLink class="btn" :to="{ name: 'tailorDashboard' }">{{ t('common.dashboard') }}</RouterLink>
     </div>
 
     <LoadingState v-if="loading" label="Loading tailor order details..." />
@@ -22,9 +22,6 @@
           <UiStatBlock label="Accepted" :value="formatDate(order.timestamps?.accepted_at)" />
         </div>
       </div>
-
-      <div v-if="actionError" class="alert alert-danger">{{ actionError }}</div>
-      <div v-if="actionMessage" class="alert alert-info">{{ actionMessage }}</div>
 
       <div class="ui-card stack" v-if="canAccept">
         <h2 class="title" style="font-size: 1rem;">Accept Order</h2>
@@ -66,15 +63,18 @@ import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import {
   acceptOrder,
   cancelTailorOrder,
-  fetchTailorActiveOrders,
-  fetchTailorOrderHistory,
+  fetchTailorOrder,
   updateOrderStatus,
 } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';
+import { useToast } from '@/composables/useToast';
+import { useI18n } from '@/composables/useI18n';
 
 const route = useRoute();
 const realtimeStore = useRealtimeStore();
+const { successToast, errorToast } = useToast();
+const { t } = useI18n();
 
 const loading = ref(false);
 const error = ref('');
@@ -82,8 +82,6 @@ const order = ref(null);
 const source = ref('');
 
 const actionLoading = ref(false);
-const actionMessage = ref('');
-const actionError = ref('');
 const nextStatus = ref('');
 const cancelReason = ref('Unable to continue this order');
 
@@ -109,16 +107,6 @@ function findOrderFromOffers(orderId) {
   return realtimeStore.tailorOffers.find((item) => Number(item.order.id) === Number(orderId));
 }
 
-async function loadFromApi(orderId) {
-  const [activeResponse, historyResponse] = await Promise.all([
-    fetchTailorActiveOrders({ per_page: 100 }),
-    fetchTailorOrderHistory({ per_page: 100 }),
-  ]);
-
-  const pool = [...(activeResponse.data || []), ...(historyResponse.data || [])];
-  return pool.find((item) => Number(item.id) === Number(orderId)) || null;
-}
-
 async function load() {
   loading.value = true;
   error.value = '';
@@ -135,13 +123,9 @@ async function load() {
       return;
     }
 
-    const found = await loadFromApi(orderId);
+    const response = await fetchTailorOrder(orderId);
 
-    if (!found) {
-      throw new Error('Order was not found in active/history lists.');
-    }
-
-    order.value = found;
+    order.value = response.data;
     source.value = 'api';
     nextStatus.value = nextStatusOptions.value[0] || '';
   } catch (err) {
@@ -157,8 +141,6 @@ async function acceptCurrentOrder() {
   }
 
   actionLoading.value = true;
-  actionMessage.value = '';
-  actionError.value = '';
 
   try {
     const offer = findOrderFromOffers(order.value.id);
@@ -168,9 +150,9 @@ async function acceptCurrentOrder() {
     source.value = 'api';
     realtimeStore.removeOffer(order.value.id);
     nextStatus.value = nextStatusOptions.value[0] || '';
-    actionMessage.value = response.message || 'Order accepted.';
+    successToast(response.message || t('notifications.tailor_order_accepted'));
   } catch (err) {
-    actionError.value = getErrorMessage(err, 'Failed to accept order.');
+    errorToast(getErrorMessage(err, 'Failed to accept order.'));
   } finally {
     actionLoading.value = false;
   }
@@ -182,16 +164,14 @@ async function updateCurrentStatus() {
   }
 
   actionLoading.value = true;
-  actionMessage.value = '';
-  actionError.value = '';
 
   try {
     const response = await updateOrderStatus(order.value.id, nextStatus.value);
     order.value = response.data;
     nextStatus.value = nextStatusOptions.value[0] || '';
-    actionMessage.value = response.message || 'Order status updated.';
+    successToast(response.message || t('notifications.tailor_status_updated'));
   } catch (err) {
-    actionError.value = getErrorMessage(err, 'Failed to update order status.');
+    errorToast(getErrorMessage(err, 'Failed to update order status.'));
   } finally {
     actionLoading.value = false;
   }
@@ -203,15 +183,13 @@ async function cancelCurrentOrder() {
   }
 
   actionLoading.value = true;
-  actionMessage.value = '';
-  actionError.value = '';
 
   try {
     const response = await cancelTailorOrder(order.value.id, cancelReason.value || 'Cancelled from web client');
     order.value = response.data;
-    actionMessage.value = response.message || 'Order cancelled.';
+    successToast(response.message || t('notifications.tailor_order_cancelled'));
   } catch (err) {
-    actionError.value = getErrorMessage(err, 'Failed to cancel order.');
+    errorToast(getErrorMessage(err, 'Failed to cancel order.'));
   } finally {
     actionLoading.value = false;
   }

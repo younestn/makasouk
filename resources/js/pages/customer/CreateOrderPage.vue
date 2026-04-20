@@ -6,7 +6,6 @@
     />
 
     <div class="ui-card stack">
-      <div v-if="successMessage" class="alert alert-info">{{ successMessage }}</div>
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
       <form class="stack" @submit.prevent="submit">
@@ -17,15 +16,18 @@
               {{ product.name }} ({{ product.price }})
             </option>
           </select>
+          <p v-if="fieldError('product_id')" class="field-error">{{ fieldError('product_id') }}</p>
         </UiFormField>
 
         <div class="grid grid-2">
           <UiFormField label="Delivery Latitude" field-id="latitude">
             <input id="latitude" v-model.number="form.latitude" class="input" type="number" step="0.000001" required />
+            <p v-if="fieldError('customer_location.latitude')" class="field-error">{{ fieldError('customer_location.latitude') }}</p>
           </UiFormField>
 
           <UiFormField label="Delivery Longitude" field-id="longitude">
             <input id="longitude" v-model.number="form.longitude" class="input" type="number" step="0.000001" required />
+            <p v-if="fieldError('customer_location.longitude')" class="field-error">{{ fieldError('customer_location.longitude') }}</p>
           </UiFormField>
         </div>
 
@@ -37,6 +39,7 @@
             rows="6"
             required
           ></textarea>
+          <p v-if="fieldError('measurements')" class="field-error">{{ fieldError('measurements') }}</p>
         </UiFormField>
 
         <button class="btn btn-primary" type="submit" :disabled="loading">
@@ -55,13 +58,17 @@ import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import { fetchProducts } from '@/services/catalogService';
 import { createOrder } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
+import { useToast } from '@/composables/useToast';
+import { useI18n } from '@/composables/useI18n';
 
 const route = useRoute();
 const router = useRouter();
+const { successToast, errorToast } = useToast();
+const { t } = useI18n();
 
 const loading = ref(false);
 const error = ref('');
-const successMessage = ref('');
+const validationErrors = ref({});
 const products = ref([]);
 
 const form = reactive({
@@ -70,6 +77,14 @@ const form = reactive({
   longitude: -7.5898,
   measurementsJson: '{"height":170,"waist":80}',
 });
+
+function fieldError(field) {
+  if (!validationErrors.value || !validationErrors.value[field]) {
+    return '';
+  }
+
+  return String(validationErrors.value[field][0] || '');
+}
 
 async function loadProducts() {
   const response = await fetchProducts({ per_page: 100 });
@@ -82,7 +97,7 @@ async function loadProducts() {
 
 async function submit() {
   error.value = '';
-  successMessage.value = '';
+  validationErrors.value = {};
   loading.value = true;
 
   try {
@@ -97,17 +112,21 @@ async function submit() {
       },
     });
 
-    successMessage.value = response.message || 'Order created.';
+    successToast(response.message || t('notifications.order_created'));
 
     if (response?.data?.id) {
       router.push({ name: 'customerOrderDetails', params: { id: response.data.id } });
     }
   } catch (err) {
+    validationErrors.value = err?.errors || {};
+
     if (err instanceof SyntaxError) {
       error.value = 'Measurements must be valid JSON.';
     } else {
       error.value = getErrorMessage(err, 'Failed to create order.');
     }
+
+    errorToast(error.value || t('notifications.action_failed'));
   } finally {
     loading.value = false;
   }
@@ -118,6 +137,7 @@ onMounted(async () => {
     await loadProducts();
   } catch (err) {
     error.value = getErrorMessage(err, 'Failed to load products for order creation.');
+    errorToast(error.value);
   }
 });
 </script>

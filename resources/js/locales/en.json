@@ -1,0 +1,103 @@
+﻿{
+  "locale": {
+    "english": "English",
+    "arabic": "Arabic",
+    "switcher": "Language"
+  },
+  "common": {
+    "dashboard": "Dashboard",
+    "catalog": "Catalog",
+    "create_order": "Create Order",
+    "active_orders": "Active Orders",
+    "history": "History",
+    "availability": "Availability",
+    "profile": "Profile",
+    "public_site": "Public Site",
+    "logout": "Logout",
+    "open": "Open",
+    "back": "Back",
+    "retry": "Retry",
+    "loading": "Loading",
+    "apply": "Apply",
+    "reset": "Reset",
+    "next": "Next",
+    "previous": "Previous",
+    "open_app": "Open App",
+    "sign_in": "Sign In",
+    "search": "Search"
+  },
+  "notifications": {
+    "login_success": "Signed in successfully.",
+    "logout_success": "Signed out successfully.",
+    "auth_required": "Please sign in to continue.",
+    "forbidden_route": "This page is not available for your account role.",
+    "admin_redirect": "Admin users are redirected to the admin panel.",
+    "order_created": "Order created successfully.",
+    "order_cancelled": "Order cancelled.",
+    "review_submitted": "Review submitted.",
+    "tailor_order_accepted": "Order accepted successfully.",
+    "tailor_status_updated": "Order status updated.",
+    "tailor_order_cancelled": "Order cancelled by tailor.",
+    "availability_updated": "Availability updated.",
+    "action_failed": "Action failed. Please try again."
+  },
+  "auth": {
+    "access_badge": "Web Client Access",
+    "welcome_title": "Welcome to Makasouk App",
+    "welcome_subtitle": "Sign in as customer or tailor to validate end-to-end flows. Admin accounts are redirected to Filament.",
+    "customer_seed": "Customer",
+    "tailor_seed": "Tailor",
+    "admin_seed": "Admin",
+    "admin_redirect": "redirected to /admin-panel",
+    "public_website": "Public Website",
+    "sign_in_title": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "signing_in": "Signing in...",
+    "sign_in_button": "Sign in",
+    "invalid_credentials": "Unable to sign in.",
+    "required": "This field is required."
+  },
+  "layout": {
+    "customer_workspace": "Makasouk Customer Workspace",
+    "tailor_workspace": "Makasouk Tailor Workspace",
+    "realtime_connected": "Realtime Connected",
+    "realtime_pending": "Realtime Pending",
+    "realtime_warning": "Realtime warning: {message}. Order lists may require manual refresh."
+  },
+  "public": {
+    "brand": "Makasouk",
+    "nav_how_it_works": "How It Works",
+    "nav_for_customers": "For Customers",
+    "nav_for_tailors": "For Tailors",
+    "nav_faq": "FAQ",
+    "nav_contact": "Contact",
+    "footer_tagline": "Tailoring on demand for customers and local professionals.",
+    "client_app": "Client App",
+    "admin_panel": "Admin Panel",
+    "home_badge": "Makasouk Marketplace",
+    "home_title": "Book trusted tailoring and track each order in real time.",
+    "home_subtitle": "Makasouk connects customers with nearby tailors through a practical order flow, clear status updates, and realtime progress across every step."
+  },
+  "seo": {
+    "site_name": "Makasouk",
+    "default_title": "Makasouk | Tailoring On Demand",
+    "default_description": "Makasouk connects customers and tailors through realtime order workflows and reliable lifecycle tracking.",
+    "home_title": "Makasouk | Tailoring On Demand",
+    "home_description": "Book trusted tailoring and track each order in real time with Makasouk.",
+    "how_it_works_title": "How It Works | Makasouk",
+    "how_it_works_description": "Understand Makasouk's customer-tailor order lifecycle from order creation to completion.",
+    "for_customers_title": "For Customers | Makasouk",
+    "for_customers_description": "Browse catalog items, create orders, and track active tailoring jobs with confidence.",
+    "for_tailors_title": "For Tailors | Makasouk",
+    "for_tailors_description": "Accept nearby orders, update statuses, and manage your availability as a Makasouk tailor.",
+    "faq_title": "FAQ | Makasouk",
+    "faq_description": "Common questions about Makasouk order tracking, realtime updates, and platform usage.",
+    "contact_title": "Contact | Makasouk",
+    "contact_description": "Get support details for Makasouk web platform usage and operations."
+  },
+  "pagination": {
+    "summary": "Showing {from} to {to} of {total} items",
+    "page": "Page {current} of {last}"
+  }
+}

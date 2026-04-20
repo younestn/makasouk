@@ -30,9 +30,6 @@
         </div>
       </div>
 
-      <div v-if="actionError" class="alert alert-danger">{{ actionError }}</div>
-      <div v-if="actionMessage" class="alert alert-info">{{ actionMessage }}</div>
-
       <div class="ui-card stack" v-if="order.lifecycle?.customer_can_cancel">
         <h2 class="title" style="font-size: 1rem;">Cancel Order</h2>
         <div>
@@ -76,17 +73,19 @@ import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { cancelOrder, fetchOrder, submitReview } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';
+import { useToast } from '@/composables/useToast';
+import { useI18n } from '@/composables/useI18n';
 
 const route = useRoute();
 const realtimeStore = useRealtimeStore();
+const { successToast, errorToast, warningToast } = useToast();
+const { t } = useI18n();
 
 const loading = ref(false);
 const error = ref('');
 const order = ref(null);
 
 const actionLoading = ref(false);
-const actionMessage = ref('');
-const actionError = ref('');
 const cancelReason = ref('Changed plan');
 
 const review = reactive({
@@ -122,15 +121,17 @@ async function load() {
 
 async function cancelCurrentOrder() {
   actionLoading.value = true;
-  actionError.value = '';
-  actionMessage.value = '';
 
   try {
     const response = await cancelOrder(route.params.id, cancelReason.value || 'Cancelled from web client');
     order.value = response.data;
-    actionMessage.value = response.message || 'Order cancelled.';
+    successToast(response.message || t('notifications.order_cancelled'));
+
+    if (response?.meta?.warning) {
+      warningToast(response.meta.warning, { duration: 7000 });
+    }
   } catch (err) {
-    actionError.value = getErrorMessage(err, 'Failed to cancel order.');
+    errorToast(getErrorMessage(err, 'Failed to cancel order.'));
   } finally {
     actionLoading.value = false;
   }
@@ -138,8 +139,6 @@ async function cancelCurrentOrder() {
 
 async function submitOrderReview() {
   actionLoading.value = true;
-  actionError.value = '';
-  actionMessage.value = '';
 
   try {
     const response = await submitReview(route.params.id, {
@@ -147,10 +146,10 @@ async function submitOrderReview() {
       comment: review.comment || null,
     });
 
-    actionMessage.value = response.message || 'Review submitted.';
+    successToast(response.message || t('notifications.review_submitted'));
     await load();
   } catch (err) {
-    actionError.value = getErrorMessage(err, 'Failed to submit review.');
+    errorToast(getErrorMessage(err, 'Failed to submit review.'));
   } finally {
     actionLoading.value = false;
   }

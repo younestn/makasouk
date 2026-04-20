@@ -1,7 +1,7 @@
 ﻿<template>
   <section class="stack">
     <UiSectionHeader
-      title="Availability"
+      :title="t('common.availability')"
       description="Control whether you can receive nearby order offers."
     />
 
@@ -12,7 +12,6 @@
       </div>
 
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
-      <div v-if="message" class="alert alert-info">{{ message }}</div>
 
       <button class="btn btn-primary" :disabled="loading" @click="toggle">
         {{ loading ? 'Updating...' : 'Toggle Availability' }}
@@ -27,10 +26,14 @@ import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { fetchAvailability, toggleAvailability } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
+import { useToast } from '@/composables/useToast';
+import { useI18n } from '@/composables/useI18n';
+
+const { successToast, errorToast } = useToast();
+const { t } = useI18n();
 
 const loading = ref(false);
 const error = ref('');
-const message = ref('');
 
 const availability = reactive({
   status: '',
@@ -54,15 +57,15 @@ async function load() {
 async function toggle() {
   loading.value = true;
   error.value = '';
-  message.value = '';
 
   try {
     const response = await toggleAvailability();
     availability.status = response.data?.status || availability.status;
-    message.value = response.message || 'Availability updated.';
+    successToast(response.message || t('notifications.availability_updated'));
     await load();
   } catch (err) {
     error.value = getErrorMessage(err, 'Failed to toggle availability.');
+    errorToast(error.value);
   } finally {
     loading.value = false;
   }

@@ -102,3 +102,15 @@ Manual smoke via local server confirmed:
 - deeper component-level frontend tests for major pages
 - optional SEO metadata refinement and social share tags for public pages
 - final brand copy review and localized content pass (Arabic/RTL strategy)
+
+## 8) Phase 7 completion notes
+
+Phase 7 addressed the key open items from this document:
+
+- Added a reusable global toast notification center.
+- Added reusable pagination controls and wired them into catalog/order list pages.
+- Added first-pass Arabic localization + RTL direction support with language switchers.
+- Implemented route-driven public SEO metadata updates (title, description, OG, canonical).
+- Expanded frontend automated tests and validated route-level smoke checks.
+
+The public website and `/app/*` SPA split remains unchanged and stable.

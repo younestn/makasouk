@@ -10,6 +10,11 @@ export async function fetchTailorOrderHistory(params = {}) {
   return data;
 }
 
+export async function fetchTailorOrder(orderId) {
+  const { data } = await apiClient.get(`/tailor/orders/${orderId}`);
+  return data;
+}
+
 export async function acceptOrder(orderId, notifiedTailorIds = []) {
   const payload = {};
 

@@ -19,9 +19,6 @@
         <span class="badge badge-neutral">{{ realtimeStore.tailorOffers.length }} offers</span>
       </div>
 
-      <div v-if="actionError" class="alert alert-danger">{{ actionError }}</div>
-      <div v-if="actionMessage" class="alert alert-info">{{ actionMessage }}</div>
-
       <EmptyState v-if="realtimeStore.tailorOffers.length === 0" message="No realtime offers right now." />
 
       <div v-else class="stack">
@@ -59,14 +56,16 @@ import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { acceptOrder, fetchTailorProfile } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';
+import { useToast } from '@/composables/useToast';
+import { useI18n } from '@/composables/useI18n';
 
 const realtimeStore = useRealtimeStore();
+const { successToast, errorToast } = useToast();
+const { t } = useI18n();
 
 const loading = ref(false);
 const error = ref('');
 const actionLoading = ref(false);
-const actionError = ref('');
-const actionMessage = ref('');
 
 const profile = reactive({
   status: '-',
@@ -89,16 +88,14 @@ async function load() {
 
 async function acceptOffer(offer) {
   actionLoading.value = true;
-  actionError.value = '';
-  actionMessage.value = '';
 
   try {
     const response = await acceptOrder(offer.order.id, offer.meta?.notified_tailor_ids || []);
-    actionMessage.value = response.message || 'Order accepted successfully.';
+    successToast(response.message || t('notifications.tailor_order_accepted'));
     realtimeStore.removeOffer(offer.order.id);
     await load();
   } catch (err) {
-    actionError.value = getErrorMessage(err, 'Unable to accept this order.');
+    errorToast(getErrorMessage(err, 'Unable to accept this order.'));
 
     if (err.status === 409) {
       realtimeStore.removeOffer(offer.order.id);

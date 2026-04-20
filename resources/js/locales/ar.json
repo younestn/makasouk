@@ -1,0 +1,103 @@
+﻿{
+  "locale": {
+    "english": "English",
+    "arabic": "العربية",
+    "switcher": "اللغة"
+  },
+  "common": {
+    "dashboard": "لوحة التحكم",
+    "catalog": "الكتالوج",
+    "create_order": "إنشاء طلب",
+    "active_orders": "الطلبات النشطة",
+    "history": "السجل",
+    "availability": "التوفر",
+    "profile": "الملف الشخصي",
+    "public_site": "الموقع العام",
+    "logout": "تسجيل الخروج",
+    "open": "فتح",
+    "back": "رجوع",
+    "retry": "إعادة المحاولة",
+    "loading": "جاري التحميل",
+    "apply": "تطبيق",
+    "reset": "إعادة ضبط",
+    "next": "التالي",
+    "previous": "السابق",
+    "open_app": "فتح التطبيق",
+    "sign_in": "تسجيل الدخول",
+    "search": "بحث"
+  },
+  "notifications": {
+    "login_success": "تم تسجيل الدخول بنجاح.",
+    "logout_success": "تم تسجيل الخروج بنجاح.",
+    "auth_required": "يرجى تسجيل الدخول للمتابعة.",
+    "forbidden_route": "هذه الصفحة غير متاحة لدور حسابك.",
+    "admin_redirect": "يتم تحويل حسابات المشرف إلى لوحة الإدارة.",
+    "order_created": "تم إنشاء الطلب بنجاح.",
+    "order_cancelled": "تم إلغاء الطلب.",
+    "review_submitted": "تم إرسال التقييم.",
+    "tailor_order_accepted": "تم قبول الطلب بنجاح.",
+    "tailor_status_updated": "تم تحديث حالة الطلب.",
+    "tailor_order_cancelled": "تم إلغاء الطلب بواسطة الخياط.",
+    "availability_updated": "تم تحديث حالة التوفر.",
+    "action_failed": "فشلت العملية. يرجى المحاولة مرة أخرى."
+  },
+  "auth": {
+    "access_badge": "وصول تطبيق الويب",
+    "welcome_title": "مرحبًا بك في تطبيق مقصوك",
+    "welcome_subtitle": "سجّل الدخول كعميل أو خياط للتحقق من التدفقات كاملة. سيتم تحويل حسابات المشرف إلى Filament.",
+    "customer_seed": "عميل",
+    "tailor_seed": "خياط",
+    "admin_seed": "مشرف",
+    "admin_redirect": "يتم تحويله إلى /admin-panel",
+    "public_website": "الموقع العام",
+    "sign_in_title": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "signing_in": "جاري تسجيل الدخول...",
+    "sign_in_button": "تسجيل الدخول",
+    "invalid_credentials": "تعذر تسجيل الدخول.",
+    "required": "هذا الحقل مطلوب."
+  },
+  "layout": {
+    "customer_workspace": "مساحة عمل العميل - مقصوك",
+    "tailor_workspace": "مساحة عمل الخياط - مقصوك",
+    "realtime_connected": "الاتصال الفوري متصل",
+    "realtime_pending": "الاتصال الفوري قيد الانتظار",
+    "realtime_warning": "تنبيه فوري: {message}. قد تحتاج القوائم إلى تحديث يدوي."
+  },
+  "public": {
+    "brand": "مقصوك",
+    "nav_how_it_works": "كيف يعمل",
+    "nav_for_customers": "للعملاء",
+    "nav_for_tailors": "للخياطين",
+    "nav_faq": "الأسئلة الشائعة",
+    "nav_contact": "تواصل معنا",
+    "footer_tagline": "خياطة حسب الطلب للعملاء والمهنيين المحليين.",
+    "client_app": "تطبيق العميل",
+    "admin_panel": "لوحة الإدارة",
+    "home_badge": "سوق مقصوك",
+    "home_title": "احجز خدمة خياطة موثوقة وتتبع كل طلب في الوقت الفعلي.",
+    "home_subtitle": "يربط مقصوك العملاء بالخياطين القريبين عبر تدفق طلبات عملي وتحديثات حالة واضحة وتقدم فوري في كل خطوة."
+  },
+  "seo": {
+    "site_name": "مقصوك",
+    "default_title": "مقصوك | خياطة حسب الطلب",
+    "default_description": "يربط مقصوك العملاء والخياطين من خلال تدفقات طلبات فورية وتتبع واضح لدورة الطلب.",
+    "home_title": "مقصوك | خياطة حسب الطلب",
+    "home_description": "احجز خدمة خياطة موثوقة وتتبع كل طلب في الوقت الفعلي مع مقصوك.",
+    "how_it_works_title": "كيف يعمل | مقصوك",
+    "how_it_works_description": "تعرّف على دورة طلبات مقصوك من إنشاء الطلب حتى الإكمال.",
+    "for_customers_title": "للعملاء | مقصوك",
+    "for_customers_description": "تصفح الكتالوج وأنشئ الطلبات وتتبع أعمال الخياطة النشطة بثقة.",
+    "for_tailors_title": "للخياطين | مقصوك",
+    "for_tailors_description": "اقبل الطلبات القريبة وحدّث الحالات وأدر التوفر كخياط في مقصوك.",
+    "faq_title": "الأسئلة الشائعة | مقصوك",
+    "faq_description": "أسئلة شائعة حول تتبع الطلبات والتحديثات الفورية واستخدام منصة مقصوك.",
+    "contact_title": "تواصل معنا | مقصوك",
+    "contact_description": "تفاصيل الدعم لاستخدام منصة مقصوك على الويب وتشغيلها."
+  },
+  "pagination": {
+    "summary": "عرض {from} إلى {to} من أصل {total}",
+    "page": "الصفحة {current} من {last}"
+  }
+}

@@ -6,12 +6,14 @@
     </div>
 
     <div v-if="retryable" class="actions">
-      <button class="btn" type="button" @click="$emit('retry')">Retry</button>
+      <button class="btn" type="button" @click="$emit('retry')">{{ t('common.retry') }}</button>
     </div>
   </div>
 </template>
 
 <script setup>
+import { useI18n } from '@/composables/useI18n';
+
 defineProps({
   title: {
     type: String,
@@ -28,4 +30,6 @@ defineProps({
 });
 
 defineEmits(['retry']);
+
+const { t } = useI18n();
 </script>

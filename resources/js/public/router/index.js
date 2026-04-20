@@ -1,4 +1,5 @@
 ﻿import { createRouter, createWebHistory } from 'vue-router';
+import { applyPublicMeta } from '@/public/seo';
 
 const routes = [
   {
@@ -9,37 +10,55 @@ const routes = [
         path: '',
         name: 'publicHome',
         component: () => import('@/public/pages/HomePage.vue'),
-        meta: { title: 'Makasouk | Tailoring On Demand' },
+        meta: {
+          titleKey: 'seo.home_title',
+          descriptionKey: 'seo.home_description',
+        },
       },
       {
         path: 'how-it-works',
         name: 'publicHowItWorks',
         component: () => import('@/public/pages/HowItWorksPage.vue'),
-        meta: { title: 'How It Works | Makasouk' },
+        meta: {
+          titleKey: 'seo.how_it_works_title',
+          descriptionKey: 'seo.how_it_works_description',
+        },
       },
       {
         path: 'for-customers',
         name: 'publicForCustomers',
         component: () => import('@/public/pages/ForCustomersPage.vue'),
-        meta: { title: 'For Customers | Makasouk' },
+        meta: {
+          titleKey: 'seo.for_customers_title',
+          descriptionKey: 'seo.for_customers_description',
+        },
       },
       {
         path: 'for-tailors',
         name: 'publicForTailors',
         component: () => import('@/public/pages/ForTailorsPage.vue'),
-        meta: { title: 'For Tailors | Makasouk' },
+        meta: {
+          titleKey: 'seo.for_tailors_title',
+          descriptionKey: 'seo.for_tailors_description',
+        },
       },
       {
         path: 'faq',
         name: 'publicFaq',
         component: () => import('@/public/pages/FaqPage.vue'),
-        meta: { title: 'FAQ | Makasouk' },
+        meta: {
+          titleKey: 'seo.faq_title',
+          descriptionKey: 'seo.faq_description',
+        },
       },
       {
         path: 'contact',
         name: 'publicContact',
         component: () => import('@/public/pages/ContactPage.vue'),
-        meta: { title: 'Contact | Makasouk' },
+        meta: {
+          titleKey: 'seo.contact_title',
+          descriptionKey: 'seo.contact_description',
+        },
       },
     ],
   },
@@ -54,7 +73,5 @@ export const publicRouter = createRouter({
 });
 
 publicRouter.afterEach((to) => {
-  if (to.meta?.title) {
-    document.title = String(to.meta.title);
-  }
+  applyPublicMeta(to);
 });

@@ -19,6 +19,17 @@ use Illuminate\Support\Facades\Event;
 
 class OrderController extends Controller
 {
+    public function show(Order $order): JsonResponse
+    {
+        $this->authorize('view', $order);
+
+        $order->load(['customer', 'tailor.tailorProfile.category', 'product.category', 'review']);
+
+        return response()->json([
+            'data' => new OrderResource($order),
+        ]);
+    }
+
     public function acceptOrder(AcceptOrderRequest $request, Order $order): JsonResponse
     {
         $this->authorize('acceptByTailor', $order);

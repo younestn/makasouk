@@ -201,3 +201,29 @@ php artisan test
 ### Phase 6 implementation docs
 - `docs/integration/web-client-foundation.md` (updated)
 - `docs/integration/public-website-and-ux-polish.md` (new)
+
+## Phase 7 Frontend Hardening + RTL/SEO/QA
+
+### Key hardening upgrades
+- Global toast notification center (SPA + public site mount)
+- Reusable pagination controls for high-volume list pages
+- First-pass localization foundation (`en` / `ar`) + RTL direction switching
+- Route-driven SEO metadata management for all public pages
+- Expanded frontend test coverage (router guards, services, i18n, pagination, SEO, toast store)
+- Additive backend support endpoint for tailor order details:
+  - `GET /api/tailor/orders/{order}`
+
+### Phase 7 validation commands
+```bash
+npm install
+npm run test
+npm run build
+php artisan optimize:clear
+php artisan test
+php artisan serve
+```
+
+### Phase 7 documentation
+- `docs/integration/phase-7-frontend-hardening.md` (new)
+- `docs/integration/web-client-foundation.md` (updated)
+- `docs/integration/public-website-and-ux-polish.md` (updated)

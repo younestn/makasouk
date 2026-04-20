@@ -3,7 +3,7 @@
     <div class="stack" style="align-items: center;">
       <div class="loading-row">
         <span class="loading-spinner" aria-hidden="true"></span>
-        <strong>{{ label }}</strong>
+        <strong>{{ resolvedLabel }}</strong>
       </div>
       <p v-if="hint" class="small">{{ hint }}</p>
     </div>
@@ -11,14 +11,23 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+import { useI18n } from '@/composables/useI18n';
+
+const props = defineProps({
   label: {
     type: String,
-    default: 'Loading...',
+    default: '',
   },
   hint: {
     type: String,
     default: '',
   },
+});
+
+const { t } = useI18n();
+
+const resolvedLabel = computed(() => {
+  return props.label || `${t('common.loading')}...`;
 });
 </script>

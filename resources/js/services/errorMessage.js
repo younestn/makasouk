@@ -11,5 +11,13 @@ export function getErrorMessage(error, fallback = 'Something went wrong.') {
     return error.message;
   }
 
+  if (error.errors && typeof error.errors === 'object') {
+    const firstFieldErrors = Object.values(error.errors).find((messages) => Array.isArray(messages) && messages.length > 0);
+
+    if (firstFieldErrors) {
+      return String(firstFieldErrors[0]);
+    }
+  }
+
   return fallback;
 }

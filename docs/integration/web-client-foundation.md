@@ -198,3 +198,43 @@ Applied improvements across customer/tailor shells:
 ### Lightweight frontend test addition
 - Added route registration test:
   - `resources/js/public/router/__tests__/publicRoutes.test.js`
+
+## 10) Phase 7 hardening addendum
+
+Phase 7 keeps the same architecture but hardens reliability and integration readiness.
+
+### Added stores/composables
+- `stores/toast.js` + `composables/useToast.js`
+- `stores/uiPreferences.js` + `composables/useI18n.js`
+
+### Added localization foundation
+- Locale dictionaries:
+  - `resources/js/locales/en.json`
+  - `resources/js/locales/ar.json`
+- Translation utility:
+  - `resources/js/i18n/index.js`
+- Runtime language + direction persistence via localStorage key `makasouk_locale`.
+
+### Added UX primitives
+- `components/ui/UiToast.vue`
+- `components/ui/UiPagination.vue`
+- `components/ui/UiLocaleSwitcher.vue`
+
+### List pages with pagination controls
+- Customer catalog
+- Customer active orders
+- Customer order history
+- Tailor active orders
+
+### Additive backend support for detail loading stability
+- New endpoint:
+  - `GET /api/tailor/orders/{order}`
+- Used by tailor order details page to avoid list-reconstruction fallback behavior.
+
+### Frontend test coverage now includes
+- Router guards behavior
+- Service method behavior for customer/tailor orders
+- i18n helper behavior
+- pagination helper behavior
+- public SEO metadata behavior
+- toast store behavior

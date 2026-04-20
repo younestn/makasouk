@@ -1,46 +1,94 @@
 ﻿<template>
   <section class="stack">
     <UiSectionHeader
-      title="Order History"
+      :title="t('common.history')"
       description="Completed and cancelled customer orders."
     />
 
     <LoadingState v-if="loading" label="Loading order history..." />
-    <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
+    <ErrorState v-else-if="error" :message="error" retryable @retry="reloadCurrentPage" />
     <EmptyState v-else-if="orders.length === 0" message="No history orders yet." />
 
-    <div v-else class="stack">
-      <OrderCard
-        v-for="order in orders"
-        :key="order.id"
-        :order="order"
-        details-route-name="customerOrderDetails"
-      />
-    </div>
+    <template v-else>
+      <div class="stack">
+        <OrderCard
+          v-for="order in orders"
+          :key="order.id"
+          :order="order"
+          details-route-name="customerOrderDetails"
+        />
+      </div>
+
+      <UiPagination :pagination="pagination" @page-change="load" />
+    </template>
   </section>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiPagination from '@/components/ui/UiPagination.vue';
 import OrderCard from '@/components/orders/OrderCard.vue';
 import { fetchOrderHistory } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
+import { defaultPagination, normalizePagination } from '@/utils/pagination';
+import { useI18n } from '@/composables/useI18n';
+
+const route = useRoute();
+const router = useRouter();
+const { t } = useI18n();
 
 const loading = ref(false);
 const error = ref('');
 const orders = ref([]);
+const pagination = reactive(defaultPagination({ perPage: 10 }));
 
-async function load() {
+function queryPage() {
+  const page = Number(route.query.page || 1);
+
+  if (!Number.isInteger(page) || page < 1) {
+    return 1;
+  }
+
+  return page;
+}
+
+function syncQuery(page) {
+  router.replace({
+    query: {
+      ...route.query,
+      page: page > 1 ? String(page) : undefined,
+    },
+  });
+}
+
+async function load(page = pagination.currentPage) {
   loading.value = true;
   error.value = '';
 
+  const safePage = Math.max(1, Number(page || 1));
+
   try {
-    const response = await fetchOrderHistory();
+    const response = await fetchOrderHistory({
+      page: safePage,
+      per_page: pagination.perPage,
+    });
+
     orders.value = response.data || [];
+
+    Object.assign(
+      pagination,
+      normalizePagination(response, {
+        ...pagination,
+        currentPage: safePage,
+      }),
+    );
+
+    syncQuery(pagination.currentPage);
   } catch (err) {
     error.value = getErrorMessage(err, 'Failed to load order history.');
   } finally {
@@ -48,5 +96,11 @@ async function load() {
   }
 }
 
-onMounted(load);
+function reloadCurrentPage() {
+  load(pagination.currentPage);
+}
+
+onMounted(() => {
+  load(queryPage());
+});
 </script>
