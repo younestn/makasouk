@@ -55,6 +55,8 @@ php artisan reverb:start
 
 ## Default local credentials
 - Admin: `admin@makasouk.local` / `Admin@12345`
+- Customer: `customer@makasouk.local` / `Password@123`
+- Tailor: `tailor@makasouk.local` / `Password@123`
 
 ## Run tests
 ```bash
@@ -227,3 +229,97 @@ php artisan serve
 - `docs/integration/phase-7-frontend-hardening.md` (new)
 - `docs/integration/web-client-foundation.md` (updated)
 - `docs/integration/public-website-and-ux-polish.md` (updated)
+
+## Phase 8 Launch Readiness (E2E + CI + Release Prep)
+
+### Deterministic QA fixtures
+- `database/seeders/ClientAppFixturesSeeder.php` provides stable QA accounts and a deterministic accepted-order fixture.
+- `DatabaseSeeder` now calls `ClientAppFixturesSeeder`, so `php artisan migrate:fresh --seed` is enough for QA and E2E data setup.
+
+### Playwright E2E automation
+- Config: `playwright.config.js`
+- Specs: `tests/e2e/*.spec.js`
+- Helpers: `tests/e2e/helpers/*`
+
+Commands:
+```bash
+npx playwright install --with-deps chromium
+npm run e2e
+```
+
+### CI quality gates
+- Workflow: `.github/workflows/ci.yml`
+- Jobs:
+  - `quality-gates`: composer install, npm install, migrate/seed, frontend tests, frontend build, backend tests
+  - `e2e`: Playwright browser install + browser E2E suite
+- Services:
+  - PostgreSQL + PostGIS (`postgis/postgis:16-3.4`)
+  - Redis (`redis:7-alpine`)
+
+### Release and deployment runbooks
+- Launch checklist: `docs/release/launch-checklist.md`
+- Deployment notes: `docs/release/deployment-notes.md`
+- Manual QA matrix: `docs/release/manual-qa-matrix.md`
+
+### Production hardening expectations
+- Set `APP_ENV=production` and `APP_DEBUG=false`.
+- Keep Sanctum stateful domains aligned with deployed web origins.
+- Run supervised processes for queue worker and Reverb server in production.
+- Build Vite assets on deploy before traffic cutover.
+
+## Phase 9 Staging Validation + Release Cutover
+
+### Staging readiness docs
+- Launch checklist: `docs/release/launch-checklist.md`
+- Deployment notes: `docs/release/deployment-notes.md`
+- Manual QA/UAT matrix: `docs/release/manual-qa-matrix.md`
+- Staging signoff sheet: `docs/release/staging-signoff.md`
+- Production cutover plan: `docs/release/production-cutover-plan.md`
+
+### CI flow for release candidates
+- Workflow: `.github/workflows/ci.yml`
+- Jobs run in sequence:
+  - `quality-gates` (install, migrate/seed, frontend tests, build, backend tests, route smoke)
+  - `e2e` (Playwright browser + deterministic browser suite)
+
+### Staging-focused environment notes
+- `VITE_*` variables are compile-time and must be set before `npm run build`.
+- `SANCTUM_STATEFUL_DOMAINS` must match browser-facing app origins.
+- `SESSION_SECURE_COOKIE=true` is required on HTTPS staging/production.
+- `REVERB_ALLOWED_ORIGINS` should be explicit trusted domains (avoid `*` outside local development).
+
+### Release-candidate validation command set
+```bash
+composer install
+npm install
+php artisan optimize:clear
+php artisan migrate:fresh --seed
+npm run test
+npm run build
+php artisan test
+npx playwright install --with-deps chromium
+npm run e2e:ci
+```
+
+## Phase 10 Production Release Execution + Hypercare
+
+### Final production gate conditions
+- Hosted CI is green on the release commit (`quality-gates` and `e2e`).
+- `docs/release/staging-signoff.md` is completed with a `GO` result.
+- No open `BLOCKER` issues remain.
+
+### Release execution and operations docs
+- Launch checklist: `docs/release/launch-checklist.md`
+- Deployment notes: `docs/release/deployment-notes.md`
+- Manual QA matrix: `docs/release/manual-qa-matrix.md`
+- Production cutover plan: `docs/release/production-cutover-plan.md`
+- Hypercare plan: `docs/release/hypercare-plan.md`
+- Incident response playbook: `docs/release/incident-response-playbook.md`
+- Release notes (v1): `docs/release/release-notes-v1.md`
+
+### Production-sensitive env guidance (summary)
+- `APP_ENV=production`, `APP_DEBUG=false`
+- `SESSION_SECURE_COOKIE=true` on HTTPS
+- `SANCTUM_STATEFUL_DOMAINS` aligned to real web origins
+- `REVERB_ALLOWED_ORIGINS` set to explicit trusted origins (no wildcard in production)
+- Ensure `VITE_*` values are correct before build; they are compile-time values

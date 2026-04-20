@@ -10,6 +10,7 @@
           <p class="small"><strong>{{ t('auth.customer_seed') }}:</strong> customer@makasouk.local</p>
           <p class="small"><strong>{{ t('auth.tailor_seed') }}:</strong> tailor@makasouk.local</p>
           <p class="small"><strong>{{ t('auth.admin_seed') }}:</strong> admin@makasouk.local ({{ t('auth.admin_redirect') }})</p>
+          <p class="small"><strong>Password:</strong> Password@123 (admin: Admin@12345)</p>
         </div>
 
         <div class="actions">

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
             DemoDataSeeder::class,
+            ClientAppFixturesSeeder::class,
         ]);
     }
 }

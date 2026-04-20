@@ -34,7 +34,10 @@ return [
             'secret' => env('REVERB_APP_SECRET', 'makasouk-secret'),
             'app_id' => env('REVERB_APP_ID', 'makasouk-app'),
             'options' => ['host' => env('REVERB_HOST', '127.0.0.1'), 'port' => env('REVERB_PORT', 8080), 'scheme' => env('REVERB_SCHEME', 'http')],
-            'allowed_origins' => ['*'],
+            'allowed_origins' => array_values(array_filter(
+                array_map('trim', explode(',', (string) env('REVERB_ALLOWED_ORIGINS', '*'))),
+                static fn (string $origin): bool => $origin !== '',
+            )),
             'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),
             'activity_timeout' => env('REVERB_APP_ACTIVITY_TIMEOUT', 30),
             'max_message_size' => env('REVERB_APP_MAX_MESSAGE_SIZE', 10_000),
