@@ -12,21 +12,15 @@ class ProfileController extends Controller
 {
     public function toggleAvailability(Request $request): JsonResponse
     {
-        abort_unless($request->user()?->role === 'tailor', 403);
-
         $tailorId = (int) $request->user()->id;
 
-        $profile = TailorProfile::query()->firstOrCreate(
-            ['user_id' => $tailorId],
-            ['status' => 'offline'],
-        );
+        $profile = TailorProfile::query()->firstOrCreate(['user_id' => $tailorId], ['status' => TailorProfile::STATUS_OFFLINE]);
+        $nextStatus = $profile->status === TailorProfile::STATUS_ONLINE ? TailorProfile::STATUS_OFFLINE : TailorProfile::STATUS_ONLINE;
 
-        $nextStatus = $profile->status === 'online' ? 'offline' : 'online';
-
-        if ($nextStatus === 'online') {
+        if ($nextStatus === TailorProfile::STATUS_ONLINE) {
             $activeOrdersCount = Order::query()
                 ->where('tailor_id', $tailorId)
-                ->whereIn('status', ['accepted', 'processing', 'ready_for_delivery'])
+                ->whereIn('status', [Order::STATUS_ACCEPTED, Order::STATUS_PROCESSING, Order::STATUS_READY_FOR_DELIVERY])
                 ->count();
 
             if ($activeOrdersCount >= 5) {
@@ -40,9 +34,6 @@ class ProfileController extends Controller
 
         $profile->update(['status' => $nextStatus]);
 
-        return response()->json([
-            'message' => 'تم تحديث حالة التوفر بنجاح',
-            'status' => $profile->status,
-        ]);
+        return response()->json(['message' => 'تم تحديث حالة التوفر بنجاح', 'status' => $profile->status]);
     }
 }

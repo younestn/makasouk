@@ -3,44 +3,37 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\StoreReviewRequest;
+use App\Http\Resources\ReviewResource;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\TailorProfile;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request, Order $order): JsonResponse
+    public function store(StoreReviewRequest $request, Order $order): JsonResponse
     {
-        abort_unless($request->user()?->role === 'customer', 403);
-        abort_unless((int) $order->customer_id === (int) $request->user()->id, 403);
-
-        $validated = $request->validate([
-            'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'comment' => ['nullable', 'string', 'max:2000'],
-        ]);
+        $this->authorize('create', [Review::class, $order]);
 
         if ($order->status !== 'completed') {
-            return response()->json([
-                'message' => 'لا يمكن تقييم الطلب قبل اكتماله.',
-            ], 422);
+            return response()->json(['message' => 'لا يمكن تقييم الطلب قبل اكتماله.'], 422);
         }
 
         if ($order->review()->exists()) {
-            return response()->json([
-                'message' => 'تم تقييم هذا الطلب مسبقاً.',
-            ], 409);
+            return response()->json(['message' => 'تم تقييم هذا الطلب مسبقاً.'], 409);
         }
 
-        $review = DB::transaction(function () use ($order, $validated) {
+        $review = DB::transaction(function () use ($order, $request) {
+            $data = $request->validated();
+
             $createdReview = Review::query()->create([
                 'order_id' => $order->id,
                 'customer_id' => $order->customer_id,
                 'tailor_id' => $order->tailor_id,
-                'rating' => $validated['rating'],
-                'comment' => $validated['comment'] ?? null,
+                'rating' => $data['rating'],
+                'comment' => $data['comment'] ?? null,
             ]);
 
             $profile = TailorProfile::query()
@@ -49,10 +42,8 @@ class ReviewController extends Controller
                 ->first();
 
             if ($profile) {
-                $currentTotal = (int) $profile->total_reviews;
-                $currentAverage = (float) $profile->average_rating;
-                $newTotal = $currentTotal + 1;
-                $newAverage = (($currentAverage * $currentTotal) + (int) $validated['rating']) / $newTotal;
+                $newTotal = (int) $profile->total_reviews + 1;
+                $newAverage = (((float) $profile->average_rating * (int) $profile->total_reviews) + (int) $data['rating']) / $newTotal;
 
                 $profile->update([
                     'total_reviews' => $newTotal,
@@ -65,7 +56,7 @@ class ReviewController extends Controller
 
         return response()->json([
             'message' => 'تم حفظ التقييم بنجاح',
-            'data' => $review,
+            'data' => new ReviewResource($review),
         ], 201);
     }
 }

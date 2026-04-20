@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('orders/{order}/reviews', [CustomerReviewController::class, 'store']);
     });
 
-    Route::prefix('tailor')->group(function () {
+    Route::prefix('tailor')->middleware('tailor.approved')->group(function () {
         Route::post('orders/{order}/accept', [TailorOrderController::class, 'acceptOrder']);
         Route::patch('orders/{order}/status', [TailorOrderController::class, 'updateStatus']);
         Route::patch('orders/{order}/cancel', [TailorOrderController::class, 'cancel']);
@@ -41,14 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('categories', [AdminCategoryController::class, 'index']);
         Route::post('categories', [AdminCategoryController::class, 'store']);
-
         Route::get('products', [AdminProductController::class, 'index']);
         Route::post('products', [AdminProductController::class, 'store']);
-
         Route::get('orders', [AdminOrderController::class, 'index']);
         Route::get('orders/{order}/track', [AdminOrderController::class, 'trackOrder']);
         Route::get('orders/statistics', [AdminOrderController::class, 'statistics']);
-
         Route::get('users', [AdminUserController::class, 'index']);
         Route::patch('users/{user}/suspend', [AdminUserController::class, 'suspend']);
         Route::get('users/pending-tailors', [AdminUserController::class, 'pendingTailors']);

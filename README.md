@@ -64,3 +64,9 @@ php artisan test
 ```bash
 docker compose up -d
 ```
+
+## Phase 2 runtime validation notes
+- RBAC hardened using Policies + middleware (`active`, `tailor.approved`).
+- API responses normalized with Json Resources for key entities.
+- Additional FormRequests added to reduce inline validation and improve controller clarity.
+- Broadcasting auth tested via `/broadcasting/auth` feature test.

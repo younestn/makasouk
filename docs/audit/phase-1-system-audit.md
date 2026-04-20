@@ -54,3 +54,6 @@
 - PostgreSQL with PostGIS is available in local/dev environment.
 - Redis is available for queue/cache/broadcast scaling.
 - Existing domain logic is source-of-truth and must remain behaviorally stable.
+
+---
+Phase 2 supersedes runtime assumptions from this document. See `docs/audit/phase-2-runtime-validation.md` for validated runtime hardening outcomes.

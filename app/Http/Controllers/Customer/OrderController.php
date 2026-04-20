@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Customer;
 
 use App\Events\OrderCancelled;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\CancelOrderRequest;
 use App\Http\Requests\Customer\StoreOrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\OrderMatchingService;
 use Illuminate\Http\JsonResponse;
@@ -20,35 +22,34 @@ class OrderController extends Controller
 
     public function store(StoreOrderRequest $request): JsonResponse
     {
-        $validated = $request->validated();
+        $order = DB::transaction(function () use ($request) {
+            $data = $request->validated();
 
-        $order = DB::transaction(function () use ($validated, $request) {
             return Order::query()->create([
                 'customer_id' => $request->user()->id,
-                'product_id' => $validated['product_id'],
-                'measurements' => $validated['measurements'],
-                'delivery_latitude' => $validated['customer_location']['latitude'],
-                'delivery_longitude' => $validated['customer_location']['longitude'],
+                'product_id' => $data['product_id'],
+                'measurements' => $data['measurements'],
+                'delivery_latitude' => $data['customer_location']['latitude'],
+                'delivery_longitude' => $data['customer_location']['longitude'],
                 'delivery_location' => DB::raw(sprintf(
                     'ST_SetSRID(ST_MakePoint(%F, %F), 4326)',
-                    (float) $validated['customer_location']['longitude'],
-                    (float) $validated['customer_location']['latitude'],
+                    (float) $data['customer_location']['longitude'],
+                    (float) $data['customer_location']['latitude'],
                 )),
-                'status' => 'searching_for_tailor',
+                'status' => Order::STATUS_SEARCHING_FOR_TAILOR,
             ]);
         });
 
         $order->load('product.category');
-
         $tailors = $this->orderMatchingService->findNearbyTailors($order, 20);
 
         if ($tailors->isEmpty()) {
-            $order->update(['status' => 'no_tailors_available']);
+            $order->update(['status' => Order::STATUS_NO_TAILORS_AVAILABLE]);
 
             return response()->json([
                 'message' => 'لم يتم العثور على خياطين متاحين حالياً',
-                'status' => 'no_tailors_available',
-                'order' => $order->fresh(['product.category']),
+                'status' => Order::STATUS_NO_TAILORS_AVAILABLE,
+                'order' => new OrderResource($order->fresh(['product.category'])),
             ], 201);
         }
 
@@ -56,21 +57,20 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'تم إنشاء الطلب وجارٍ البحث عن خياط مناسب',
-            'status' => 'searching_for_tailor',
+            'status' => Order::STATUS_SEARCHING_FOR_TAILOR,
             'matched_tailors_count' => $tailors->count(),
-            'order' => $order,
+            'order' => new OrderResource($order),
         ], 201);
     }
 
     public function show(Order $order): JsonResponse
     {
-        abort_unless(auth()->user()?->role === 'customer', 403);
-        abort_unless($order->customer_id === auth()->id(), 403);
+        $this->authorize('view', $order);
 
         $order->load(['product.category', 'tailor.tailorProfile.category', 'review']);
 
         return response()->json([
-            'order' => $order,
+            'order' => new OrderResource($order),
             'status' => $order->status,
             'is_accepted' => $order->tailor_id !== null,
         ]);
@@ -78,43 +78,37 @@ class OrderController extends Controller
 
     public function history(Request $request): JsonResponse
     {
-        abort_unless($request->user()?->role === 'customer', 403);
-
         $orders = Order::query()
             ->where('customer_id', $request->user()->id)
-            ->whereIn('status', ['completed', 'cancelled', 'cancelled_by_customer', 'cancelled_by_tailor', 'no_tailors_available'])
+            ->whereIn('status', [
+                Order::STATUS_COMPLETED,
+                Order::STATUS_CANCELLED,
+                Order::STATUS_CANCELLED_BY_CUSTOMER,
+                Order::STATUS_CANCELLED_BY_TAILOR,
+                Order::STATUS_NO_TAILORS_AVAILABLE,
+            ])
             ->with(['tailor.tailorProfile', 'product.category', 'review'])
             ->latest('updated_at')
             ->paginate(20);
 
-        return response()->json(['data' => $orders]);
+        return response()->json(OrderResource::collection($orders));
     }
 
-    public function cancel(Request $request, Order $order): JsonResponse
+    public function cancel(CancelOrderRequest $request, Order $order): JsonResponse
     {
-        abort_unless($request->user()?->role === 'customer', 403);
-        abort_unless((int) $order->customer_id === (int) $request->user()->id, 403);
+        $this->authorize('cancelByCustomer', $order);
 
-        $validated = $request->validate([
-            'reason' => ['nullable', 'string', 'max:1000'],
-        ]);
-
-        $cancellableStatuses = ['searching_for_tailor', 'accepted', 'processing'];
-
-        if (! in_array($order->status, $cancellableStatuses, true)) {
-            return response()->json([
-                'message' => 'لا يمكن إلغاء هذا الطلب في حالته الحالية.',
-                'status' => $order->status,
-            ], 422);
+        if (! in_array($order->status, [Order::STATUS_SEARCHING_FOR_TAILOR, Order::STATUS_ACCEPTED, Order::STATUS_PROCESSING], true)) {
+            return response()->json(['message' => 'لا يمكن إلغاء هذا الطلب في حالته الحالية.', 'status' => $order->status], 422);
         }
 
-        $warning = $order->status === 'processing'
+        $warning = $order->status === Order::STATUS_PROCESSING
             ? 'تم إلغاء الطلب أثناء التنفيذ وقد تطبق غرامة حسب سياسة المنصة.'
             : null;
 
         $order->update([
-            'status' => 'cancelled_by_customer',
-            'cancellation_reason' => $validated['reason'] ?? null,
+            'status' => Order::STATUS_CANCELLED_BY_CUSTOMER,
+            'cancellation_reason' => $request->validated('reason'),
         ]);
 
         $order->refresh();
@@ -126,7 +120,7 @@ class OrderController extends Controller
         return response()->json([
             'message' => 'تم إلغاء الطلب بنجاح',
             'warning' => $warning,
-            'order' => $order,
+            'order' => new OrderResource($order),
         ]);
     }
 }

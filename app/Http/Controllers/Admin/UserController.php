@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\SuspendUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,7 +13,7 @@ class UserController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        abort_unless($request->user()?->role === 'admin', 403);
+        $this->authorize('manage', User::class);
 
         $validated = $request->validate([
             'role' => ['nullable', 'in:admin,customer,tailor'],
@@ -20,53 +22,42 @@ class UserController extends Controller
 
         $users = User::query()
             ->with('tailorProfile.category')
-            ->when(isset($validated['role']), function ($query) use ($validated) {
-                $query->where('role', $validated['role']);
-            })
-            ->when(array_key_exists('is_suspended', $validated), function ($query) use ($validated) {
-                $query->where('is_suspended', $validated['is_suspended']);
-            })
+            ->when(isset($validated['role']), fn ($q) => $q->where('role', $validated['role']))
+            ->when(array_key_exists('is_suspended', $validated), fn ($q) => $q->where('is_suspended', $validated['is_suspended']))
             ->latest()
             ->paginate(30);
 
-        return response()->json(['data' => $users]);
+        return response()->json(UserResource::collection($users));
     }
 
-    public function suspend(Request $request, User $user): JsonResponse
+    public function suspend(SuspendUserRequest $request, User $user): JsonResponse
     {
-        abort_unless($request->user()?->role === 'admin', 403);
-
-        if ($user->role === 'admin') {
-            return response()->json([
-                'message' => 'لا يمكن إيقاف حساب أدمن.',
-            ], 422);
-        }
+        $this->authorize('suspend', $user);
 
         $user->update(['is_suspended' => true]);
 
-        if ($user->role === 'tailor' && $user->tailorProfile) {
+        if ($user->role === User::ROLE_TAILOR && $user->tailorProfile) {
             $user->tailorProfile->update(['status' => 'offline']);
         }
 
         return response()->json([
             'message' => 'تم إيقاف الحساب بنجاح',
-            'user' => $user->fresh('tailorProfile'),
+            'reason' => $request->validated('reason'),
+            'user' => new UserResource($user->fresh('tailorProfile')),
         ]);
     }
 
-    public function pendingTailors(Request $request): JsonResponse
+    public function pendingTailors(): JsonResponse
     {
-        abort_unless($request->user()?->role === 'admin', 403);
+        $this->authorize('manage', User::class);
 
         $tailors = User::query()
-            ->where('role', 'tailor')
+            ->where('role', User::ROLE_TAILOR)
             ->whereNull('approved_at')
             ->with('tailorProfile.category')
             ->latest()
             ->paginate(30);
 
-        return response()->json([
-            'data' => $tailors,
-        ]);
+        return response()->json(UserResource::collection($tailors));
     }
 }

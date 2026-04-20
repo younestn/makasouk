@@ -6,6 +6,10 @@ use App\Events\OrderAccepted;
 use App\Events\OrderCancelledByTailor;
 use App\Events\OrderStatusUpdated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tailor\AcceptOrderRequest;
+use App\Http\Requests\Tailor\CancelOrderRequest;
+use App\Http\Requests\Tailor\UpdateOrderStatusRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,88 +18,55 @@ use Illuminate\Support\Facades\Event;
 
 class OrderController extends Controller
 {
-    public function acceptOrder(Request $request, Order $order): JsonResponse
+    public function acceptOrder(AcceptOrderRequest $request, Order $order): JsonResponse
     {
-        abort_unless($request->user()?->role === 'tailor', 403);
-
+        $this->authorize('acceptByTailor', $order);
         $tailorId = (int) $request->user()->id;
 
-        $validated = $request->validate([
-            'notified_tailor_ids' => ['nullable', 'array'],
-            'notified_tailor_ids.*' => ['integer', 'distinct'],
-        ]);
-
         $result = DB::transaction(function () use ($order, $tailorId) {
-            $lockedOrder = Order::query()
-                ->whereKey($order->id)
-                ->lockForUpdate()
-                ->firstOrFail();
+            $lockedOrder = Order::query()->whereKey($order->id)->lockForUpdate()->firstOrFail();
 
             if ($lockedOrder->tailor_id !== null) {
-                return [
-                    'success' => false,
-                    'status' => 409,
-                    'message' => 'عذراً، تم أخذ الطلب',
-                    'order' => $lockedOrder,
-                ];
+                return ['success' => false, 'status' => 409, 'message' => 'عذراً، تم أخذ الطلب', 'order' => $lockedOrder];
             }
 
             $lockedOrder->update([
                 'tailor_id' => $tailorId,
-                'status' => 'accepted',
+                'status' => Order::STATUS_ACCEPTED,
                 'accepted_at' => now(),
             ]);
 
-            return [
-                'success' => true,
-                'status' => 200,
-                'message' => 'تم قبول الطلب بنجاح',
-                'order' => $lockedOrder->fresh(['customer', 'tailor', 'product']),
-            ];
+            return ['success' => true, 'status' => 200, 'message' => 'تم قبول الطلب بنجاح', 'order' => $lockedOrder->fresh(['customer', 'tailor', 'product'])];
         });
 
         if (! $result['success']) {
-            return response()->json([
-                'message' => $result['message'],
-                'order' => $result['order'],
-            ], $result['status']);
+            return response()->json(['message' => $result['message'], 'order' => new OrderResource($result['order'])], $result['status']);
         }
 
-        $notifiedTailorIds = collect($validated['notified_tailor_ids'] ?? [])
+        $notifiedTailorIds = collect($request->validated('notified_tailor_ids', []))
             ->map(static fn ($id) => (int) $id)
             ->unique()
+            ->whenEmpty(fn ($collection) => $collection->push($tailorId))
             ->values()
             ->all();
 
-        if ($notifiedTailorIds === []) {
-            $notifiedTailorIds = [$tailorId];
-        }
-
         Event::dispatch(new OrderAccepted($result['order'], $tailorId, $notifiedTailorIds));
 
-        return response()->json([
-            'message' => $result['message'],
-            'order' => $result['order'],
-        ], 200);
+        return response()->json(['message' => $result['message'], 'order' => new OrderResource($result['order'])]);
     }
 
-    public function updateStatus(Request $request, Order $order): JsonResponse
+    public function updateStatus(UpdateOrderStatusRequest $request, Order $order): JsonResponse
     {
-        abort_unless($request->user()?->role === 'tailor', 403);
-        abort_unless((int) $order->tailor_id === (int) $request->user()->id, 403);
-
-        $validated = $request->validate([
-            'status' => ['required', 'in:processing,ready_for_delivery,completed'],
-        ]);
+        $this->authorize('updateByTailor', $order);
 
         $allowedTransitions = [
-            'accepted' => ['processing'],
-            'processing' => ['ready_for_delivery'],
-            'ready_for_delivery' => ['completed'],
+            Order::STATUS_ACCEPTED => [Order::STATUS_PROCESSING],
+            Order::STATUS_PROCESSING => [Order::STATUS_READY_FOR_DELIVERY],
+            Order::STATUS_READY_FOR_DELIVERY => [Order::STATUS_COMPLETED],
         ];
 
+        $nextStatus = $request->validated('status');
         $currentStatus = (string) $order->status;
-        $nextStatus = $validated['status'];
 
         if (! isset($allowedTransitions[$currentStatus]) || ! in_array($nextStatus, $allowedTransitions[$currentStatus], true)) {
             return response()->json([
@@ -110,52 +81,34 @@ class OrderController extends Controller
 
         Event::dispatch(new OrderStatusUpdated($order));
 
-        return response()->json([
-            'message' => 'تم تحديث حالة الطلب بنجاح',
-            'order' => $order,
-        ]);
+        return response()->json(['message' => 'تم تحديث حالة الطلب بنجاح', 'order' => new OrderResource($order)]);
     }
 
-    public function cancel(Request $request, Order $order): JsonResponse
+    public function cancel(CancelOrderRequest $request, Order $order): JsonResponse
     {
-        abort_unless($request->user()?->role === 'tailor', 403);
-        abort_unless((int) $order->tailor_id === (int) $request->user()->id, 403);
+        $this->authorize('cancelByTailor', $order);
 
-        $validated = $request->validate([
-            'reason' => ['nullable', 'string', 'max:1000'],
-        ]);
-
-        if (! in_array($order->status, ['accepted', 'processing', 'ready_for_delivery'], true)) {
-            return response()->json([
-                'message' => 'لا يمكن إلغاء هذا الطلب في حالته الحالية.',
-            ], 422);
+        if (! in_array($order->status, [Order::STATUS_ACCEPTED, Order::STATUS_PROCESSING, Order::STATUS_READY_FOR_DELIVERY], true)) {
+            return response()->json(['message' => 'لا يمكن إلغاء هذا الطلب في حالته الحالية.'], 422);
         }
 
-        $order->update([
-            'status' => 'cancelled_by_tailor',
-            'cancellation_reason' => $validated['reason'] ?? null,
-        ]);
-
+        $order->update(['status' => Order::STATUS_CANCELLED_BY_TAILOR, 'cancellation_reason' => $request->validated('reason')]);
         $order->refresh();
+
         Event::dispatch(new OrderCancelledByTailor($order));
 
-        return response()->json([
-            'message' => 'تم إلغاء الطلب من طرف الخياط.',
-            'order' => $order,
-        ]);
+        return response()->json(['message' => 'تم إلغاء الطلب من طرف الخياط.', 'order' => new OrderResource($order)]);
     }
 
     public function history(Request $request): JsonResponse
     {
-        abort_unless($request->user()?->role === 'tailor', 403);
-
         $orders = Order::query()
             ->where('tailor_id', $request->user()->id)
-            ->where('status', 'completed')
+            ->where('status', Order::STATUS_COMPLETED)
             ->with(['customer', 'product.category', 'review'])
             ->latest('updated_at')
             ->paginate(20);
 
-        return response()->json(['data' => $orders]);
+        return response()->json(OrderResource::collection($orders));
     }
 }
