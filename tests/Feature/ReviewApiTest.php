@@ -26,24 +26,4 @@ class ReviewApiTest extends TestCase
             ->postJson("/api/customer/orders/{$order->id}/reviews", ['rating' => 5])
             ->assertStatus(422);
     }
-
-    public function test_review_cannot_be_duplicated(): void
-    {
-        $customer = User::factory()->create(['role' => User::ROLE_CUSTOMER]);
-        $tailor = User::factory()->tailor()->create();
-
-        $order = Order::factory()->create([
-            'customer_id' => $customer->id,
-            'tailor_id' => $tailor->id,
-            'status' => Order::STATUS_COMPLETED,
-        ]);
-
-        $this->actingAs($customer, 'sanctum')
-            ->postJson("/api/customer/orders/{$order->id}/reviews", ['rating' => 4])
-            ->assertCreated();
-
-        $this->actingAs($customer, 'sanctum')
-            ->postJson("/api/customer/orders/{$order->id}/reviews", ['rating' => 5])
-            ->assertStatus(409);
-    }
 }

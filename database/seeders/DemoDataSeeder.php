@@ -40,36 +40,41 @@ class DemoDataSeeder extends Seeder
         $products = Product::query()->get();
 
         Order::factory()->count(20)->make()->each(function (Order $order) use ($customers, $tailors, $products): void {
-            $product = $products->random();
-            $tailor = $tailors->random();
-            $status = fake()->randomElement([
-                Order::STATUS_SEARCHING_FOR_TAILOR,
-                Order::STATUS_ACCEPTED,
-                Order::STATUS_PROCESSING,
-                Order::STATUS_COMPLETED,
-            ]);
+    $product = $products->random();
+    $tailor = $tailors->random();
+    $status = fake()->randomElement([
+        Order::STATUS_SEARCHING_FOR_TAILOR,
+        Order::STATUS_ACCEPTED,
+        Order::STATUS_PROCESSING,
+        Order::STATUS_COMPLETED,
+    ]);
 
-            Order::query()->create([
-                'customer_id' => $customers->random()->id,
-                'tailor_id' => $status === Order::STATUS_SEARCHING_FOR_TAILOR ? null : $tailor->id,
-                'product_id' => $product->id,
-                'measurements' => $order->measurements,
-                'delivery_latitude' => $order->delivery_latitude,
-                'delivery_longitude' => $order->delivery_longitude,
-                'status' => $status,
-                'accepted_at' => in_array($status, [Order::STATUS_ACCEPTED, Order::STATUS_PROCESSING, Order::STATUS_COMPLETED], true) ? now()->subDays(rand(1, 5)) : null,
-                'created_at' => now()->subDays(rand(1, 10)),
-                'updated_at' => now(),
-            ]);
-        });
+    $createdOrder = Order::query()->create([
+        'customer_id' => $customers->random()->id,
+        'tailor_id' => $status === Order::STATUS_SEARCHING_FOR_TAILOR ? null : $tailor->id,
+        'product_id' => $product->id,
+        'measurements' => $order->measurements,
+        'delivery_latitude' => $order->delivery_latitude,
+        'delivery_longitude' => $order->delivery_longitude,
+        'status' => $status,
+        'accepted_at' => in_array(
+            $status,
+            [Order::STATUS_ACCEPTED, Order::STATUS_PROCESSING, Order::STATUS_COMPLETED],
+            true
+        ) ? now()->subDays(rand(1, 5)) : null,
+        'created_at' => now()->subDays(rand(1, 10)),
+        'updated_at' => now(),
+    ]);
 
-        Order::query()->each(function (Order $order): void {
-            DB::statement('UPDATE orders SET delivery_location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?', [
-                $order->delivery_longitude,
-                $order->delivery_latitude,
-                $order->id,
-            ]);
-        });
+    DB::statement(
+        'UPDATE orders SET delivery_location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?',
+        [
+            $createdOrder->delivery_longitude,
+            $createdOrder->delivery_latitude,
+            $createdOrder->id,
+        ]
+    );
+});
 
         $completedOrders = Order::query()->where('status', Order::STATUS_COMPLETED)->take(5)->get();
 

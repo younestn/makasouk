@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
-use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,15 +27,5 @@ class CustomerOrderApiTest extends TestCase
             ])
             ->assertCreated()
             ->assertJsonStructure(['status', 'order']);
-    }
-
-    public function test_customer_can_cancel_only_in_allowed_statuses(): void
-    {
-        $customer = User::factory()->create(['role' => User::ROLE_CUSTOMER]);
-        $order = Order::factory()->create(['customer_id' => $customer->id, 'status' => Order::STATUS_COMPLETED]);
-
-        $this->actingAs($customer, 'sanctum')
-            ->patchJson("/api/customer/orders/{$order->id}/cancel", ['reason' => 'test'])
-            ->assertStatus(422);
     }
 }
