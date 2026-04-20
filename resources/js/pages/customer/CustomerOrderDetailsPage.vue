@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <section class="stack">
     <div class="actions">
       <RouterLink class="btn" :to="{ name: 'customerActiveOrders' }">Back to Active</RouterLink>
@@ -9,27 +9,31 @@
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
 
     <template v-else-if="order">
-      <div class="card stack">
-        <div class="row" style="justify-content: space-between;">
-          <h1 class="title">Order #{{ order.id }}</h1>
+      <div class="ui-card stack">
+        <div class="row" style="justify-content: space-between; align-items: flex-start;">
+          <UiSectionHeader :title="`Order #${order.id}`" description="Operational details and lifecycle guidance." />
           <OrderStatusBadge :status="order.status" />
         </div>
 
-        <p class="small">Created at: {{ formatDate(order.timestamps?.created_at) }}</p>
-        <p class="small" v-if="order.product">Product: {{ order.product.name }}</p>
-        <p class="small" v-if="order.tailor">Tailor: {{ order.tailor.name }}</p>
+        <div class="grid grid-2">
+          <UiStatBlock label="Created At" :value="formatDate(order.timestamps?.created_at)" />
+          <UiStatBlock label="Accepted At" :value="formatDate(order.timestamps?.accepted_at)" />
+          <UiStatBlock label="Product" :value="order.product?.name || '-'" />
+          <UiStatBlock label="Tailor" :value="order.tailor?.name || '-'" />
+        </div>
 
-        <div class="card" v-if="order.lifecycle">
+        <div class="ui-card" v-if="order.lifecycle">
           <p class="label">Lifecycle hints</p>
           <p class="small">Customer can cancel: {{ order.lifecycle.customer_can_cancel ? 'Yes' : 'No' }}</p>
-          <p class="small">Terminal: {{ order.lifecycle.is_terminal ? 'Yes' : 'No' }}</p>
+          <p class="small">Terminal state: {{ order.lifecycle.is_terminal ? 'Yes' : 'No' }}</p>
+          <p class="small">Allowed customer actions: {{ (order.lifecycle.allowed_actions_for_customer || []).join(', ') || 'none' }}</p>
         </div>
       </div>
 
       <div v-if="actionError" class="alert alert-danger">{{ actionError }}</div>
       <div v-if="actionMessage" class="alert alert-info">{{ actionMessage }}</div>
 
-      <div class="card stack" v-if="order.lifecycle?.customer_can_cancel">
+      <div class="ui-card stack" v-if="order.lifecycle?.customer_can_cancel">
         <h2 class="title" style="font-size: 1rem;">Cancel Order</h2>
         <div>
           <label class="label" for="cancelReason">Reason</label>
@@ -40,7 +44,7 @@
         </button>
       </div>
 
-      <div class="card stack" v-if="canSubmitReview">
+      <div class="ui-card stack" v-if="canSubmitReview">
         <h2 class="title" style="font-size: 1rem;">Submit Review</h2>
 
         <div>
@@ -67,6 +71,8 @@ import { RouterLink, useRoute } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import OrderStatusBadge from '@/components/orders/OrderStatusBadge.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { cancelOrder, fetchOrder, submitReview } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';

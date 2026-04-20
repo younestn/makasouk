@@ -2,7 +2,7 @@
   <div>
     <div v-if="realtimeStore.lastError" class="container" style="padding-top: 0.75rem;">
       <div class="alert alert-warning">
-        Realtime warning: {{ realtimeStore.lastError }}
+        Realtime warning: {{ realtimeStore.lastError }}. Order lists may require manual refresh.
       </div>
     </div>
 

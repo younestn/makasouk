@@ -1,13 +1,17 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Active Orders</h1>
-      <p class="subtitle">Realtime-enabled list of your active customer orders.</p>
-    </div>
+    <UiSectionHeader
+      title="Active Orders"
+      description="Realtime-enabled list of your currently active customer orders."
+    />
 
     <LoadingState v-if="loading" label="Loading active orders..." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
-    <EmptyState v-else-if="orders.length === 0" message="No active orders yet." />
+    <EmptyState v-else-if="orders.length === 0" message="No active orders yet.">
+      <template #actions>
+        <RouterLink class="btn btn-primary" :to="{ name: 'customerCreateOrder' }">Create your first order</RouterLink>
+      </template>
+    </EmptyState>
 
     <div v-else class="stack">
       <OrderCard
@@ -22,9 +26,11 @@
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import OrderCard from '@/components/orders/OrderCard.vue';
 import { fetchActiveOrders } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';

@@ -157,3 +157,44 @@ Realtime behavior:
 - Global notification/toast system and stronger retry/reconnect strategies
 - Broader frontend test coverage (component + flow tests)
 - Optional API mocking/storybook-like tooling for parallel frontend work
+
+## 9) Phase 6 completion addendum
+
+Phase 6 finalized the public-facing web layer while keeping the Phase 5 SPA architecture intact.
+
+### Public site entry and routes
+- New Vue public entry: `resources/js/public/main.js`
+- Public router and layout:
+  - `resources/js/public/router/index.js`
+  - `resources/js/public/layouts/PublicLayout.vue`
+- Public pages:
+  - `/`
+  - `/how-it-works`
+  - `/for-customers`
+  - `/for-tailors`
+  - `/faq`
+  - `/contact`
+
+Server rendering hosts:
+- `resources/views/public-site.blade.php` for public pages
+- `resources/views/spa.blade.php` for `/app/*`
+
+### UX and reusable UI primitives
+Reusable UI components introduced under `resources/js/components/ui`:
+- `UiButton.vue`
+- `UiCard.vue`
+- `UiSectionHeader.vue`
+- `UiStatBlock.vue`
+- `UiAlert.vue`
+- `UiFormField.vue`
+
+Applied improvements across customer/tailor shells:
+- clearer layout headers and navigation structure
+- improved realtime connection indicators
+- enhanced loading/error/empty states
+- clearer stat blocks and section headers on dashboards/detail pages
+- improved form readability on login and order creation
+
+### Lightweight frontend test addition
+- Added route registration test:
+  - `resources/js/public/router/__tests__/publicRoutes.test.js`

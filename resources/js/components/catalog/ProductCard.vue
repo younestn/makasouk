@@ -1,17 +1,16 @@
-<template>
-  <article class="card stack">
-    <div class="row" style="justify-content: space-between;">
-      <h3 class="title" style="font-size: 1rem; margin: 0;">{{ product.name }}</h3>
+﻿<template>
+  <article class="ui-card stack">
+    <div class="row" style="justify-content: space-between; align-items: flex-start;">
+      <h3 class="title" style="font-size: 1.05rem; margin: 0;">{{ product.name }}</h3>
       <span class="badge badge-neutral">{{ product.pricing_type }}</span>
     </div>
 
-    <p class="small">{{ product.description || 'No description.' }}</p>
+    <p class="small">{{ product.description || 'No description available for this product yet.' }}</p>
 
-    <p class="small">
-      Category: {{ product.category?.name || '-' }}
-    </p>
-
-    <p><strong>{{ product.price }}</strong></p>
+    <div class="row" style="justify-content: space-between;">
+      <p class="small"><strong>Category:</strong> {{ product.category?.name || '-' }}</p>
+      <p class="title" style="font-size: 1rem;">{{ product.price }}</p>
+    </div>
 
     <div class="actions">
       <RouterLink class="btn" :to="{ name: 'customerProductDetails', params: { id: product.id } }">

@@ -1,25 +1,19 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Tailor Dashboard</h1>
-      <p class="subtitle">Realtime order feed and profile summary.</p>
-
-      <div class="grid grid-2">
-        <div class="card">
-          <p class="label">Current Availability</p>
-          <h2 class="title">{{ profile.status || '-' }}</h2>
-        </div>
-        <div class="card">
-          <p class="label">Active Orders</p>
-          <h2 class="title">{{ profile.active_orders_count ?? 0 }}</h2>
-        </div>
-      </div>
-    </div>
+    <UiSectionHeader
+      title="Tailor Dashboard"
+      description="Realtime offer feed and profile summary for current operations."
+    />
 
     <LoadingState v-if="loading" label="Loading tailor dashboard..." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
 
-    <div class="card stack">
+    <div v-else class="grid grid-2">
+      <UiStatBlock label="Current Availability" :value="profile.status || '-'" tone="info" />
+      <UiStatBlock label="Active Orders" :value="profile.active_orders_count ?? 0" />
+    </div>
+
+    <div class="ui-card stack">
       <div class="row" style="justify-content: space-between;">
         <h2 class="title" style="font-size: 1rem;">Incoming Nearby Orders (Realtime)</h2>
         <span class="badge badge-neutral">{{ realtimeStore.tailorOffers.length }} offers</span>
@@ -31,16 +25,14 @@
       <EmptyState v-if="realtimeStore.tailorOffers.length === 0" message="No realtime offers right now." />
 
       <div v-else class="stack">
-        <article v-for="offer in realtimeStore.tailorOffers" :key="offer.order.id" class="card stack">
+        <article v-for="offer in realtimeStore.tailorOffers" :key="offer.order.id" class="ui-card stack">
           <div class="row" style="justify-content: space-between;">
             <h3 class="title" style="font-size: 1rem; margin: 0;">Order #{{ offer.order.id }}</h3>
             <span class="badge badge-info">{{ offer.event }}</span>
           </div>
 
           <p class="small">Product: {{ offer.order.product?.name || '-' }}</p>
-          <p class="small">
-            Delivery: {{ offer.order.delivery?.latitude }}, {{ offer.order.delivery?.longitude }}
-          </p>
+          <p class="small">Delivery: {{ offer.order.delivery?.latitude }}, {{ offer.order.delivery?.longitude }}</p>
 
           <div class="actions">
             <button class="btn btn-primary" :disabled="actionLoading" @click="acceptOffer(offer)">
@@ -62,6 +54,8 @@ import { RouterLink } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { acceptOrder, fetchTailorProfile } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';

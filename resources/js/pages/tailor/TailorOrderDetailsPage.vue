@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <section class="stack">
     <div class="actions">
       <RouterLink class="btn" :to="{ name: 'tailorActiveOrders' }">Back to Active Orders</RouterLink>
@@ -9,21 +9,24 @@
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
 
     <template v-else-if="order">
-      <div class="card stack">
-        <div class="row" style="justify-content: space-between;">
-          <h1 class="title">Order #{{ order.id }}</h1>
+      <div class="ui-card stack">
+        <div class="row" style="justify-content: space-between; align-items: flex-start;">
+          <UiSectionHeader :title="`Order #${order.id}`" description="Tailor-side lifecycle actions" />
           <OrderStatusBadge :status="order.status" />
         </div>
 
-        <p class="small">Product: {{ order.product?.name || '-' }}</p>
-        <p class="small">Customer: {{ order.customer?.name || '-' }}</p>
-        <p class="small" v-if="order.timestamps?.created_at">Created: {{ formatDate(order.timestamps.created_at) }}</p>
+        <div class="grid grid-2">
+          <UiStatBlock label="Product" :value="order.product?.name || '-'" />
+          <UiStatBlock label="Customer" :value="order.customer?.name || '-'" />
+          <UiStatBlock label="Created" :value="formatDate(order.timestamps?.created_at)" />
+          <UiStatBlock label="Accepted" :value="formatDate(order.timestamps?.accepted_at)" />
+        </div>
       </div>
 
       <div v-if="actionError" class="alert alert-danger">{{ actionError }}</div>
       <div v-if="actionMessage" class="alert alert-info">{{ actionMessage }}</div>
 
-      <div class="card stack" v-if="canAccept">
+      <div class="ui-card stack" v-if="canAccept">
         <h2 class="title" style="font-size: 1rem;">Accept Order</h2>
         <p class="small">This order came from realtime nearby notifications.</p>
         <button class="btn btn-primary" :disabled="actionLoading" @click="acceptCurrentOrder">
@@ -31,7 +34,7 @@
         </button>
       </div>
 
-      <div class="card stack" v-if="nextStatusOptions.length > 0">
+      <div class="ui-card stack" v-if="nextStatusOptions.length > 0">
         <h2 class="title" style="font-size: 1rem;">Update Status</h2>
         <select v-model="nextStatus" class="select">
           <option v-for="status in nextStatusOptions" :key="status" :value="status">{{ status }}</option>
@@ -41,7 +44,7 @@
         </button>
       </div>
 
-      <div class="card stack" v-if="order.lifecycle?.tailor_can_cancel">
+      <div class="ui-card stack" v-if="order.lifecycle?.tailor_can_cancel">
         <h2 class="title" style="font-size: 1rem;">Cancel Order</h2>
         <textarea v-model="cancelReason" class="textarea" rows="3"></textarea>
         <button class="btn btn-danger" :disabled="actionLoading" @click="cancelCurrentOrder">
@@ -58,6 +61,8 @@ import { RouterLink, useRoute } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import OrderStatusBadge from '@/components/orders/OrderStatusBadge.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import {
   acceptOrder,
   cancelTailorOrder,

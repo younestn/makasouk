@@ -1,36 +1,35 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Create Order</h1>
-      <p class="subtitle">Submit a customer order using the finalized contract payload.</p>
+    <UiSectionHeader
+      title="Create Order"
+      description="Submit measurements and delivery location using the integration-ready payload."
+    />
 
+    <div class="ui-card stack">
       <div v-if="successMessage" class="alert alert-info">{{ successMessage }}</div>
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
       <form class="stack" @submit.prevent="submit">
-        <div>
-          <label class="label" for="product">Product</label>
+        <UiFormField label="Product" field-id="product">
           <select id="product" v-model="form.productId" class="select" required>
             <option value="">Select product</option>
             <option v-for="product in products" :key="product.id" :value="String(product.id)">
               {{ product.name }} ({{ product.price }})
             </option>
           </select>
-        </div>
+        </UiFormField>
 
         <div class="grid grid-2">
-          <div>
-            <label class="label" for="latitude">Delivery Latitude</label>
+          <UiFormField label="Delivery Latitude" field-id="latitude">
             <input id="latitude" v-model.number="form.latitude" class="input" type="number" step="0.000001" required />
-          </div>
-          <div>
-            <label class="label" for="longitude">Delivery Longitude</label>
+          </UiFormField>
+
+          <UiFormField label="Delivery Longitude" field-id="longitude">
             <input id="longitude" v-model.number="form.longitude" class="input" type="number" step="0.000001" required />
-          </div>
+          </UiFormField>
         </div>
 
-        <div>
-          <label class="label" for="measurements">Measurements JSON</label>
+        <UiFormField label="Measurements JSON" field-id="measurements" hint='Example: {"height": 170, "waist": 80}'>
           <textarea
             id="measurements"
             v-model="form.measurementsJson"
@@ -38,8 +37,7 @@
             rows="6"
             required
           ></textarea>
-          <p class="small">Example: {"height": 170, "waist": 80}</p>
-        </div>
+        </UiFormField>
 
         <button class="btn btn-primary" type="submit" :disabled="loading">
           {{ loading ? 'Submitting...' : 'Create Order' }}
@@ -52,6 +50,8 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import UiFormField from '@/components/ui/UiFormField.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import { fetchProducts } from '@/services/catalogService';
 import { createOrder } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';

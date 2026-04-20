@@ -1,13 +1,13 @@
-<template>
+﻿<template>
   <div>
     <header class="navbar">
       <div class="container">
         <div class="stack" style="gap: 0.2rem;">
-          <strong>Makasouk Tailor</strong>
-          <span class="small" style="color: #e5e7eb;">{{ authStore.user?.name }} ({{ authStore.user?.email }})</span>
+          <p class="app-layout-title">Makasouk Tailor Workspace</p>
+          <p class="app-layout-subtitle">{{ authStore.user?.name }} · {{ authStore.user?.email }}</p>
         </div>
 
-        <nav class="nav-links">
+        <nav class="nav-links" aria-label="Tailor navigation">
           <RouterLink class="nav-link" :to="{ name: 'tailorDashboard' }">Dashboard</RouterLink>
           <RouterLink class="nav-link" :to="{ name: 'tailorActiveOrders' }">Active Orders</RouterLink>
           <RouterLink class="nav-link" :to="{ name: 'tailorAvailability' }">Availability</RouterLink>
@@ -15,9 +15,11 @@
         </nav>
 
         <div class="actions">
-          <span class="badge" :class="realtimeStore.isConnected ? 'badge-success' : 'badge-warning'">
+          <span class="status-chip" :class="realtimeStore.isConnected ? 'status-chip--connected' : 'status-chip--pending'">
+            <span class="status-dot"></span>
             {{ realtimeStore.isConnected ? 'Realtime Connected' : 'Realtime Pending' }}
           </span>
+          <a class="btn" href="/">Public Site</a>
           <button class="btn" type="button" @click="logout">Logout</button>
         </div>
       </div>

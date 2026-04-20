@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <section class="stack">
     <div class="actions">
       <RouterLink class="btn" :to="{ name: 'customerCatalog' }">Back to Catalog</RouterLink>
@@ -7,19 +7,12 @@
     <LoadingState v-if="loading" label="Loading product details..." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
 
-    <div v-else-if="product" class="card stack">
-      <h1 class="title">{{ product.name }}</h1>
-      <p class="subtitle">{{ product.description || 'No description.' }}</p>
+    <div v-else-if="product" class="ui-card stack">
+      <UiSectionHeader :title="product.name" :description="product.description || 'No description available.'" />
 
       <div class="grid grid-2">
-        <div>
-          <p class="label">Category</p>
-          <p>{{ product.category?.name || '-' }}</p>
-        </div>
-        <div>
-          <p class="label">Price</p>
-          <p>{{ product.price }} ({{ product.pricing_type }})</p>
-        </div>
+        <UiStatBlock label="Category" :value="product.category?.name || '-'" />
+        <UiStatBlock label="Price" :value="`${product.price} (${product.pricing_type})`" tone="info" />
       </div>
 
       <div class="actions">
@@ -36,6 +29,8 @@ import { onMounted, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { fetchProduct } from '@/services/catalogService';
 import { getErrorMessage } from '@/services/errorMessage';
 

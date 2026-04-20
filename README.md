@@ -169,3 +169,35 @@ VITE_REVERB_SCHEME=http
 
 ### Phase 5 doc
 - `docs/integration/web-client-foundation.md`
+
+## Phase 6 Public Website + UX Polish
+
+### Public website routes
+- `/`
+- `/how-it-works`
+- `/for-customers`
+- `/for-tailors`
+- `/faq`
+- `/contact`
+
+These routes now render the dedicated public Vue entrypoint (`resources/js/public/main.js`) through:
+- `resources/views/public-site.blade.php`
+
+### SPA + Admin coexistence
+- Client SPA remains mounted under `/app/*` via `resources/views/spa.blade.php`.
+- Filament admin panel remains under `/admin-panel`.
+- Public pages, app shell, and admin panel are now explicitly separated at route level.
+
+### Phase 6 frontend commands
+```bash
+npm install
+npm run build
+npm run test
+php artisan optimize:clear
+php artisan route:list
+php artisan test
+```
+
+### Phase 6 implementation docs
+- `docs/integration/web-client-foundation.md` (updated)
+- `docs/integration/public-website-and-ux-polish.md` (new)

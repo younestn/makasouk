@@ -1,9 +1,9 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Order History</h1>
-      <p class="subtitle">Completed and cancelled customer orders.</p>
-    </div>
+    <UiSectionHeader
+      title="Order History"
+      description="Completed and cancelled customer orders."
+    />
 
     <LoadingState v-if="loading" label="Loading order history..." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
@@ -25,6 +25,7 @@ import { onMounted, ref } from 'vue';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import OrderCard from '@/components/orders/OrderCard.vue';
 import { fetchOrderHistory } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';

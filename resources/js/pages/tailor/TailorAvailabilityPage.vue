@@ -1,18 +1,14 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Availability</h1>
-      <p class="subtitle">Control whether you can receive nearby orders.</p>
+    <UiSectionHeader
+      title="Availability"
+      description="Control whether you can receive nearby order offers."
+    />
 
-      <div class="row" style="justify-content: space-between;">
-        <div>
-          <p class="label">Current Status</p>
-          <h2 class="title">{{ availability.status || '-' }}</h2>
-        </div>
-        <div>
-          <p class="label">Active Orders</p>
-          <h2 class="title">{{ availability.active_orders_count ?? 0 }}</h2>
-        </div>
+    <div class="ui-card stack">
+      <div class="grid grid-2">
+        <UiStatBlock label="Current Status" :value="availability.status || '-'" tone="info" />
+        <UiStatBlock label="Active Orders" :value="availability.active_orders_count ?? 0" />
       </div>
 
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -27,6 +23,8 @@
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { fetchAvailability, toggleAvailability } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
 

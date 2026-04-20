@@ -1,9 +1,11 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Catalog</h1>
-      <p class="subtitle">Browse active categories and products.</p>
+    <UiSectionHeader
+      title="Catalog"
+      description="Browse active categories and products, then create an order directly."
+    />
 
+    <div class="ui-card stack">
       <div class="grid grid-2">
         <div>
           <label class="label">Category</label>
@@ -21,7 +23,7 @@
             v-model="filters.query"
             class="input"
             type="text"
-            placeholder="Search product name or description"
+            placeholder="Search by product name or description"
             @keyup.enter="loadProducts"
           />
         </div>
@@ -35,7 +37,11 @@
 
     <LoadingState v-if="loading" label="Loading products..." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="loadProducts" />
-    <EmptyState v-else-if="products.length === 0" message="No products matched your filters." />
+    <EmptyState v-else-if="products.length === 0" message="No products matched your filters.">
+      <template #actions>
+        <button class="btn" type="button" @click="resetFilters">Clear filters</button>
+      </template>
+    </EmptyState>
 
     <div v-else class="grid grid-2">
       <ProductCard v-for="product in products" :key="product.id" :product="product" />
@@ -48,6 +54,7 @@ import { onMounted, reactive, ref } from 'vue';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import ProductCard from '@/components/catalog/ProductCard.vue';
 import { fetchCategories, fetchProducts } from '@/services/catalogService';
 import { getErrorMessage } from '@/services/errorMessage';

@@ -1,23 +1,17 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Customer Dashboard</h1>
-      <p class="subtitle">Quick operational summary for your account.</p>
+    <UiSectionHeader
+      title="Customer Dashboard"
+      description="Quick operational snapshot for your account and order activity."
+    />
 
-      <div class="grid grid-2">
-        <div class="card">
-          <p class="label">Active Orders</p>
-          <h2 class="title">{{ stats.active }}</h2>
-        </div>
-        <div class="card">
-          <p class="label">History Orders</p>
-          <h2 class="title">{{ stats.history }}</h2>
-        </div>
-      </div>
-    </div>
-
-    <LoadingState v-if="loading" label="Loading customer dashboard..." />
+    <LoadingState v-if="loading" label="Loading customer dashboard..." hint="Fetching active and history counts." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
+
+    <div v-else class="grid grid-2">
+      <UiStatBlock label="Active Orders" :value="stats.active" hint="Realtime-enabled" tone="info" />
+      <UiStatBlock label="History Orders" :value="stats.history" hint="Completed and cancelled" />
+    </div>
   </section>
 </template>
 
@@ -25,6 +19,8 @@
 import { onMounted, reactive, ref } from 'vue';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { fetchActiveOrders, fetchOrderHistory } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
 

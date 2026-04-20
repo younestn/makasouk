@@ -1,9 +1,6 @@
-<template>
+﻿<template>
   <section class="stack">
-    <div class="card stack">
-      <h1 class="title">Tailor Active Orders</h1>
-      <p class="subtitle">Orders currently assigned to you.</p>
-    </div>
+    <UiSectionHeader title="Tailor Active Orders" description="Orders currently assigned to you." />
 
     <LoadingState v-if="loading" label="Loading active tailor orders..." />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
@@ -25,6 +22,7 @@ import { onMounted, ref, watch } from 'vue';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import EmptyState from '@/components/common/EmptyState.vue';
+import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import OrderCard from '@/components/orders/OrderCard.vue';
 import { fetchTailorActiveOrders } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
