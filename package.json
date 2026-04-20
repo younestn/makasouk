@@ -1,0 +1,7 @@
+{
+    "name": "makasouk",
+    "private": true,
+    "scripts": {
+        "build": "node -e \"console.log('No frontend asset build is required for this backend repository.')\""
+    }
+}

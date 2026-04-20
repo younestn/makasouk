@@ -28,9 +28,10 @@ Edit `.env` for Postgres, Redis, Sanctum domains, and Reverb keys.
 ## Install dependencies
 ```bash
 composer install
-composer require laravel/sanctum laravel/reverb
 php artisan vendor:publish --provider="Laravel\\Sanctum\\SanctumServiceProvider"
 ```
+
+Filament admin panel package is included in `composer.json` (`filament/filament:^3.3`).
 
 ## Migrate and seed
 ```bash
@@ -70,3 +71,30 @@ docker compose up -d
 - API responses normalized with Json Resources for key entities.
 - Additional FormRequests added to reduce inline validation and improve controller clarity.
 - Broadcasting auth tested via `/broadcasting/auth` feature test.
+
+## Phase 3.1 Admin Panel (Filament)
+- Panel URL: `/admin-panel`
+- Access: admin users only (`role=admin`, `is_suspended=false`)
+- Core resources: Users, Categories, Products, Orders, Reviews
+- Pending tailor approvals: handled in Users resource via `Pending Tailors` filter + `Approve Tailor` action
+
+### Filament install and runtime validation
+```bash
+composer install
+npm install
+npm run build
+php artisan optimize:clear
+php artisan migrate:fresh --seed
+php artisan test --filter=Filament
+php artisan test
+```
+
+`npm run build` is a backend-safe no-op in this repository (there is no customer/tailor frontend bundle in this stage).
+
+### Safety safeguards
+- Panel access enforced by `User::canAccessPanel()`.
+- User suspend action prevents self-lockout and blocks suspending admin accounts.
+- Tailor approval and suspension actions run in transactions.
+- Category delete is blocked when products or tailor profiles still reference the category.
+- Orders remain observability-first (list/view, no arbitrary status mutation).
+- Review moderation delete action is intentionally disabled in this stage.

@@ -48,6 +48,8 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::get('orders/statistics', [AdminOrderController::class, 'statistics']);
         Route::get('users', [AdminUserController::class, 'index']);
         Route::patch('users/{user}/suspend', [AdminUserController::class, 'suspend']);
+        Route::patch('users/{user}/unsuspend', [AdminUserController::class, 'unsuspend']);
+        Route::patch('users/{user}/approve-tailor', [AdminUserController::class, 'approveTailor']);
         Route::get('users/pending-tailors', [AdminUserController::class, 'pendingTailors']);
     });
 });

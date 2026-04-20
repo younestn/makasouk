@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SuspendUserRequest;
 use App\Http\Resources\UserResource;
+use App\Models\TailorProfile;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -34,16 +36,56 @@ class UserController extends Controller
     {
         $this->authorize('suspend', $user);
 
-        $user->update(['is_suspended' => true]);
+        DB::transaction(function () use ($user): void {
+            $user->update(['is_suspended' => true]);
 
-        if ($user->role === User::ROLE_TAILOR && $user->tailorProfile) {
-            $user->tailorProfile->update(['status' => 'offline']);
-        }
+            if ($user->role === User::ROLE_TAILOR && $user->tailorProfile) {
+                $user->tailorProfile->update(['status' => TailorProfile::STATUS_OFFLINE]);
+            }
+        });
 
         return response()->json([
-            'message' => 'تم إيقاف الحساب بنجاح',
+            'message' => 'User suspended successfully.',
             'reason' => $request->validated('reason'),
             'user' => new UserResource($user->fresh('tailorProfile')),
+        ]);
+    }
+
+    public function unsuspend(User $user): JsonResponse
+    {
+        $this->authorize('manage', User::class);
+
+        $user->update(['is_suspended' => false]);
+
+        return response()->json([
+            'message' => 'User unsuspended successfully.',
+            'user' => new UserResource($user->fresh('tailorProfile')),
+        ]);
+    }
+
+    public function approveTailor(User $user): JsonResponse
+    {
+        $this->authorize('manage', User::class);
+
+        if ($user->role !== User::ROLE_TAILOR) {
+            return response()->json(['message' => 'Only tailor accounts can be approved.'], 422);
+        }
+
+        if ($user->approved_at !== null) {
+            return response()->json(['message' => 'Tailor is already approved.'], 422);
+        }
+
+        DB::transaction(function () use ($user): void {
+            $user->update(['approved_at' => now()]);
+
+            if ($user->tailorProfile) {
+                $user->tailorProfile->update(['status' => TailorProfile::STATUS_OFFLINE]);
+            }
+        });
+
+        return response()->json([
+            'message' => 'Tailor approved successfully.',
+            'user' => new UserResource($user->fresh('tailorProfile.category')),
         ]);
     }
 
