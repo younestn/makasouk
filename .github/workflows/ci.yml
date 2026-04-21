@@ -2,6 +2,9 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
+      - work
   pull_request:
   workflow_dispatch:
 
@@ -16,7 +19,8 @@ jobs:
   quality-gates:
     name: Backend + Frontend Quality Gates
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 30
+
     services:
       postgres:
         image: postgis/postgis:16-3.4
@@ -27,36 +31,62 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d makasouk"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready -U postgres -d makasouk"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
       redis:
-        image: redis:7-alpine
+        image: redis:7
         ports:
           - 6379:6379
         options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       APP_ENV: testing
       APP_DEBUG: true
-      APP_URL: http://127.0.0.1:8000
+      APP_URL: http://127.0.0.1:8010
+
       DB_CONNECTION: pgsql
       DB_HOST: 127.0.0.1
       DB_PORT: 5432
       DB_DATABASE: makasouk
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
+
+      CACHE_STORE: file
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: file
+      BROADCAST_CONNECTION: log
+
+      REDIS_CLIENT: predis
       REDIS_HOST: 127.0.0.1
       REDIS_PORT: 6379
-      CACHE_STORE: redis
-      QUEUE_CONNECTION: sync
-      SESSION_DRIVER: array
-      BROADCAST_CONNECTION: log
-      SANCTUM_STATEFUL_DOMAINS: 127.0.0.1:8000,localhost:8000
+      REDIS_PASSWORD: null
+
+      SANCTUM_STATEFUL_DOMAINS: 127.0.0.1:8010,localhost:8010
+
+      REVERB_APP_ID: makasouk-app
+      REVERB_APP_KEY: makasouk-key
+      REVERB_APP_SECRET: makasouk-secret
+      REVERB_HOST: 127.0.0.1
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8080
+      REVERB_ALLOWED_ORIGINS: 127.0.0.1:8010,localhost:8010
+
+      SESSION_SECURE_COOKIE: false
+      SESSION_SAME_SITE: lax
+      LOG_CHANNEL: stack
+      LOG_STACK: single
+
+      LARAVEL_BYPASS_ENV_CHECK: "1"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -65,7 +95,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-          extensions: mbstring, xml, ctype, json, tokenizer, fileinfo, pdo_pgsql, pgsql, bcmath
+          extensions: mbstring, bcmath, ctype, fileinfo, openssl, PDO, pdo_pgsql, pgsql
           coverage: none
 
       - name: Setup Node
@@ -82,13 +112,13 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate app key
-        run: php artisan key:generate --force
+        run: php artisan key:generate
 
       - name: Install JS dependencies
         run: npm ci
 
       - name: Migrate and seed database
-        run: php artisan migrate:fresh --seed --force
+        run: php artisan migrate:fresh --seed
 
       - name: Frontend tests
         run: npm run test
@@ -103,28 +133,25 @@ jobs:
         run: php artisan test
 
       - name: Route smoke checks
+        shell: bash
         run: |
           set -euo pipefail
-          php artisan serve --host=127.0.0.1 --port=8010 >/tmp/laravel-serve.log 2>&1 &
-          SERVER_PID=$!
-          trap "kill $SERVER_PID" EXIT
 
-          sleep 2
-          echo "Waiting for Laravel dev server on http://127.0.0.1:8010 ..."
-          for attempt in {1..30}; do
-            if curl -fsS "http://127.0.0.1:8010/" >/dev/null; then
-              echo "Laravel dev server is reachable."
+          php artisan serve --host=127.0.0.1 --port=8010 >/tmp/laravel-serve.log 2>&1 &
+
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8010/ >/dev/null; then
+              echo "Laravel server is ready."
               break
             fi
 
-            if [ "$attempt" -eq 30 ]; then
-              echo "Route smoke check failed: Laravel dev server never became reachable."
-              echo "---- /tmp/laravel-serve.log (tail -n 200) ----"
+            if [ "$i" -eq 30 ]; then
+              echo "Laravel server did not become ready in time."
+              echo "===== /tmp/laravel-serve.log ====="
               tail -n 200 /tmp/laravel-serve.log || true
               exit 1
             fi
 
-            echo "Server not ready yet (attempt ${attempt}/30), retrying..."
             sleep 1
           done
 
@@ -140,24 +167,21 @@ jobs:
           )
 
           for route in "${routes[@]}"; do
-            url="http://127.0.0.1:8010${route}"
-            echo "Checking route: ${url}"
-
-            if ! curl -fsS "${url}" >/dev/null; then
-              echo "Route smoke check failed at: ${route}"
-              echo "---- /tmp/laravel-serve.log (tail -n 200) ----"
+            echo "Checking route: ${route}"
+            if ! curl -fsS "http://127.0.0.1:8010${route}" >/dev/null; then
+              echo "Route failed: ${route}"
+              echo "===== /tmp/laravel-serve.log ====="
               tail -n 200 /tmp/laravel-serve.log || true
               exit 1
             fi
           done
 
-          echo "All route smoke checks passed."
-
-  e2e:
+  playwright-e2e:
     name: Playwright E2E
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: quality-gates
-    timeout-minutes: 45
+
     services:
       postgres:
         image: postgis/postgis:16-3.4
@@ -168,37 +192,60 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres -d makasouk"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="pg_isready -U postgres -d makasouk"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
       redis:
-        image: redis:7-alpine
+        image: redis:7
         ports:
           - 6379:6379
         options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       APP_ENV: testing
       APP_DEBUG: true
       APP_URL: http://127.0.0.1:8000
+
       DB_CONNECTION: pgsql
       DB_HOST: 127.0.0.1
       DB_PORT: 5432
       DB_DATABASE: makasouk
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
+
+      CACHE_STORE: file
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: file
+      BROADCAST_CONNECTION: log
+
+      REDIS_CLIENT: predis
       REDIS_HOST: 127.0.0.1
       REDIS_PORT: 6379
-      CACHE_STORE: redis
-      QUEUE_CONNECTION: sync
-      SESSION_DRIVER: array
-      BROADCAST_CONNECTION: log
+      REDIS_PASSWORD: null
+
       SANCTUM_STATEFUL_DOMAINS: 127.0.0.1:8000,localhost:8000
-      CI: true
+
+      REVERB_APP_ID: makasouk-app
+      REVERB_APP_KEY: makasouk-key
+      REVERB_APP_SECRET: makasouk-secret
+      REVERB_HOST: 127.0.0.1
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+      REVERB_SERVER_HOST: 0.0.0.0
+      REVERB_SERVER_PORT: 8080
+      REVERB_ALLOWED_ORIGINS: 127.0.0.1:8000,localhost:8000
+
+      SESSION_SECURE_COOKIE: false
+      SESSION_SAME_SITE: lax
+      LOG_CHANNEL: stack
+      LOG_STACK: single
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -207,7 +254,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-          extensions: mbstring, xml, ctype, json, tokenizer, fileinfo, pdo_pgsql, pgsql, bcmath
+          extensions: mbstring, bcmath, ctype, fileinfo, openssl, PDO, pdo_pgsql, pgsql
           coverage: none
 
       - name: Setup Node
@@ -224,25 +271,19 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate app key
-        run: php artisan key:generate --force
+        run: php artisan key:generate
 
       - name: Install JS dependencies
         run: npm ci
 
-      - name: Build frontend assets
+      - name: Build frontend
         run: npm run build
 
+      - name: Prepare database
+        run: php artisan migrate:fresh --seed
+
       - name: Install Playwright browser
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
 
-      - name: Run E2E suite
+      - name: Run Playwright E2E
         run: npm run e2e:ci
-
-      - name: Upload Playwright artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-artifacts
-          path: |
-            playwright-report
-            test-results
