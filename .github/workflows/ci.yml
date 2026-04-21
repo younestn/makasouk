@@ -104,13 +104,54 @@ jobs:
 
       - name: Route smoke checks
         run: |
+          set -euo pipefail
           php artisan serve --host=127.0.0.1 --port=8010 >/tmp/laravel-serve.log 2>&1 &
           SERVER_PID=$!
           trap "kill $SERVER_PID" EXIT
-          sleep 5
-          curl -fsS http://127.0.0.1:8010/ >/dev/null
-          curl -fsS http://127.0.0.1:8010/app/login >/dev/null
-          curl -fsS http://127.0.0.1:8010/admin-panel/login >/dev/null
+
+          sleep 2
+          echo "Waiting for Laravel dev server on http://127.0.0.1:8010 ..."
+          for attempt in {1..30}; do
+            if curl -fsS "http://127.0.0.1:8010/" >/dev/null; then
+              echo "Laravel dev server is reachable."
+              break
+            fi
+
+            if [ "$attempt" -eq 30 ]; then
+              echo "Route smoke check failed: Laravel dev server never became reachable."
+              echo "---- /tmp/laravel-serve.log (tail -n 200) ----"
+              tail -n 200 /tmp/laravel-serve.log || true
+              exit 1
+            fi
+
+            echo "Server not ready yet (attempt ${attempt}/30), retrying..."
+            sleep 1
+          done
+
+          routes=(
+            "/"
+            "/how-it-works"
+            "/for-customers"
+            "/for-tailors"
+            "/faq"
+            "/contact"
+            "/app/login"
+            "/admin-panel/login"
+          )
+
+          for route in "${routes[@]}"; do
+            url="http://127.0.0.1:8010${route}"
+            echo "Checking route: ${url}"
+
+            if ! curl -fsS "${url}" >/dev/null; then
+              echo "Route smoke check failed at: ${route}"
+              echo "---- /tmp/laravel-serve.log (tail -n 200) ----"
+              tail -n 200 /tmp/laravel-serve.log || true
+              exit 1
+            fi
+          done
+
+          echo "All route smoke checks passed."
 
   e2e:
     name: Playwright E2E
