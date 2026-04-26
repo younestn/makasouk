@@ -1,0 +1,1392 @@
+<!DOCTYPE html><html lang="en" dir="ltr" class="fi min-h-screen"><head>
+        
+
+        <meta charset="utf-8">
+        <meta name="csrf-token" content="fsSoXAqsbZMhQgwqe6FpNXAwjQtOJETxd2P4wVPf">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        
+        <title>
+            Makasouk Atelier Control Center -  Makasouk Admin
+        </title>
+
+        
+
+        <style>
+            [x-cloak=''],
+            [x-cloak='x-cloak'],
+            [x-cloak='1'] {
+                display: none !important;
+            }
+
+            @media (max-width: 1023px) {
+                [x-cloak='-lg'] {
+                    display: none !important;
+                }
+            }
+
+            @media (min-width: 1024px) {
+                [x-cloak='lg'] {
+                    display: none !important;
+                }
+            }
+        </style>
+
+        <link href="http://127.0.0.1:8010/css/filament/forms/forms.css?v=3.3.0.0" rel="stylesheet" data-navigate-track="">
+                <link href="http://127.0.0.1:8010/css/filament/support/support.css?v=3.3.0.0" rel="stylesheet" data-navigate-track="">
+    
+<style>
+    :root {
+         --danger-50:254, 242, 242;  --danger-100:254, 226, 226;  --danger-200:254, 202, 202;  --danger-300:252, 165, 165;  --danger-400:248, 113, 113;  --danger-500:239, 68, 68;  --danger-600:220, 38, 38;  --danger-700:185, 28, 28;  --danger-800:153, 27, 27;  --danger-900:127, 29, 29;  --danger-950:69, 10, 10;  --gray-50:250, 250, 250;  --gray-100:244, 244, 245;  --gray-200:228, 228, 231;  --gray-300:212, 212, 216;  --gray-400:161, 161, 170;  --gray-500:113, 113, 122;  --gray-600:82, 82, 91;  --gray-700:63, 63, 70;  --gray-800:39, 39, 42;  --gray-900:24, 24, 27;  --gray-950:9, 9, 11;  --info-50:239, 246, 255;  --info-100:219, 234, 254;  --info-200:191, 219, 254;  --info-300:147, 197, 253;  --info-400:96, 165, 250;  --info-500:59, 130, 246;  --info-600:37, 99, 235;  --info-700:29, 78, 216;  --info-800:30, 64, 175;  --info-900:30, 58, 138;  --info-950:23, 37, 84;  --primary-50:255, 251, 235;  --primary-100:254, 243, 199;  --primary-200:253, 230, 138;  --primary-300:252, 211, 77;  --primary-400:251, 191, 36;  --primary-500:245, 158, 11;  --primary-600:217, 119, 6;  --primary-700:180, 83, 9;  --primary-800:146, 64, 14;  --primary-900:120, 53, 15;  --primary-950:69, 26, 3;  --success-50:240, 253, 244;  --success-100:220, 252, 231;  --success-200:187, 247, 208;  --success-300:134, 239, 172;  --success-400:74, 222, 128;  --success-500:34, 197, 94;  --success-600:22, 163, 74;  --success-700:21, 128, 61;  --success-800:22, 101, 52;  --success-900:20, 83, 45;  --success-950:5, 46, 22;  --warning-50:255, 251, 235;  --warning-100:254, 243, 199;  --warning-200:253, 230, 138;  --warning-300:252, 211, 77;  --warning-400:251, 191, 36;  --warning-500:245, 158, 11;  --warning-600:217, 119, 6;  --warning-700:180, 83, 9;  --warning-800:146, 64, 14;  --warning-900:120, 53, 15;  --warning-950:69, 26, 3;     }
+</style>
+
+        <link rel="preload" as="style" href="http://127.0.0.1:8010/build/assets/theme-So36zW4I.css"><link rel="stylesheet" href="http://127.0.0.1:8010/build/assets/theme-So36zW4I.css" data-navigate-track="reload">
+        
+            <link rel="preconnect" href="https://fonts.bunny.net">
+            <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&amp;display=swap" rel="stylesheet">
+        
+
+        <style>
+            :root {
+                --font-family: 'Inter';
+                --sidebar-width: 17rem;
+                --collapsed-sidebar-width: 4.5rem;
+                --default-theme-mode: system;
+            }
+        </style>
+
+        
+        
+
+                    <script>
+                const loadDarkMode = () => {
+                    window.theme = localStorage.getItem('theme') ?? 'system'
+                    if (
+                        window.theme === 'dark' ||
+                        (window.theme === 'system' &&
+                            window.matchMedia('(prefers-color-scheme: dark)')
+                                .matches)
+                    ) {
+                        document.documentElement.classList.add('dark')
+                    }
+                }
+
+                loadDarkMode()
+
+                document.addEventListener('livewire:navigated', loadDarkMode)
+            </script>
+        
+        
+    <!-- Livewire Styles --><style>[wire\:loading][wire\:loading], [wire\:loading\.delay][wire\:loading\.delay], [wire\:loading\.inline-block][wire\:loading\.inline-block], [wire\:loading\.inline][wire\:loading\.inline], [wire\:loading\.block][wire\:loading\.block], [wire\:loading\.flex][wire\:loading\.flex], [wire\:loading\.table][wire\:loading\.table], [wire\:loading\.grid][wire\:loading\.grid], [wire\:loading\.inline-flex][wire\:loading\.inline-flex] {display: none;}[wire\:loading\.delay\.none][wire\:loading\.delay\.none], [wire\:loading\.delay\.shortest][wire\:loading\.delay\.shortest], [wire\:loading\.delay\.shorter][wire\:loading\.delay\.shorter], [wire\:loading\.delay\.short][wire\:loading\.delay\.short], [wire\:loading\.delay\.default][wire\:loading\.delay\.default], [wire\:loading\.delay\.long][wire\:loading\.delay\.long], [wire\:loading\.delay\.longer][wire\:loading\.delay\.longer], [wire\:loading\.delay\.longest][wire\:loading\.delay\.longest] {display: none;}[wire\:offline][wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}:root {--livewire-progress-bar-color: #2299dd;}[x-cloak] {display: none !important;}[wire\:cloak] {display: none !important;}dialog#livewire-error::backdrop {background-color: rgba(0, 0, 0, .6);}</style>
+<style>/* Make clicks pass-through */
+
+    #nprogress {
+      pointer-events: none;
+    }
+
+    #nprogress .bar {
+      background: var(--livewire-progress-bar-color, #29d);
+
+      position: fixed;
+      z-index: 1031;
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 2px;
+    }
+
+    /* Fancy blur effect */
+    #nprogress .peg {
+      display: block;
+      position: absolute;
+      right: 0px;
+      width: 100px;
+      height: 100%;
+      box-shadow: 0 0 10px var(--livewire-progress-bar-color, #29d), 0 0 5px var(--livewire-progress-bar-color, #29d);
+      opacity: 1.0;
+
+      -webkit-transform: rotate(3deg) translate(0px, -4px);
+          -ms-transform: rotate(3deg) translate(0px, -4px);
+              transform: rotate(3deg) translate(0px, -4px);
+    }
+
+    /* Remove these to get rid of the spinner */
+    #nprogress .spinner {
+      display: block;
+      position: fixed;
+      z-index: 1031;
+      top: 15px;
+      right: 15px;
+    }
+
+    #nprogress .spinner-icon {
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+
+      border: solid 2px transparent;
+      border-top-color: var(--livewire-progress-bar-color, #29d);
+      border-left-color: var(--livewire-progress-bar-color, #29d);
+      border-radius: 50%;
+
+      -webkit-animation: nprogress-spinner 400ms linear infinite;
+              animation: nprogress-spinner 400ms linear infinite;
+    }
+
+    .nprogress-custom-parent {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .nprogress-custom-parent #nprogress .spinner,
+    .nprogress-custom-parent #nprogress .bar {
+      position: absolute;
+    }
+
+    @-webkit-keyframes nprogress-spinner {
+      0%   { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes nprogress-spinner {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    </style></head>
+
+    <body class="fi-body fi-panel-admin min-h-screen bg-gray-50 font-normal text-gray-950 antialiased dark:bg-gray-950 dark:text-white">
+        
+
+        <div class="fi-layout flex min-h-screen w-full flex-row-reverse overflow-x-clip">
+        <div x-data="{}" x-bind:style="'display: flex; opacity:1;'" class="fi-main-ctn w-screen flex-1 flex-col opacity-0" style="display: flex; opacity:1;">
+                            
+
+                <div class="fi-topbar sticky top-0 z-20 overflow-x-clip">
+    <nav class="flex h-16 items-center gap-x-4 bg-white px-4 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 md:px-6 lg:px-8">
+        
+
+                    <button style="--c-300: var(--gray-300); --c-400: var(--gray-400); --c-500: var(--gray-500); --c-600: var(--gray-600); display: none;" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-1.5 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-topbar-open-sidebar-btn lg:hidden" title="Expand sidebar" type="button" wire:loading.attr="disabled" x-data="{}" x-on:click="$store.sidebar.open()" x-show="! $store.sidebar.isOpen">
+                    <span class="sr-only">
+                Expand sidebar
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+</svg>
+        
+            </button>
+
+            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-1.5 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-topbar-close-sidebar-btn lg:hidden" title="Collapse sidebar" type="button" wire:loading.attr="disabled" x-data="{}" x-on:click="$store.sidebar.close()" x-show="$store.sidebar.isOpen">
+                    <span class="sr-only">
+                Collapse sidebar
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+</svg>
+        
+            </button>
+        
+        
+        <div x-persist="topbar.end" class="ms-auto flex items-center gap-x-4">
+            
+
+            
+            
+
+                            
+                <div x-data="{
+        toggle: function (event) {
+            $refs.panel.toggle(event)
+        },
+
+        open: function (event) {
+            $refs.panel.open(event)
+        },
+
+        close: function (event) {
+            $refs.panel.close(event)
+        },
+    }" class="fi-dropdown fi-user-menu">
+    <div x-on:click="toggle" class="fi-dropdown-trigger flex cursor-pointer">
+        <button aria-label="User menu" type="button" class="shrink-0">
+            <img class="fi-avatar object-cover object-center fi-circular rounded-full h-8 w-8 fi-user-avatar" src="https://ui-avatars.com/api/?name=S+A&amp;color=FFFFFF&amp;background=09090b" alt="Avatar of System Admin">
+        </button>
+    </div>
+
+            <div x-float.placement.bottom-end.flip.teleport.offset="{ offset: 8,  }" x-ref="panel" x-transition:enter-start="opacity-0" x-transition:leave-end="opacity-0" class="fi-dropdown-panel absolute z-10 w-screen divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-gray-950/5 transition dark:divide-white/5 dark:bg-gray-900 dark:ring-white/10 !max-w-[14rem]" style="position: fixed; display: none;">
+            <div class="fi-dropdown-header flex w-full gap-2 p-3 text-sm  fi-dropdown-header-color-gray fi-color-gray">
+            <svg class="fi-dropdown-header-icon h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-5.5-2.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0ZM10 12a5.99 5.99 0 0 0-4.793 2.39A6.483 6.483 0 0 0 10 16.5a6.483 6.483 0 0 0 4.793-2.11A5.99 5.99 0 0 0 10 12Z" clip-rule="evenodd"></path>
+</svg>    
+    <span class="fi-dropdown-header-label flex-1 truncate text-start text-gray-700 dark:text-gray-200" style="">
+        System Admin
+    </span>
+</div>
+        
+        
+    
+            <div class="fi-dropdown-list p-1">
+    <div x-data="{ theme: null }" x-init="
+        $watch('theme', () =&gt; {
+            $dispatch('theme-changed', theme)
+        })
+
+        theme = localStorage.getItem('theme') || 'system'    " class="fi-theme-switcher grid grid-flow-col gap-x-1">
+    <button aria-label="Enable light theme" type="button" x-on:click="(theme = 'light') &amp;&amp; close()" x-tooltip="{
+        content: 'Enable light theme',
+        theme: $store.theme,
+    }" class="fi-theme-switcher-btn flex justify-center rounded-md p-2 outline-none transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400" x-bind:class="
+        theme === 'light'            ? 'fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400'
+            : 'text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400'
+    ">
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path d="M10 2a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 2ZM10 15a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 10 15ZM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6ZM15.657 5.404a.75.75 0 1 0-1.06-1.06l-1.061 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06ZM6.464 14.596a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06ZM18 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 18 10ZM5 10a.75.75 0 0 1-.75.75h-1.5a.75.75 0 0 1 0-1.5h1.5A.75.75 0 0 1 5 10ZM14.596 15.657a.75.75 0 0 0 1.06-1.06l-1.06-1.061a.75.75 0 1 0-1.06 1.06l1.06 1.06ZM5.404 6.464a.75.75 0 0 0 1.06-1.06l-1.06-1.06a.75.75 0 1 0-1.061 1.06l1.06 1.06Z"></path>
+</svg></button>
+
+    <button aria-label="Enable dark theme" type="button" x-on:click="(theme = 'dark') &amp;&amp; close()" x-tooltip="{
+        content: 'Enable dark theme',
+        theme: $store.theme,
+    }" class="fi-theme-switcher-btn flex justify-center rounded-md p-2 outline-none transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400" x-bind:class="
+        theme === 'dark'            ? 'fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400'
+            : 'text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400'
+    ">
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M7.455 2.004a.75.75 0 0 1 .26.77 7 7 0 0 0 9.958 7.967.75.75 0 0 1 1.067.853A8.5 8.5 0 1 1 6.647 1.921a.75.75 0 0 1 .808.083Z" clip-rule="evenodd"></path>
+</svg></button>
+
+    <button aria-label="Enable system theme" type="button" x-on:click="(theme = 'system') &amp;&amp; close()" x-tooltip="{
+        content: 'Enable system theme',
+        theme: $store.theme,
+    }" class="fi-theme-switcher-btn flex justify-center rounded-md p-2 outline-none transition duration-75 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400" x-bind:class="
+        theme === 'system'            ? 'fi-active bg-gray-50 text-primary-500 dark:bg-white/5 dark:text-primary-400'
+            : 'text-gray-400 hover:text-gray-500 focus-visible:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:text-gray-400'
+    ">
+    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M2 4.25A2.25 2.25 0 0 1 4.25 2h11.5A2.25 2.25 0 0 1 18 4.25v8.5A2.25 2.25 0 0 1 15.75 15h-3.105a3.501 3.501 0 0 0 1.1 1.677A.75.75 0 0 1 13.26 18H6.74a.75.75 0 0 1-.484-1.323A3.501 3.501 0 0 0 7.355 15H4.25A2.25 2.25 0 0 1 2 12.75v-8.5Zm1.5 0a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 .75.75v7.5a.75.75 0 0 1-.75.75H4.25a.75.75 0 0 1-.75-.75v-7.5Z" clip-rule="evenodd"></path>
+</svg></button>
+</div>
+</div>
+    
+    <div class="fi-dropdown-list p-1">
+    <form action="http://127.0.0.1:8010/admin-panel/logout" method="post">
+        <input type="hidden" name="_token" value="fsSoXAqsbZMhQgwqe6FpNXAwjQtOJETxd2P4wVPf" autocomplete="off">
+        <button type="submit" style=";" class="fi-dropdown-list-item flex w-full items-center gap-2 whitespace-nowrap rounded-md p-2 text-sm transition-colors duration-75 outline-none disabled:pointer-events-none disabled:opacity-70 hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 fi-dropdown-list-item-color-gray fi-color-gray">
+                            <svg class="fi-dropdown-list-item-icon h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z" clip-rule="evenodd"></path>
+  <path fill-rule="evenodd" d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z" clip-rule="evenodd"></path>
+</svg>            
+            <span class="fi-dropdown-list-item-label flex-1 truncate text-start text-gray-700 dark:text-gray-200" style="">
+                Sign out
+            </span>
+
+                    </button>
+    </form>
+</div>
+        </div>
+    </div>
+
+
+                    </div>
+
+        
+    </nav>
+</div>
+
+                
+            
+            <main class="fi-main mx-auto h-full w-full px-4 md:px-6 lg:px-8 max-w-full">
+                
+
+                <div wire:snapshot="{&quot;data&quot;:{&quot;mountedActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;defaultAction&quot;:null,&quot;defaultActionArguments&quot;:null,&quot;componentFileAttachments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsComponents&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsComponent&quot;:null,&quot;mountedInfolistActionsInfolist&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;V5OWsoL2gmfnfGshLLhX&quot;,&quot;name&quot;:&quot;app.filament.pages.dashboard&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:{&quot;App\\Filament\\Widgets\\AdminStatsOverview-1&quot;:[&quot;div&quot;,&quot;0yptfLtS0q6bYyjXEse1&quot;],&quot;App\\Filament\\Widgets\\QuickActions-2&quot;:[&quot;div&quot;,&quot;AFYSnEMlK4lEPI0XWtRl&quot;],&quot;App\\Filament\\Widgets\\OrdersTrendChart-3&quot;:[&quot;div&quot;,&quot;XrhgdSArYDJI42qMy7Yw&quot;],&quot;App\\Filament\\Widgets\\UserRegistrationsTrendChart-4&quot;:[&quot;div&quot;,&quot;X80bndUFk6GdWtf5ZJUO&quot;],&quot;App\\Filament\\Widgets\\RevenueTrendChart-5&quot;:[&quot;div&quot;,&quot;px1HqKDZaEF5hXGhlsKL&quot;],&quot;App\\Filament\\Widgets\\RecentOrdersTable-8&quot;:[&quot;div&quot;,&quot;PHBTZcajSTIuIGzOSwht&quot;],&quot;App\\Filament\\Widgets\\RecentUsersTable-9&quot;:[&quot;div&quot;,&quot;c0avSiJbt0kieITSKBMr&quot;],&quot;App\\Filament\\Widgets\\RecentProductsTable-10&quot;:[&quot;div&quot;,&quot;CgmBjJA5bI3JbpmcThXU&quot;],&quot;App\\Filament\\Widgets\\AtelierHeroWidget-0&quot;:[&quot;div&quot;,&quot;G2uwR7L5vDbsOQMOZ84G&quot;],&quot;App\\Filament\\Widgets\\MostRequestedServicesChart-6&quot;:[&quot;div&quot;,&quot;YnfMTpICiFv6SYlsRK9G&quot;],&quot;App\\Filament\\Widgets\\AtelierVisualBlockWidget-7&quot;:[&quot;div&quot;,&quot;rOGOMw9D3LkluqAUJ7Jh&quot;]},&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;1943471fe2c72a072caa47aeb9f72e5137264cadb98df7e930c313ad886916a2&quot;}" wire:effects="{&quot;url&quot;:{&quot;defaultAction&quot;:{&quot;as&quot;:&quot;action&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultActionArguments&quot;:{&quot;as&quot;:&quot;actionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="V5OWsoL2gmfnfGshLLhX" class="fi-page fi-dashboard-page">
+    
+
+    <section class="flex flex-col gap-y-8 py-8">
+        <!--[if BLOCK]><![endif]-->            
+            <header class="fi-header flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <h1 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
+            Makasouk Atelier Control Center
+        </h1>
+
+        <!--[if BLOCK]><![endif]-->            <p class="fi-header-subheading mt-2 max-w-2xl text-lg text-gray-600 dark:text-gray-400">
+                Oversee bespoke tailoring operations, monitor order craftsmanship flow, and act quickly on critical tasks.
+            </p>
+        <!--[if ENDBLOCK]><![endif]-->    </div>
+
+    <div class="flex shrink-0 items-center gap-3">
+        
+
+        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <div class="fi-ac gap-3 flex flex-wrap items-center justify-start">
+        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/shop" style="--c-400:var(--warning-400);--c-500:var(--warning-500);--c-600:var(--warning-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-warning fi-color-warning fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Enter Store
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/admin-panel/products/create" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Add Product
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/admin-panel/categories/create" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"></path>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Add Category
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/admin-panel/orders" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        View Orders
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/admin-panel/users" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Manage Users
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/admin-panel/reports-center" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Reports
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+                            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<a href="http://127.0.0.1:8010/admin-panel/settings-hub" style="--c-400:var(--primary-400);--c-500:var(--primary-500);--c-600:var(--primary-600);" class="fi-btn relative grid-flow-col items-center justify-center font-semibold outline-none transition duration-75 focus-visible:ring-2 rounded-lg fi-color-custom fi-btn-color-primary fi-color-primary fi-size-md fi-btn-size-md gap-1.5 px-3 py-2 text-sm inline-grid shadow-sm bg-custom-600 text-white hover:bg-custom-500 focus-visible:ring-custom-500/50 dark:bg-custom-500 dark:hover:bg-custom-400 dark:focus-visible:ring-custom-400/50 fi-ac-action fi-ac-btn-action">
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->            <!--[if BLOCK]><![endif]-->    <svg class="fi-btn-icon transition duration-75 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"></path>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
+</svg><!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <span class="fi-btn-label">
+        Settings
+    </span>
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></a>
+
+            <!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->    </div>
+<!--[if ENDBLOCK]><![endif]-->        <!--[if ENDBLOCK]><![endif]-->
+        
+    </div>
+</header>
+        <!--[if ENDBLOCK]><![endif]-->
+        <div class="">
+            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+            <div class="grid flex-1 auto-cols-fr gap-y-8">
+                
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div style="--cols-default: repeat(1, minmax(0, 1fr)); --cols-md: repeat(2, minmax(0, 1fr)); --cols-xl: repeat(12, minmax(0, 1fr));" class="grid grid-cols-[--cols-default] md:grid-cols-[--cols-md] xl:grid-cols-[--cols-xl] fi-wi gap-6">
+    <!--[if BLOCK]><![endif]-->        
+        <div wire:snapshot="{&quot;data&quot;:[],&quot;memo&quot;:{&quot;id&quot;:&quot;0yptfLtS0q6bYyjXEse1&quot;,&quot;name&quot;:&quot;app.filament.widgets.admin-stats-overview&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;52c75954eb6f765e65a492950f500941e313f59ca85278bf5cba649b463ad274&quot;}" wire:effects="[]" wire:id="0yptfLtS0q6bYyjXEse1" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6ImRCVWtDamhUOFJEeDRKbTU5bWw4IiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiIxOWEwYmFmOWI0YjQ3N2I4MzFhN2VkMzQ0YWE1ZGM5OGVmNTU4ODlhNWNmNTNjYmYzNDQ3MDMxMjExODNjZGI3In0=')" style="--col-span-default: 1 / -1;" class="col-[--col-span-default] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:[],&quot;memo&quot;:{&quot;id&quot;:&quot;AFYSnEMlK4lEPI0XWtRl&quot;,&quot;name&quot;:&quot;app.filament.widgets.quick-actions&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;00e100c9de20df156be5a352de98a5c32fdd934f1410eec70822194872b8ab74&quot;}" wire:effects="[]" wire:id="AFYSnEMlK4lEPI0XWtRl" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6IkVvaWlMSjBYSVgyU0NIakdEVVd5IiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiIwZWMxYjNjODUzMGZkZDczZDgzODJjYTA0ZjBjOTI4NTQ3NmZhMmVkODcyY2JkYmUwOTg3ZTg1M2RmMWE2YzQ1In0=')" style="--col-span-default: 1 / -1;" class="col-[--col-span-default] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;dataChecksum&quot;:null,&quot;filter&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;XrhgdSArYDJI42qMy7Yw&quot;,&quot;name&quot;:&quot;app.filament.widgets.orders-trend-chart&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;e9590ec8e1e3cc8ef454dfdae862091b4f9d4140f5e9275a341b7862f09f9979&quot;}" wire:effects="[]" wire:id="XrhgdSArYDJI42qMy7Yw" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6IlZxNHpmQWhSTlFTUWdvdHR4Y1Q3IiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiI5NGU4OTZhYjQ0NGE1ZTQyOWMwYjk3MGI4NzY0NWRhNDcxZGUwZTgyMDk0NDUwOWM3OTI1NmNjZDdjOWExNDIxIn0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 4 / span 4;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;dataChecksum&quot;:null,&quot;filter&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;X80bndUFk6GdWtf5ZJUO&quot;,&quot;name&quot;:&quot;app.filament.widgets.user-registrations-trend-chart&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;5abf626f1fab9b2f1c05387389fe52ba4ddda4cf422d0ea8051c2e5b566667db&quot;}" wire:effects="[]" wire:id="X80bndUFk6GdWtf5ZJUO" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6InBnYklWVFFNbGdqNkNMVEhvcVFhIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiI1MDVhOTcyOTQxY2EwNWIwODkyZTM1OWU5ODY4OTA5Y2I0NzNjMjE0ZmI5NjFiYTcxY2U4ZjE4YTJmNDlhZDY3In0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 4 / span 4;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;dataChecksum&quot;:null,&quot;filter&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;px1HqKDZaEF5hXGhlsKL&quot;,&quot;name&quot;:&quot;app.filament.widgets.revenue-trend-chart&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;3f0a9b5507afbdebd5ff0c30b8b49d904f1bc30d34fa0f9bbb63ce595afb46b8&quot;}" wire:effects="[]" wire:id="px1HqKDZaEF5hXGhlsKL" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6InUzS3c3WEpkZVhJZ2JMRjJnYm4zIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiI2MDE3ZmI2MmE2ZmMxOTk0YjAwOTJlYzhiYjJhNDA4ZmMwNzVlNTQwMWI1MzZiMjA5MDM5NTIzYjUyNjA0MTJkIn0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 4 / span 4;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;mountedActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;defaultAction&quot;:null,&quot;defaultActionArguments&quot;:null,&quot;componentFileAttachments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsComponents&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsComponent&quot;:null,&quot;mountedInfolistActionsInfolist&quot;:null,&quot;isTableLoaded&quot;:false,&quot;tableGrouping&quot;:null,&quot;tableGroupingDirection&quot;:null,&quot;tableRecordsPerPage&quot;:null,&quot;isTableReordering&quot;:false,&quot;tableColumnSearches&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;tableSearch&quot;:&quot;&quot;,&quot;tableSortColumn&quot;:null,&quot;tableSortDirection&quot;:null,&quot;toggledTableColumns&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionRecord&quot;:null,&quot;defaultTableAction&quot;:null,&quot;defaultTableActionArguments&quot;:null,&quot;defaultTableActionRecord&quot;:null,&quot;selectedTableRecords&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableBulkAction&quot;:null,&quot;mountedTableBulkActionData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;tableFilters&quot;:null,&quot;tableDeferredFilters&quot;:null,&quot;paginators&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;PHBTZcajSTIuIGzOSwht&quot;,&quot;name&quot;:&quot;app.filament.widgets.recent-orders-table&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;baa51e28efc45054e674a2f9c928825db50ee8b5ae5a47e217791731b122f17a&quot;}" wire:effects="{&quot;url&quot;:{&quot;defaultAction&quot;:{&quot;as&quot;:&quot;action&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultActionArguments&quot;:{&quot;as&quot;:&quot;actionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableAction&quot;:{&quot;as&quot;:&quot;tableAction&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableActionArguments&quot;:{&quot;as&quot;:&quot;tableActionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableActionRecord&quot;:{&quot;as&quot;:&quot;tableActionRecord&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="PHBTZcajSTIuIGzOSwht" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6InM5aW1KUzNFOGZVVzNmczVHTHlBIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiIyNjBmZjc5MGYyNTM2ZGEzODQwZDZhMzRiODE4ZWM2ODg1NmM1ZDM5N2Q4N2JiOTE0MTU0YTMwNjY4NDBlOWI2In0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 6 / span 6;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;mountedActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;defaultAction&quot;:null,&quot;defaultActionArguments&quot;:null,&quot;componentFileAttachments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsComponents&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsComponent&quot;:null,&quot;mountedInfolistActionsInfolist&quot;:null,&quot;isTableLoaded&quot;:false,&quot;tableGrouping&quot;:null,&quot;tableGroupingDirection&quot;:null,&quot;tableRecordsPerPage&quot;:null,&quot;isTableReordering&quot;:false,&quot;tableColumnSearches&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;tableSearch&quot;:&quot;&quot;,&quot;tableSortColumn&quot;:null,&quot;tableSortDirection&quot;:null,&quot;toggledTableColumns&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionRecord&quot;:null,&quot;defaultTableAction&quot;:null,&quot;defaultTableActionArguments&quot;:null,&quot;defaultTableActionRecord&quot;:null,&quot;selectedTableRecords&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableBulkAction&quot;:null,&quot;mountedTableBulkActionData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;tableFilters&quot;:null,&quot;tableDeferredFilters&quot;:null,&quot;paginators&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;c0avSiJbt0kieITSKBMr&quot;,&quot;name&quot;:&quot;app.filament.widgets.recent-users-table&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;5f8ac333e6955a340dfa9c733b776041163b6788d826d0272312d7833d1b1903&quot;}" wire:effects="{&quot;url&quot;:{&quot;defaultAction&quot;:{&quot;as&quot;:&quot;action&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultActionArguments&quot;:{&quot;as&quot;:&quot;actionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableAction&quot;:{&quot;as&quot;:&quot;tableAction&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableActionArguments&quot;:{&quot;as&quot;:&quot;tableActionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableActionRecord&quot;:{&quot;as&quot;:&quot;tableActionRecord&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="c0avSiJbt0kieITSKBMr" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6Im5RN25ycWVkYm5TaFh4dmhWalVIIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiIzNjg2MTQxZDg1MDA2MWFkZTM0NjYxMThiOGE5ZTBiODZkZTczZjkyOWNiNGI4NjU0MjFiNWZjYjYyOTIxYzM1In0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 3 / span 3;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;mountedActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;defaultAction&quot;:null,&quot;defaultActionArguments&quot;:null,&quot;componentFileAttachments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedFormComponentActionsComponents&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedInfolistActionsComponent&quot;:null,&quot;mountedInfolistActionsInfolist&quot;:null,&quot;isTableLoaded&quot;:false,&quot;tableGrouping&quot;:null,&quot;tableGroupingDirection&quot;:null,&quot;tableRecordsPerPage&quot;:null,&quot;isTableReordering&quot;:false,&quot;tableColumnSearches&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;tableSearch&quot;:&quot;&quot;,&quot;tableSortColumn&quot;:null,&quot;tableSortDirection&quot;:null,&quot;toggledTableColumns&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActions&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionsData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionsArguments&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableActionRecord&quot;:null,&quot;defaultTableAction&quot;:null,&quot;defaultTableActionArguments&quot;:null,&quot;defaultTableActionRecord&quot;:null,&quot;selectedTableRecords&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;mountedTableBulkAction&quot;:null,&quot;mountedTableBulkActionData&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}],&quot;tableFilters&quot;:null,&quot;tableDeferredFilters&quot;:null,&quot;paginators&quot;:[[],{&quot;s&quot;:&quot;arr&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;CgmBjJA5bI3JbpmcThXU&quot;,&quot;name&quot;:&quot;app.filament.widgets.recent-products-table&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;b970e1cdf754f7baad430da1b8066938e0cb4647c312d329eea449d7c7f1b7f8&quot;}" wire:effects="{&quot;url&quot;:{&quot;defaultAction&quot;:{&quot;as&quot;:&quot;action&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultActionArguments&quot;:{&quot;as&quot;:&quot;actionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableAction&quot;:{&quot;as&quot;:&quot;tableAction&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableActionArguments&quot;:{&quot;as&quot;:&quot;tableActionArguments&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null},&quot;defaultTableActionRecord&quot;:{&quot;as&quot;:&quot;tableActionRecord&quot;,&quot;use&quot;:&quot;replace&quot;,&quot;alwaysShow&quot;:false,&quot;except&quot;:null}}}" wire:id="CgmBjJA5bI3JbpmcThXU" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6Imp5bWdRUzAzdkFIRDVsMWJYUjRjIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiIzNzY3Yjk4NDJlZDczMDFlNTMyMjAzNTUxM2QyMjg5YTFiNDM4Njc4MzY0ZTAzNDAyZTExNWVmM2Q3MzhhODk2In0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 3 / span 3;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:[],&quot;memo&quot;:{&quot;id&quot;:&quot;G2uwR7L5vDbsOQMOZ84G&quot;,&quot;name&quot;:&quot;app.filament.widgets.atelier-hero-widget&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;151e69cf55a9de007f78983590662a3bbe53ca37350242b100ed4d64c9b418a0&quot;}" wire:effects="[]" wire:id="G2uwR7L5vDbsOQMOZ84G" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6ImhZZlUxRHBrSXgxR1BDRG1qUm1aIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiI5NjI0MTdlZmY5ZjQ4OWFmOWM1MWQ0ZTExMzUyNGNiNjhlZTdhNzFjMjY4OGM1MzQ1OTkyNjA1NWEwNmE4ZGFmIn0=')" style="--col-span-default: 1 / -1;" class="col-[--col-span-default] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:{&quot;dataChecksum&quot;:null,&quot;filter&quot;:null},&quot;memo&quot;:{&quot;id&quot;:&quot;YnfMTpICiFv6SYlsRK9G&quot;,&quot;name&quot;:&quot;app.filament.widgets.most-requested-services-chart&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;8ab8a76395ca79e35b0457d08469252141c3ad5ca5d3b4b4fbccfb7c782628b1&quot;}" wire:effects="[]" wire:id="YnfMTpICiFv6SYlsRK9G" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6Im1IeGdUbXVrWncyNTlGYjJmclpQIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiI5OTZjN2FmMmI1YTM2NDIyMGQzY2M2NWNhYWIxMTkyMGExMjJlMWYyNmM4OWIyNmZkODZkYjI1ZjA0M2RmZmZiIn0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 4 / span 4;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+            
+        <div wire:snapshot="{&quot;data&quot;:[],&quot;memo&quot;:{&quot;id&quot;:&quot;rOGOMw9D3LkluqAUJ7Jh&quot;,&quot;name&quot;:&quot;app.filament.widgets.atelier-visual-block-widget&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;lazyLoaded&quot;:false,&quot;lazyIsolated&quot;:true,&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;91f40e79914a6cdaa994364e7cc8496e3db9c74ca536c1f756bca7e38be5c563&quot;}" wire:effects="[]" wire:id="rOGOMw9D3LkluqAUJ7Jh" x-intersect="$wire.__lazyLoad('eyJkYXRhIjp7ImZvck1vdW50IjpbW10seyJzIjoiYXJyIn1dfSwibWVtbyI6eyJpZCI6IldOZ2owVEVuVEdic0VOQ3JhZ2tDIiwibmFtZSI6Il9fbW91bnRQYXJhbXNDb250YWluZXIiLCJwYXRoIjoiYWRtaW4tcGFuZWwiLCJtZXRob2QiOiJHRVQiLCJyZWxlYXNlIjoiYS1hLWEifSwiY2hlY2tzdW0iOiJmMzJiNmE2OTA3NGZkYTg2ZmFjYjdjYTVkNjg3N2IzMzY1MTIzNGU3MjNmOWRkZDUxYmY5ODhmMDY2NmM4OGE2In0=')" style="--col-span-default: span 1 / span 1; --col-span-xl: span 4 / span 4;" class="col-[--col-span-default] xl:col-[--col-span-xl] fi-loading-section">
+    <section x-data="{
+        isCollapsed:  false ,
+    }" class="fi-section rounded-xl bg-white shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 animate-pulse" style="height: 8rem;">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div class="fi-section-content-ctn">
+        <div class="fi-section-content p-6">
+            
+        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+</section>
+</div>
+    <!--[if ENDBLOCK]><![endif]-->
+</div>
+
+                
+
+                <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                
+            </div>
+
+            <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->        </div>
+
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </section>
+
+    <!--[if BLOCK]><![endif]-->        <!--[if BLOCK]><![endif]-->    <form wire:submit.prevent="callMountedAction">
+        
+        <div aria-modal="true" role="dialog" x-data="{
+        isOpen: false,
+
+        livewire: null,
+
+        close: function () {
+            this.isOpen = false
+
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent('modal-closed', { id: 'V5OWsoL2gmfnfGshLLhX-action' }),
+            )
+        },
+
+        open: function () {
+            this.$nextTick(() =&gt; {
+                this.isOpen = true
+
+                
+                this.$refs.modalContainer.dispatchEvent(
+                    new CustomEvent('modal-opened', { id: 'V5OWsoL2gmfnfGshLLhX-action' }),
+                )
+            })
+        },
+    }" x-on:close-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX-action') close()" x-on:open-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX-action') open()" x-trap.noscroll="isOpen" x-bind:class="{
+        'fi-modal-open': isOpen,
+    }" class="fi-modal block">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div x-show="isOpen" style="display: none;">
+        <div aria-hidden="true" x-show="isOpen" x-transition.duration.300ms.opacity="" class="fi-modal-close-overlay fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75" style="display: none;"></div>
+
+        <div class="fixed inset-0 z-40 overflow-y-auto cursor-pointer">
+            <div x-ref="modalContainer" x-on:click.self="
+                        document.activeElement.selectionStart === undefined &amp;&amp;
+                            document.activeElement.selectionEnd === undefined &amp;&amp;
+                            $dispatch('close-modal', { id: 'V5OWsoL2gmfnfGshLLhX-action' })
+                    " class="relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr] p-4" x-on:closed-form-component-action-modal.window="if (($event.detail.id === 'V5OWsoL2gmfnfGshLLhX') &amp;&amp; $wire.mountedActions.length) open()" x-on:modal-closed.stop="const mountedActionShouldOpenModal = false
+
+
+                if (! mountedActionShouldOpenModal) {
+                    return
+                }
+
+                if ($wire.mountedFormComponentActions.length) {
+                    return
+                }
+
+                $wire.unmountAction(false, false)" x-on:opened-form-component-action-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX') close()">
+                <div x-data="{ isShown: false }" x-init="
+                        $nextTick(() =&gt; {
+                            isShown = isOpen
+                            $watch('isOpen', () =&gt; (isShown = isOpen))
+                        })
+                    " x-on:keydown.window.escape="$dispatch('close-modal', { id: 'V5OWsoL2gmfnfGshLLhX-action' })" x-show="isShown" x-transition:enter="duration-300" x-transition:leave="duration-300" x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100" x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-95 opacity-0" class="fi-modal-window pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mx-auto rounded-xl hidden max-w-sm" style="display: none;">
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+
+    <!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]-->    <form wire:submit.prevent="callMountedInfolistAction">
+        
+        <div aria-modal="true" role="dialog" x-data="{
+        isOpen: false,
+
+        livewire: null,
+
+        close: function () {
+            this.isOpen = false
+
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent('modal-closed', { id: 'V5OWsoL2gmfnfGshLLhX-infolist-action' }),
+            )
+        },
+
+        open: function () {
+            this.$nextTick(() =&gt; {
+                this.isOpen = true
+
+                
+                this.$refs.modalContainer.dispatchEvent(
+                    new CustomEvent('modal-opened', { id: 'V5OWsoL2gmfnfGshLLhX-infolist-action' }),
+                )
+            })
+        },
+    }" x-on:close-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX-infolist-action') close()" x-on:open-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX-infolist-action') open()" x-trap.noscroll="isOpen" x-bind:class="{
+        'fi-modal-open': isOpen,
+    }" class="fi-modal block">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div x-show="isOpen" style="display: none;">
+        <div aria-hidden="true" x-show="isOpen" x-transition.duration.300ms.opacity="" class="fi-modal-close-overlay fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75" style="display: none;"></div>
+
+        <div class="fixed inset-0 z-40 overflow-y-auto cursor-pointer">
+            <div x-ref="modalContainer" x-on:click.self="
+                        document.activeElement.selectionStart === undefined &amp;&amp;
+                            document.activeElement.selectionEnd === undefined &amp;&amp;
+                            $dispatch('close-modal', { id: 'V5OWsoL2gmfnfGshLLhX-infolist-action' })
+                    " class="relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr] p-4" x-on:closed-form-component-action-modal.window="if (($event.detail.id === 'V5OWsoL2gmfnfGshLLhX') &amp;&amp; $wire.mountedInfolistActions.length) open()" x-on:modal-closed.stop="const mountedInfolistActionShouldOpenModal = false
+
+
+                if (! mountedInfolistActionShouldOpenModal) {
+                    return
+                }
+
+                if ($wire.mountedFormComponentActions.length) {
+                    return
+                }
+
+                $wire.unmountInfolistAction(false, false)" x-on:opened-form-component-action-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX') close()">
+                <div x-data="{ isShown: false }" x-init="
+                        $nextTick(() =&gt; {
+                            isShown = isOpen
+                            $watch('isOpen', () =&gt; (isShown = isOpen))
+                        })
+                    " x-on:keydown.window.escape="$dispatch('close-modal', { id: 'V5OWsoL2gmfnfGshLLhX-infolist-action' })" x-show="isShown" x-transition:enter="duration-300" x-transition:leave="duration-300" x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100" x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-95 opacity-0" class="fi-modal-window pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mx-auto rounded-xl hidden max-w-sm" style="display: none;">
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+
+    <!--[if ENDBLOCK]><![endif]-->
+<!--[if BLOCK]><![endif]-->    
+    <form wire:submit.prevent="callMountedFormComponentAction">
+        <div aria-modal="true" role="dialog" x-data="{
+        isOpen: false,
+
+        livewire: null,
+
+        close: function () {
+            this.isOpen = false
+
+            this.$refs.modalContainer.dispatchEvent(
+                new CustomEvent('modal-closed', { id: 'V5OWsoL2gmfnfGshLLhX-form-component-action' }),
+            )
+        },
+
+        open: function () {
+            this.$nextTick(() =&gt; {
+                this.isOpen = true
+
+                
+                this.$refs.modalContainer.dispatchEvent(
+                    new CustomEvent('modal-opened', { id: 'V5OWsoL2gmfnfGshLLhX-form-component-action' }),
+                )
+            })
+        },
+    }" x-on:close-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX-form-component-action') close()" x-on:open-modal.window="if ($event.detail.id === 'V5OWsoL2gmfnfGshLLhX-form-component-action') open()" x-trap.noscroll="isOpen" x-bind:class="{
+        'fi-modal-open': isOpen,
+    }" class="fi-modal block">
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    <div x-show="isOpen" style="display: none;">
+        <div aria-hidden="true" x-show="isOpen" x-transition.duration.300ms.opacity="" class="fi-modal-close-overlay fixed inset-0 z-40 bg-gray-950/50 dark:bg-gray-950/75" style="display: none;"></div>
+
+        <div class="fixed inset-0 z-40 overflow-y-auto cursor-pointer">
+            <div x-ref="modalContainer" x-on:click.self="
+                        document.activeElement.selectionStart === undefined &amp;&amp;
+                            document.activeElement.selectionEnd === undefined &amp;&amp;
+                            $dispatch('close-modal', { id: 'V5OWsoL2gmfnfGshLLhX-form-component-action' })
+                    " class="relative grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center sm:grid-rows-[1fr_auto_3fr] p-4" x-on:modal-closed.stop="const mountedFormComponentActionShouldOpenModal = false
+
+
+                if (mountedFormComponentActionShouldOpenModal) {
+                    $wire.unmountFormComponentAction(false, false)
+                }">
+                <div x-data="{ isShown: false }" x-init="
+                        $nextTick(() =&gt; {
+                            isShown = isOpen
+                            $watch('isOpen', () =&gt; (isShown = isOpen))
+                        })
+                    " x-on:keydown.window.escape="$dispatch('close-modal', { id: 'V5OWsoL2gmfnfGshLLhX-form-component-action' })" x-show="isShown" x-transition:enter="duration-300" x-transition:leave="duration-300" x-transition:enter-start="scale-95 opacity-0" x-transition:enter-end="scale-100 opacity-100" x-transition:leave-start="scale-100 opacity-100" x-transition:leave-end="scale-95 opacity-0" class="fi-modal-window pointer-events-auto relative row-start-2 flex w-full cursor-default flex-col bg-white shadow-xl ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 mx-auto rounded-xl hidden max-w-sm" style="display: none;">
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+                    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </form>
+
+    <!--[if ENDBLOCK]><![endif]-->    <!--[if ENDBLOCK]><![endif]-->
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->
+    
+
+    <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]--></div>
+
+                
+            </main>
+
+            
+        </div>
+
+                    <div x-data="{}" x-on:click="$store.sidebar.close()" x-show="$store.sidebar.isOpen" x-transition.opacity.300ms="" class="fi-sidebar-close-overlay fixed inset-0 z-30 bg-gray-950/50 transition duration-500 dark:bg-gray-950/75 lg:hidden"></div>
+
+            <aside x-data="{}" x-bind:class="
+                $store.sidebar.isOpen
+                    ? 'fi-sidebar-open w-[--sidebar-width] translate-x-0 shadow-xl ring-1 ring-gray-950\/5 dark:ring-white\/10 rtl:-translate-x-0 lg:sticky'                    : 'w-[--sidebar-width] -translate-x-full rtl:translate-x-full lg:sticky'
+            " class="fi-sidebar fixed inset-y-0 start-0 z-30 flex flex-col h-screen content-start bg-white transition-all dark:bg-gray-900 lg:z-0 lg:bg-transparent lg:shadow-none lg:ring-0 lg:transition-none dark:lg:bg-transparent lg:translate-x-0 rtl:lg:-translate-x-0 fi-main-sidebar fi-sidebar-open w-[--sidebar-width] translate-x-0 shadow-xl ring-1 ring-gray-950/5 dark:ring-white/10 rtl:-translate-x-0 lg:sticky">
+    <div class="overflow-x-clip">
+        <header class="fi-sidebar-header flex h-16 items-center bg-white px-6 ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10 lg:shadow-sm">
+            <div>
+                                    <a href="http://127.0.0.1:8010/admin-panel">
+                        <img alt="Makasouk Admin logo" src="http://127.0.0.1:8010/favicon.ico" style="height: 1.5rem;" class="fi-logo flex">
+    
+            
+
+                    </a>
+                            </div>
+
+            
+                    </header>
+    </div>
+
+    <nav class="fi-sidebar-nav flex-grow flex flex-col gap-y-7 overflow-y-auto overflow-x-hidden px-6 py-8" style="scrollbar-gutter: stable">
+        
+
+        
+        <ul class="fi-sidebar-nav-groups -mx-2 flex flex-col gap-y-7">
+                            <li x-data="{ label: 'Dashboard' }" data-group-label="Dashboard" class="fi-sidebar-group flex flex-col gap-y-1 fi-active">
+            <div class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Dashboard
+            </span>
+
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item fi-active fi-sidebar-item-active flex flex-col gap-y-1">
+    <a href="http://127.0.0.1:8010/admin-panel" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5 bg-gray-100 dark:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-primary-600 dark:text-primary-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-primary-600 dark:text-primary-400">
+            Control Center
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Commerce' }" data-group-label="Commerce" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Commerce
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Commerce" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Commerce
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/orders" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Orders
+        </span>
+
+                    <span>
+                <span style="--c-50:var(--warning-50);--c-400:var(--warning-400);--c-600:var(--warning-600);" class="fi-badge flex items-center justify-center gap-x-1 rounded-md text-xs font-medium ring-1 ring-inset px-2 min-w-[theme(spacing.6)] py-1 fi-color-custom bg-custom-50 text-custom-600 ring-custom-600/10 dark:bg-custom-400/10 dark:text-custom-400 dark:ring-custom-400/30 fi-color-warning">
+            
+            
+    <span class="grid">
+        <span class="truncate">
+            18
+        </span>
+    </span>
+
+    </span>
+            </span>
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/reviews" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Reviews &amp; Ratings
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/vendors" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Vendors &amp; Sellers
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Catalog' }" data-group-label="Catalog" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Catalog
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Catalog" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Catalog
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/categories" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z"></path>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Categories
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/products" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Products
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Users' }" data-group-label="Users" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Users
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Users" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Users
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/users" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Users Directory
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/pending-tailors" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Pending Tailors
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Content' }" data-group-label="Content" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Content
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Content" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Content
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/cms-manager" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            CMS / Pages / Banners
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/shop-banners" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Shop Banners
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/notifications-center" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Notifications / Messages
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Reports' }" data-group-label="Reports" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Reports
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Reports" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Reports
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/reports-center" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"></path>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Reports &amp; Analytics
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Administration' }" data-group-label="Administration" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Administration
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Administration" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Administration
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/admin-tasks" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Admin Tasks
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/roles-permissions" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Roles &amp; Permissions
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                            <li x-data="{ label: 'Settings' }" data-group-label="Settings" class="fi-sidebar-group flex flex-col gap-y-1">
+            <div x-on:click="$store.sidebar.toggleCollapsedGroup(label)" class="fi-sidebar-group-button flex items-center gap-x-3 px-2 py-2 cursor-pointer">
+            
+            <span class="fi-sidebar-group-label flex-1 text-sm font-medium leading-6 text-gray-500 dark:text-gray-400">
+                Settings
+            </span>
+
+                            <button style="--c-300:var(--gray-300);--c-400:var(--gray-400);--c-500:var(--gray-500);--c-600:var(--gray-600);" class="fi-icon-btn relative flex items-center justify-center rounded-lg outline-none transition duration-75 focus-visible:ring-2 -m-2 h-9 w-9 text-gray-400 hover:text-gray-500 focus-visible:ring-primary-600 dark:text-gray-500 dark:hover:text-gray-400 dark:focus-visible:ring-primary-500 fi-color-gray fi-sidebar-group-collapse-button" title="Settings" type="button" wire:loading.attr="disabled" x-bind:aria-expanded="! $store.sidebar.groupIsCollapsed(label)" x-on:click.stop="$store.sidebar.toggleCollapsedGroup(label)" x-bind:class="{ '-rotate-180': $store.sidebar.groupIsCollapsed(label) }" aria-expanded="true">
+                    <span class="sr-only">
+                Settings
+            </span>
+        
+        <svg class="fi-icon-btn-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
+  <path fill-rule="evenodd" d="M9.47 6.47a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 1 1-1.06 1.06L10 8.06l-3.72 3.72a.75.75 0 0 1-1.06-1.06l4.25-4.25Z" clip-rule="evenodd"></path>
+</svg>
+        
+            </button>
+                    </div>
+    
+    
+    <ul x-show="! $store.sidebar.groupIsCollapsed(label)" x-collapse.duration.200ms="" class="fi-sidebar-group-items flex flex-col gap-y-1">
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/settings-hub" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"></path>
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Platform Settings
+        </span>
+
+            </a>
+
+    </li>
+                    
+            <li class="fi-sidebar-item">
+    <a href="http://127.0.0.1:8010/admin-panel/shop-settings" x-on:click="window.matchMedia(`(max-width: 1024px)`).matches &amp;&amp; $store.sidebar.close()" class="fi-sidebar-item-button relative flex items-center justify-center gap-x-3 rounded-lg px-2 py-2 outline-none transition duration-75 hover:bg-gray-100 focus-visible:bg-gray-100 dark:hover:bg-white/5 dark:focus-visible:bg-white/5">
+                    <svg class="fi-sidebar-item-icon h-6 w-6 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+</svg>        
+        
+        <span class="fi-sidebar-item-label flex-1 truncate text-sm font-medium text-gray-700 dark:text-gray-200">
+            Shop Settings
+        </span>
+
+            </a>
+
+    </li>
+            </ul>
+</li>
+                    </ul>
+
+        <script>
+            var collapsedGroups = JSON.parse(
+                localStorage.getItem('collapsedGroups'),
+            )
+
+            if (collapsedGroups === null || collapsedGroups === 'null') {
+                localStorage.setItem(
+                    'collapsedGroups',
+                    JSON.stringify([]),
+                )
+            }
+
+            collapsedGroups = JSON.parse(
+                localStorage.getItem('collapsedGroups'),
+            )
+
+            document
+                .querySelectorAll('.fi-sidebar-group')
+                .forEach((group) => {
+                    if (
+                        !collapsedGroups.includes(group.dataset.groupLabel)
+                    ) {
+                        return
+                    }
+
+                    // Alpine.js loads too slow, so attempt to hide a
+                    // collapsed sidebar group earlier.
+                    group.querySelector(
+                        '.fi-sidebar-group-items',
+                    ).style.display = 'none'
+                    group
+                        .querySelector('.fi-sidebar-group-collapse-button')
+                        .classList.add('rotate-180')
+                })
+        </script>
+
+        
+    </nav>
+
+    
+</aside>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    setTimeout(() => {
+                        let activeSidebarItem = document.querySelector(
+                            '.fi-main-sidebar .fi-sidebar-item.fi-active',
+                        )
+
+                        if (
+                            !activeSidebarItem ||
+                            activeSidebarItem.offsetParent === null
+                        ) {
+                            activeSidebarItem = document.querySelector(
+                                '.fi-main-sidebar .fi-sidebar-group.fi-active',
+                            )
+                        }
+
+                        if (
+                            !activeSidebarItem ||
+                            activeSidebarItem.offsetParent === null
+                        ) {
+                            return
+                        }
+
+                        const sidebarWrapper = document.querySelector(
+                            '.fi-main-sidebar .fi-sidebar-nav',
+                        )
+
+                        if (!sidebarWrapper) {
+                            return
+                        }
+
+                        sidebarWrapper.scrollTo(
+                            0,
+                            activeSidebarItem.offsetTop -
+                                window.innerHeight / 2,
+                        )
+                    }, 10)
+                })
+            </script>
+            </div>
+
+        <div wire:snapshot="{&quot;data&quot;:{&quot;isFilamentNotificationsComponent&quot;:true,&quot;notifications&quot;:[[],{&quot;class&quot;:&quot;Filament\\Notifications\\Collection&quot;,&quot;s&quot;:&quot;wrbl&quot;}]},&quot;memo&quot;:{&quot;id&quot;:&quot;lgVnPM6rjgKcN4HSAIVb&quot;,&quot;name&quot;:&quot;filament.livewire.notifications&quot;,&quot;path&quot;:&quot;admin-panel&quot;,&quot;method&quot;:&quot;GET&quot;,&quot;release&quot;:&quot;a-a-a&quot;,&quot;children&quot;:[],&quot;scripts&quot;:[],&quot;assets&quot;:[],&quot;errors&quot;:[],&quot;locale&quot;:&quot;en&quot;},&quot;checksum&quot;:&quot;a4a70e2821b06553cb28f8aab0d0a13d54a95e3de15bc70f076b42689af69452&quot;}" wire:effects="{&quot;listeners&quot;:[&quot;notificationsSent&quot;,&quot;notificationSent&quot;,&quot;notificationClosed&quot;]}" wire:id="lgVnPM6rjgKcN4HSAIVb">
+    <div class="fi-no pointer-events-none fixed inset-4 z-50 mx-auto flex gap-3 items-end flex-col-reverse justify-end" role="status">
+        <!--[if BLOCK]><![endif]--><!--[if ENDBLOCK]><![endif]-->    </div>
+
+    <!--[if BLOCK]><![endif]-->        <div x-data="{}" x-init="
+        window.addEventListener('EchoLoaded', () =&gt; {
+            window.Echo.private('App.Models.User.1').notification((notification) =&gt; {
+                setTimeout(() =&gt; $wire.handleBroadcastNotification(notification), 500)
+            })
+        })
+
+        if (window.Echo) {
+            window.dispatchEvent(new CustomEvent('EchoLoaded'))
+        }
+    "></div>
+    <!--[if ENDBLOCK]><![endif]--></div>
+
+        
+
+        <script>
+        window.filamentData = []    </script>
+
+            
+            <script src="http://127.0.0.1:8010/js/filament/notifications/notifications.js?v=3.3.0.0"></script>
+        
+                
+            <script src="http://127.0.0.1:8010/js/filament/support/support.js?v=3.3.0.0"></script>
+        
+                
+            <script src="http://127.0.0.1:8010/js/filament/filament/echo.js?v=3.3.0.0"></script>
+        
+                
+            <script src="http://127.0.0.1:8010/js/filament/filament/app.js?v=3.3.0.0"></script>
+        
+    
+<style>
+    :root {
+            }
+</style>
+
+        
+                    <script>
+                loadDarkMode()
+            </script>
+        
+        
+        
+
+        
+    <!-- Livewire Scripts -->
+<script src="/livewire/livewire.js?id=6d832aed" data-csrf="fsSoXAqsbZMhQgwqe6FpNXAwjQtOJETxd2P4wVPf" data-update-uri="/livewire/update" data-navigate-once="true"></script>
+
+
+</body></html>

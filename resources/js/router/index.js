@@ -17,6 +17,34 @@ export const router = createRouter({
       meta: { requiresGuest: true },
     },
     {
+      path: '/login/customer',
+      redirect: { name: 'login', query: { role: 'customer' } },
+    },
+    {
+      path: '/login/tailor',
+      redirect: { name: 'login', query: { role: 'tailor' } },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/pages/auth/RegisterPage.vue'),
+      meta: { requiresGuest: true },
+    },
+    {
+      path: '/register/customer',
+      redirect: { name: 'register', query: { role: 'customer' } },
+    },
+    {
+      path: '/register/tailor',
+      redirect: { name: 'register', query: { role: 'tailor' } },
+    },
+    {
+      path: '/verify-phone',
+      name: 'verifyPhone',
+      component: () => import('@/pages/auth/VerifyPhonePage.vue'),
+      meta: { requiresAuth: true, roles: ['tailor'] },
+    },
+    {
       path: '/forbidden',
       name: 'forbidden',
       component: () => import('@/pages/common/ForbiddenPage.vue'),

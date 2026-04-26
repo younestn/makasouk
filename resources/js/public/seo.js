@@ -34,10 +34,10 @@ function resolveLocale(route, locale) {
   }
 
   if (typeof document !== 'undefined') {
-    return document.documentElement.lang || 'en';
+    return document.documentElement.lang || 'ar';
   }
 
-  return 'en';
+  return 'ar';
 }
 
 export function applyPublicMeta(route, locale) {

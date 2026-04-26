@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Support\Tailor\TailorOnboardingOptions;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -16,6 +18,7 @@ class StoreCategoryRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', 'unique:categories,name'],
             'slug' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:categories,slug'],
+            'tailor_specialization' => ['required', Rule::in(TailorOnboardingOptions::SPECIALIZATIONS)],
             'description' => ['nullable', 'string'],
             'is_active' => ['sometimes', 'boolean'],
         ];

@@ -1,8 +1,8 @@
-﻿<template>
+<template>
   <section class="page">
     <div class="ui-card stack">
-      <h1 class="title">Forbidden</h1>
-      <p class="subtitle">You are signed in, but this route is not available for your role.</p>
+      <h1 class="title">{{ t('auth.forbidden_title') }}</h1>
+      <p class="subtitle">{{ t('auth.forbidden_description') }}</p>
       <div class="actions">
         <RouterLink class="btn" :to="{ name: 'root' }">{{ t('common.back') }}</RouterLink>
         <a class="btn" href="/">{{ t('common.public_site') }}</a>

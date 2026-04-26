@@ -2,15 +2,15 @@
     <x-filament::section
         icon="heroicon-o-bolt"
         heading="Quick Actions"
-        description="Shortcuts for the most common admin tasks."
+        description="Immediate shortcuts for atelier operations, merchandising, and governance."
     >
-        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             @foreach ($actions as $action)
                 <a
                     href="{{ $action['url'] }}"
-                    class="mk-admin-quick-action group flex items-start gap-3 rounded-xl border border-gray-200 bg-white p-4 transition hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-sm dark:border-gray-800 dark:bg-gray-900"
+                    class="mk-admin-quick-action group flex items-start gap-3 rounded-xl border border-amber-100/70 bg-white/95 p-4 transition hover:-translate-y-0.5 hover:border-amber-300 hover:shadow-md dark:border-gray-800 dark:bg-gray-900/95"
                 >
-                    <span class="rounded-lg bg-primary-50 p-2 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400">
+                    <span class="rounded-lg bg-amber-50 p-2 text-amber-700 transition group-hover:bg-amber-100 dark:bg-amber-400/10 dark:text-amber-300">
                         <x-filament::icon :icon="$action['icon']" class="h-5 w-5" />
                     </span>
                     <span class="space-y-1">

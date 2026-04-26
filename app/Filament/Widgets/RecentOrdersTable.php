@@ -4,10 +4,10 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Resources\OrderResource;
 use App\Models\Order;
+use App\Support\Filament\AdminUiState;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
-use Illuminate\Database\Eloquent\Builder;
 
 class RecentOrdersTable extends TableWidget
 {
@@ -26,7 +26,7 @@ class RecentOrdersTable extends TableWidget
         return $table
             ->query(
                 Order::query()
-                    ->with(['customer', 'tailor', 'product'])
+                    ->with(['customer', 'tailor', 'product.category'])
                     ->latest()
                     ->limit(10),
             )
@@ -42,8 +42,18 @@ class RecentOrdersTable extends TableWidget
                     ->placeholder('-'),
                 Tables\Columns\TextColumn::make('product.name')
                     ->label('Product'),
+                Tables\Columns\TextColumn::make('product.category.name')
+                    ->label('Category')
+                    ->placeholder('-')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => AdminUiState::orderStatusLabel($state))
+                    ->color(fn (?string $state): string => AdminUiState::orderStatusColor($state)),
+                Tables\Columns\TextColumn::make('product.price')
+                    ->label('Amount')
+                    ->money('MAD')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
                     ->label('Created'),

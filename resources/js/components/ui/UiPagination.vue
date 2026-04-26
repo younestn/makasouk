@@ -1,5 +1,5 @@
 ﻿<template>
-  <nav v-if="pagination.lastPage > 1" class="ui-pagination" aria-label="Pagination controls">
+  <nav v-if="pagination.lastPage > 1" class="ui-pagination" :aria-label="t('pagination.aria_label')">
     <div class="small">
       {{ t('pagination.summary', summaryParams) }} · {{ t('pagination.page', pageParams) }}
     </div>

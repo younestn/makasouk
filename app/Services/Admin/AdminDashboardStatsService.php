@@ -14,12 +14,16 @@ class AdminDashboardStatsService
     /**
      * @return array{
      *     total_users: int,
+     *     total_customers: int,
      *     total_vendors: int,
      *     total_products: int,
      *     total_categories: int,
      *     total_orders: int,
+     *     new_orders: int,
+     *     in_progress_orders: int,
      *     pending_orders: int,
      *     completed_orders: int,
+     *     cancelled_orders: int,
      *     total_revenue: float|null,
      *     low_stock_products: int|null,
      *     recent_registrations: int
@@ -34,17 +38,48 @@ class AdminDashboardStatsService
 
         return [
             'total_users' => User::query()->count(),
+            'total_customers' => User::query()->where('role', User::ROLE_CUSTOMER)->count(),
             'total_vendors' => User::query()->where('role', User::ROLE_TAILOR)->count(),
             'total_products' => Product::query()->count(),
             'total_categories' => DB::table('categories')->count(),
             'total_orders' => (int) $statusCounts->sum(),
+            'new_orders' => (int) $statusCounts->only($this->newOrderStatuses())->sum(),
+            'in_progress_orders' => (int) $statusCounts->only($this->inProgressOrderStatuses())->sum(),
             'pending_orders' => (int) $statusCounts->only($this->pendingOrderStatuses())->sum(),
             'completed_orders' => (int) ($statusCounts[Order::STATUS_COMPLETED] ?? 0),
+            'cancelled_orders' => (int) $statusCounts->only($this->cancelledOrderStatuses())->sum(),
             'total_revenue' => $this->getTotalRevenue(),
             'low_stock_products' => $this->getLowStockProductsCount(),
             'recent_registrations' => User::query()
                 ->where('created_at', '>=', now()->subDays(7))
                 ->count(),
+        ];
+    }
+
+    /**
+     * @return array{labels: array<int, string>, values: array<int, int>}
+     */
+    public function getMostRequestedCategories(int $limit = 6): array
+    {
+        if (! Schema::hasTable('orders') || ! Schema::hasTable('products') || ! Schema::hasTable('categories')) {
+            return [
+                'labels' => [],
+                'values' => [],
+            ];
+        }
+
+        $rows = DB::table('orders')
+            ->join('products', 'products.id', '=', 'orders.product_id')
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->selectRaw('categories.name as category_name, COUNT(orders.id) as total_orders')
+            ->groupBy('categories.name')
+            ->orderByDesc('total_orders')
+            ->limit($limit)
+            ->get();
+
+        return [
+            'labels' => $rows->pluck('category_name')->map(fn (string $name): string => str($name)->limit(16)->toString())->all(),
+            'values' => $rows->pluck('total_orders')->map(fn ($total): int => (int) $total)->all(),
         ];
     }
 
@@ -120,12 +155,44 @@ class AdminDashboardStatsService
     protected function pendingOrderStatuses(): array
     {
         return [
+            ...$this->newOrderStatuses(),
+            ...$this->inProgressOrderStatuses(),
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function newOrderStatuses(): array
+    {
+        return [
             Order::STATUS_PENDING,
             Order::STATUS_SEARCHING_FOR_TAILOR,
             Order::STATUS_NO_TAILORS_AVAILABLE,
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function inProgressOrderStatuses(): array
+    {
+        return [
             Order::STATUS_ACCEPTED,
             Order::STATUS_PROCESSING,
             Order::STATUS_READY_FOR_DELIVERY,
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function cancelledOrderStatuses(): array
+    {
+        return [
+            Order::STATUS_CANCELLED_BY_CUSTOMER,
+            Order::STATUS_CANCELLED_BY_TAILOR,
+            Order::STATUS_CANCELLED,
         ];
     }
 

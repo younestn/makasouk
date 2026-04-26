@@ -6,7 +6,12 @@
         <span>{{ t('public.brand') }}</span>
       </RouterLink>
 
-      <nav class="public-nav" aria-label="Public navigation">
+      <nav class="public-nav" :aria-label="t('public.navigation_aria')">
+        <RouterLink class="public-nav-link" :to="{ name: 'publicHome' }">{{ t('public.nav_home') }}</RouterLink>
+        <a class="public-nav-link public-nav-link--shop" href="/shop" aria-label="Shop">
+          <span aria-hidden="true">✦</span>
+          <span>{{ t('public.nav_shop') }}</span>
+        </a>
         <RouterLink class="public-nav-link" :to="{ name: 'publicHowItWorks' }">{{ t('public.nav_how_it_works') }}</RouterLink>
         <RouterLink class="public-nav-link" :to="{ name: 'publicForCustomers' }">{{ t('public.nav_for_customers') }}</RouterLink>
         <RouterLink class="public-nav-link" :to="{ name: 'publicForTailors' }">{{ t('public.nav_for_tailors') }}</RouterLink>

@@ -10,6 +10,11 @@ export async function fetchTailorOrderHistory(params = {}) {
   return data;
 }
 
+export async function fetchTailorOrderOffers(params = {}) {
+  const { data } = await apiClient.get('/tailor/orders-offers', { params });
+  return data;
+}
+
 export async function fetchTailorOrder(orderId) {
   const { data } = await apiClient.get(`/tailor/orders/${orderId}`);
   return data;
@@ -26,6 +31,16 @@ export async function acceptOrder(orderId, notifiedTailorIds = []) {
   return data;
 }
 
+export async function declineOrderOffer(orderId, payload) {
+  const { data } = await apiClient.post(`/tailor/orders/${orderId}/decline`, payload);
+  return data;
+}
+
+export async function markOrderNotMySpecialty(orderId, payload = {}) {
+  const { data } = await apiClient.post(`/tailor/orders/${orderId}/not-my-specialty`, payload);
+  return data;
+}
+
 export async function updateOrderStatus(orderId, status) {
   const { data } = await apiClient.patch(`/tailor/orders/${orderId}/status`, { status });
   return data;
@@ -38,6 +53,11 @@ export async function cancelTailorOrder(orderId, reason) {
 
 export async function fetchTailorProfile() {
   const { data } = await apiClient.get('/tailor/profile');
+  return data;
+}
+
+export async function updateTailorLocation(payload) {
+  const { data } = await apiClient.patch('/tailor/profile/location', payload);
   return data;
 }
 

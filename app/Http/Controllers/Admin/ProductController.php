@@ -15,7 +15,11 @@ class ProductController extends Controller
     {
         $this->authorize('manage', User::class);
 
-        $products = Product::query()->with(['category', 'createdByAdmin'])->latest()->paginate(20);
+        $products = Product::query()
+            ->with(['category', 'createdByAdmin', 'fabric'])
+            ->latest()
+            ->paginate(20);
+
         return response()->json(ProductResource::collection($products));
     }
 
@@ -23,13 +27,28 @@ class ProductController extends Controller
     {
         $this->authorize('manage', User::class);
 
+        $validated = $request->validated();
+        $measurementIds = $validated['measurement_ids'] ?? [];
+
         $product = Product::query()->create([
-            ...$request->validated(),
+            ...collect($validated)->except('measurement_ids')->all(),
             'created_by_admin_id' => $request->user()->id,
         ]);
 
-        $product->load(['category', 'createdByAdmin']);
+        if (is_array($measurementIds) && $measurementIds !== []) {
+            $product->measurements()->sync($measurementIds);
+        }
 
-        return response()->json(['message' => 'تم إنشاء الموديل بنجاح', 'data' => new ProductResource($product)], 201);
+        $product->load([
+            'category',
+            'fabric',
+            'createdByAdmin',
+            'measurements' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name'),
+        ]);
+
+        return response()->json([
+            'message' => __('messages.admin.product_created_success'),
+            'data' => new ProductResource($product),
+        ], 201);
     }
 }

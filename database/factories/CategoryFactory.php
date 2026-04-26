@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Support\Tailor\TailorOnboardingOptions;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -20,8 +21,11 @@ class CategoryFactory extends Factory
         return [
             'name' => ucfirst($name),
             'slug' => Str::slug($name),
+            'tailor_specialization' => fake()->randomElement(TailorOnboardingOptions::SPECIALIZATIONS),
             'description' => fake()->sentence(),
             'is_active' => true,
+            'is_featured' => fake()->boolean(40),
+            'sort_order' => fake()->numberBetween(0, 15),
         ];
     }
 }

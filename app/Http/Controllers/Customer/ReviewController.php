@@ -18,11 +18,11 @@ class ReviewController extends Controller
         $this->authorize('create', [Review::class, $order]);
 
         if ($order->status !== Order::STATUS_COMPLETED) {
-            return response()->json(['message' => 'Order must be completed before review submission.'], 422);
+            return response()->json(['message' => __('messages.reviews.order_not_completed')], 422);
         }
 
         if ($order->review()->exists()) {
-            return response()->json(['message' => 'Review already exists for this order.'], 409);
+            return response()->json(['message' => __('messages.reviews.already_exists')], 409);
         }
 
         $review = DB::transaction(function () use ($order, $request): Review {
@@ -57,7 +57,7 @@ class ReviewController extends Controller
         $review->loadMissing(['customer', 'tailor']);
 
         return response()->json([
-            'message' => 'Review submitted successfully.',
+            'message' => __('messages.reviews.submitted_success'),
             'data' => new ReviewResource($review),
         ], 201);
     }

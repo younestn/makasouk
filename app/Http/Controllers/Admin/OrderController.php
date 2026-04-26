@@ -23,7 +23,7 @@ class OrderController extends Controller
         ]);
 
         $orders = Order::query()
-            ->with(['customer', 'tailor.tailorProfile', 'product.category'])
+            ->with(['customer', 'tailor.tailorProfile', 'product.category', 'product.fabric'])
             ->when(isset($validated['status']), fn ($q) => $q->where('status', $validated['status']))
             ->when(isset($validated['tailor_id']), fn ($q) => $q->where('tailor_id', $validated['tailor_id']))
             ->latest()
@@ -36,7 +36,7 @@ class OrderController extends Controller
     {
         $this->authorize('adminAccess', Order::class);
 
-        $order->load(['customer', 'tailor.tailorProfile', 'product.category']);
+        $order->load(['customer', 'tailor.tailorProfile', 'product.category', 'product.fabric']);
 
         return response()->json([
             'order' => new OrderResource($order),

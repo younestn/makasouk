@@ -19,10 +19,12 @@ class ClientAppFixturesSeeder extends Seeder
             ['email' => 'customer@makasouk.local'],
             [
                 'name' => 'Seed Customer',
+                'phone' => '+213550000001',
                 'password' => Hash::make('Password@123'),
                 'role' => User::ROLE_CUSTOMER,
                 'approved_at' => now(),
                 'is_suspended' => false,
+                'phone_verified_at' => now(),
             ],
         );
 
@@ -30,10 +32,12 @@ class ClientAppFixturesSeeder extends Seeder
             ['email' => 'tailor@makasouk.local'],
             [
                 'name' => 'Seed Tailor',
+                'phone' => '+213550000002',
                 'password' => Hash::make('Password@123'),
                 'role' => User::ROLE_TAILOR,
                 'approved_at' => now(),
                 'is_suspended' => false,
+                'phone_verified_at' => now(),
             ],
         );
 
@@ -47,13 +51,22 @@ class ClientAppFixturesSeeder extends Seeder
             return;
         }
 
-        $latitude = 33.5731;
-        $longitude = -7.5898;
+        if (! filled($category->tailor_specialization)) {
+            $category->forceFill(['tailor_specialization' => 'Traditionnel'])->save();
+        }
+
+        $latitude = 36.7538;
+        $longitude = 3.0588;
 
         $tailorProfile = TailorProfile::query()->updateOrCreate(
             ['user_id' => $tailor->id],
             [
                 'category_id' => $category->id,
+                'specialization' => 'Traditionnel',
+                'work_wilaya' => 'Algiers',
+                'years_of_experience' => 8,
+                'gender' => 'male',
+                'workers_count' => 4,
                 'status' => TailorProfile::STATUS_ONLINE,
                 'latitude' => $latitude,
                 'longitude' => $longitude,
@@ -84,7 +97,15 @@ class ClientAppFixturesSeeder extends Seeder
             ],
             'delivery_latitude' => $latitude,
             'delivery_longitude' => $longitude,
+            'delivery_work_wilaya' => 'Algiers',
+            'delivery_location_label' => 'Casablanca city center',
             'status' => Order::STATUS_ACCEPTED,
+            'matched_specialization' => $category->tailor_specialization,
+            'matching_snapshot' => [
+                'strategy' => 'seed_fixture',
+                'eligible_tailor_ids' => [$tailor->id],
+                'recommended_tailor_id' => $tailor->id,
+            ],
             'accepted_at' => now()->subHours(2),
         ]);
 

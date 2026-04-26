@@ -8,18 +8,28 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
+use App\Http\Controllers\MapConfigController;
+use App\Http\Controllers\PublicHomepageController;
 use App\Http\Controllers\Tailor\OrderController as TailorOrderController;
 use App\Http\Controllers\Tailor\ProfileController as TailorProfileController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('public/homepage', PublicHomepageController::class);
+Route::get('public/footer-pages', [PublicHomepageController::class, 'footerPageLinks']);
+Route::get('map/config', MapConfigController::class);
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+    Route::get('tailor-registration-metadata', [AuthController::class, 'tailorRegistrationMetadata']);
 });
 
 Route::middleware(['auth:sanctum', 'active'])->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
+        Route::post('email-verification/send', [AuthController::class, 'sendEmailVerification']);
+        Route::post('phone-verification/send', [AuthController::class, 'sendPhoneVerificationCode']);
+        Route::post('phone-verification/verify', [AuthController::class, 'verifyPhoneCode']);
         Route::post('logout', [AuthController::class, 'logout']);
     });
 
@@ -40,10 +50,14 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
 
     Route::prefix('tailor')->middleware('tailor.approved')->group(function () {
         Route::get('profile', [TailorProfileController::class, 'show']);
+        Route::patch('profile/location', [TailorProfileController::class, 'updateLocation']);
         Route::get('availability', [TailorProfileController::class, 'availability']);
+        Route::get('orders-offers', [TailorOrderController::class, 'offers']);
         Route::get('orders-active', [TailorOrderController::class, 'active']);
         Route::get('orders/{order}', [TailorOrderController::class, 'show']);
         Route::post('orders/{order}/accept', [TailorOrderController::class, 'acceptOrder']);
+        Route::post('orders/{order}/decline', [TailorOrderController::class, 'decline']);
+        Route::post('orders/{order}/not-my-specialty', [TailorOrderController::class, 'notMySpecialty']);
         Route::patch('orders/{order}/status', [TailorOrderController::class, 'updateStatus']);
         Route::patch('orders/{order}/cancel', [TailorOrderController::class, 'cancel']);
         Route::get('orders-history', [TailorOrderController::class, 'history']);

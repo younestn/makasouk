@@ -5,7 +5,7 @@ describe('i18n helpers', () => {
   it('normalizes locale values', () => {
     expect(normalizeLocale('ar-MA')).toBe('ar');
     expect(normalizeLocale('en-US')).toBe('en');
-    expect(normalizeLocale('')).toBe('en');
+    expect(normalizeLocale('')).toBe('ar');
   });
 
   it('returns direction by locale', () => {

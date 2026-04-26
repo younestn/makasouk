@@ -1,13 +1,13 @@
-﻿<template>
+<template>
   <section class="stack">
     <UiSectionHeader
       :title="t('common.history')"
-      description="Completed and cancelled customer orders."
+      :description="t('orders.history_description')"
     />
 
-    <LoadingState v-if="loading" label="Loading order history..." />
+    <LoadingState v-if="loading" :label="t('orders.loading_history')" />
     <ErrorState v-else-if="error" :message="error" retryable @retry="reloadCurrentPage" />
-    <EmptyState v-else-if="orders.length === 0" message="No history orders yet." />
+    <EmptyState v-else-if="orders.length === 0" :message="t('orders.empty_history')" />
 
     <template v-else>
       <div class="stack">
@@ -90,7 +90,7 @@ async function load(page = pagination.currentPage) {
 
     syncQuery(pagination.currentPage);
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to load order history.');
+    error.value = getErrorMessage(err, t('messages.orders_history_load_failed'));
   } finally {
     loading.value = false;
   }

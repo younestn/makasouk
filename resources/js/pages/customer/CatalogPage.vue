@@ -1,16 +1,16 @@
-﻿<template>
+<template>
   <section class="stack">
     <UiSectionHeader
-      title="Catalog"
-      description="Browse active categories and products, then create an order directly."
+      :title="t('products.catalog_title')"
+      :description="t('products.catalog_description')"
     />
 
     <div class="ui-card stack">
       <div class="grid grid-2">
         <div>
-          <label class="label">Category</label>
+          <label class="label">{{ t('products.filters.category_label') }}</label>
           <select v-model="filters.categoryId" class="select">
-            <option value="">All categories</option>
+            <option value="">{{ t('products.filters.all_categories') }}</option>
             <option v-for="category in categories" :key="category.id" :value="String(category.id)">
               {{ category.name }}
             </option>
@@ -23,7 +23,7 @@
             v-model="filters.query"
             class="input"
             type="text"
-            placeholder="Search by product name or description"
+            :placeholder="t('products.filters.search_placeholder')"
             @keyup.enter="applyFilters"
           />
         </div>
@@ -35,11 +35,11 @@
       </div>
     </div>
 
-    <LoadingState v-if="loading" label="Loading products..." />
+    <LoadingState v-if="loading" :label="t('products.loading_catalog')" />
     <ErrorState v-else-if="error" :message="error" retryable @retry="reloadCurrentPage" />
-    <EmptyState v-else-if="products.length === 0" message="No products matched your filters.">
+    <EmptyState v-else-if="products.length === 0" :message="t('products.empty_filtered')">
       <template #actions>
-        <button class="btn" type="button" @click="resetFilters">Clear filters</button>
+        <button class="btn" type="button" @click="resetFilters">{{ t('products.clear_filters') }}</button>
       </template>
     </EmptyState>
 
@@ -135,7 +135,7 @@ async function loadProducts(page = pagination.currentPage) {
 
     syncQuery(pagination.currentPage);
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to load products.');
+    error.value = getErrorMessage(err, t('messages.products_load_failed'));
   } finally {
     loading.value = false;
   }
@@ -160,7 +160,7 @@ onMounted(async () => {
     await loadCategories();
     await loadProducts(queryPage());
   } catch (err) {
-    error.value = getErrorMessage(err, 'Unable to initialize catalog.');
+    error.value = getErrorMessage(err, t('messages.catalog_init_failed'));
   }
 });
 </script>

@@ -1,20 +1,20 @@
-﻿<template>
+<template>
   <section class="stack">
     <UiSectionHeader
       :title="t('common.availability')"
-      description="Control whether you can receive nearby order offers."
+      :description="t('tailors.availability_description')"
     />
 
     <div class="ui-card stack">
       <div class="grid grid-2">
-        <UiStatBlock label="Current Status" :value="availability.status || '-'" tone="info" />
-        <UiStatBlock label="Active Orders" :value="availability.active_orders_count ?? 0" />
+        <UiStatBlock :label="t('tailors.current_status_label')" :value="tailorStatusLabel(availability.status)" tone="info" />
+        <UiStatBlock :label="t('tailors.active_orders_label')" :value="availability.active_orders_count ?? 0" />
       </div>
 
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
       <button class="btn btn-primary" :disabled="loading" @click="toggle">
-        {{ loading ? 'Updating...' : 'Toggle Availability' }}
+        {{ loading ? t('tailors.updating_availability') : t('tailors.toggle_availability_action') }}
       </button>
     </div>
   </section>
@@ -48,7 +48,7 @@ async function load() {
     const response = await fetchAvailability();
     Object.assign(availability, response.data || {});
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to load availability.');
+    error.value = getErrorMessage(err, t('messages.tailor_availability_load_failed'));
   } finally {
     loading.value = false;
   }
@@ -64,11 +64,22 @@ async function toggle() {
     successToast(response.message || t('notifications.availability_updated'));
     await load();
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to toggle availability.');
+    error.value = getErrorMessage(err, t('messages.tailor_availability_toggle_failed'));
     errorToast(error.value);
   } finally {
     loading.value = false;
   }
+}
+
+function tailorStatusLabel(status) {
+  if (!status) {
+    return t('tailors.status_unknown');
+  }
+
+  const key = `tailors.status_${status}`;
+  const label = t(key);
+
+  return label === key ? status : label;
 }
 
 onMounted(load);

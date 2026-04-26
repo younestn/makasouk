@@ -45,7 +45,7 @@ class UserController extends Controller
         });
 
         return response()->json([
-            'message' => 'User suspended successfully.',
+            'message' => __('messages.admin.user_suspended_success'),
             'reason' => $request->validated('reason'),
             'user' => new UserResource($user->fresh('tailorProfile')),
         ]);
@@ -58,7 +58,7 @@ class UserController extends Controller
         $user->update(['is_suspended' => false]);
 
         return response()->json([
-            'message' => 'User unsuspended successfully.',
+            'message' => __('messages.admin.user_unsuspended_success'),
             'user' => new UserResource($user->fresh('tailorProfile')),
         ]);
     }
@@ -68,11 +68,11 @@ class UserController extends Controller
         $this->authorize('manage', User::class);
 
         if ($user->role !== User::ROLE_TAILOR) {
-            return response()->json(['message' => 'Only tailor accounts can be approved.'], 422);
+            return response()->json(['message' => __('messages.admin.only_tailor_accounts_approvable')], 422);
         }
 
         if ($user->approved_at !== null) {
-            return response()->json(['message' => 'Tailor is already approved.'], 422);
+            return response()->json(['message' => __('messages.admin.tailor_already_approved')], 422);
         }
 
         DB::transaction(function () use ($user): void {
@@ -84,7 +84,7 @@ class UserController extends Controller
         });
 
         return response()->json([
-            'message' => 'Tailor approved successfully.',
+            'message' => __('messages.admin.tailor_approved_success'),
             'user' => new UserResource($user->fresh('tailorProfile.category')),
         ]);
     }

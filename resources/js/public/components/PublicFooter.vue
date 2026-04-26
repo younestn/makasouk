@@ -7,6 +7,14 @@
       </div>
 
       <div class="row" style="justify-content: flex-end;">
+        <a
+          v-for="page in footerPages"
+          :key="page.url"
+          class="public-footer-link"
+          :href="page.url"
+        >
+          {{ page.title }}
+        </a>
         <a class="public-footer-link" href="/app/login">{{ t('public.client_app') }}</a>
         <a class="public-footer-link" href="/admin-panel">{{ t('public.admin_panel') }}</a>
       </div>
@@ -15,7 +23,19 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
+import { apiClient } from '@/services/http';
 import { useI18n } from '@/composables/useI18n';
 
 const { t } = useI18n();
+const footerPages = ref([]);
+
+onMounted(async () => {
+  try {
+    const { data } = await apiClient.get('/public/footer-pages');
+    footerPages.value = data.data || [];
+  } catch {
+    footerPages.value = [];
+  }
+});
 </script>

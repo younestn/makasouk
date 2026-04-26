@@ -23,6 +23,10 @@ class CategoryController extends Controller
         $this->authorize('manage', User::class);
         $category = Category::query()->create($request->validated());
 
-        return response()->json(['message' => 'تم إنشاء التصنيف بنجاح', 'data' => new CategoryResource($category)], 201);
+        return response()->json([
+            'message' => __('messages.admin.category_created_success'),
+            'data' => new CategoryResource($category),
+        ], 201);
     }
 }
+

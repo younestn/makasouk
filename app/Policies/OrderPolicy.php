@@ -11,7 +11,8 @@ class OrderPolicy
     {
         return $user->role === User::ROLE_ADMIN
             || ($user->role === User::ROLE_CUSTOMER && $order->customer_id === $user->id)
-            || ($user->role === User::ROLE_TAILOR && $order->tailor_id === $user->id);
+            || ($user->role === User::ROLE_TAILOR && $order->tailor_id === $user->id)
+            || ($user->role === User::ROLE_TAILOR && $order->tailorOffers()->where('tailor_id', $user->id)->exists());
     }
 
     public function cancelByCustomer(User $user, Order $order): bool

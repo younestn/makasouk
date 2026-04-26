@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Order;
+use App\Services\OrderFinancialsService;
 
 class RealtimeOrderPayload
 {
@@ -29,7 +30,7 @@ class RealtimeOrderPayload
      */
     public static function withProductAndDelivery(Order $order): array
     {
-        $order->loadMissing(['product.category']);
+        $order->loadMissing(['product.category', 'product.fabric']);
 
         return array_merge(self::base($order), [
             'product' => [
@@ -37,13 +38,32 @@ class RealtimeOrderPayload
                 'name' => $order->product?->name,
                 'category_id' => $order->product?->category_id,
                 'category_name' => $order->product?->category?->name,
+                'category_specialization' => $order->product?->category?->tailor_specialization,
                 'price' => $order->product?->price,
                 'pricing_type' => $order->product?->pricing_type,
+                'fabric_type' => $order->product?->display_fabric_type,
+                'fabric_country' => $order->product?->display_fabric_country,
+                'fabric_description' => $order->product?->display_fabric_description,
+                'fabric_image_url' => $order->product?->fabric_image_url,
             ],
             'measurements' => $order->measurements,
             'delivery' => [
-                'latitude' => $order->delivery_latitude,
-                'longitude' => $order->delivery_longitude,
+                'latitude' => null,
+                'longitude' => null,
+                'work_wilaya' => $order->delivery_work_wilaya,
+                'label' => null,
+                'preview' => $order->delivery_work_wilaya,
+                'is_limited' => true,
+            ],
+            'financials' => app(OrderFinancialsService::class)->payload($order),
+            'fulfillment' => [
+                'pattern_available' => filled($order->product?->pattern_file_path),
+                'pattern_locked' => filled($order->product?->pattern_file_path),
+                'pattern_file_url' => null,
+            ],
+            'matching' => [
+                'matched_specialization' => $order->matched_specialization,
+                'recommended_tailor_id' => data_get($order->matching_snapshot, 'recommended_tailor_id'),
             ],
         ]);
     }
@@ -53,7 +73,7 @@ class RealtimeOrderPayload
      */
     public static function withParticipantSummary(Order $order): array
     {
-        $order->loadMissing(['tailor', 'customer', 'product']);
+        $order->loadMissing(['tailor', 'customer', 'product.fabric']);
 
         return array_merge(self::base($order), [
             'customer' => [
@@ -67,6 +87,9 @@ class RealtimeOrderPayload
             'product' => [
                 'id' => $order->product?->id,
                 'name' => $order->product?->name,
+                'fabric_type' => $order->product?->display_fabric_type,
+                'fabric_country' => $order->product?->display_fabric_country,
+                'fabric_image_url' => $order->product?->fabric_image_url,
             ],
         ]);
     }

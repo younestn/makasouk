@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name') }} Web Client</title>
+    <title>{{ __('shop.meta.web_client_title') }}</title>
     <meta name="robots" content="noindex,nofollow">
     @vite(['resources/css/app.css', 'resources/js/main.js'])
 </head>

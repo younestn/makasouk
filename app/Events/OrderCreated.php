@@ -22,7 +22,7 @@ class OrderCreated implements ShouldBroadcastNow
         public array $tailorIds,
         public array $distancesByTailorId = [],
     ) {
-        $this->order->loadMissing(['product.category']);
+        $this->order->loadMissing(['product.category', 'product.fabric']);
     }
 
     /**
@@ -50,6 +50,8 @@ class OrderCreated implements ShouldBroadcastNow
             'meta' => [
                 'notified_tailor_ids' => $this->tailorIds,
                 'distances_by_tailor_id' => $this->distancesByTailorId,
+                'matched_specialization' => $this->order->matched_specialization,
+                'recommended_tailor_id' => data_get($this->order->matching_snapshot, 'recommended_tailor_id'),
             ],
         ];
     }

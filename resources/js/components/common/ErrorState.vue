@@ -1,8 +1,8 @@
-﻿<template>
+<template>
   <div class="ui-card stack">
     <div class="alert alert-danger">
-      <strong style="display: block; margin-bottom: 0.25rem;">{{ title }}</strong>
-      {{ message }}
+      <strong style="display: block; margin-bottom: 0.25rem;">{{ resolvedTitle }}</strong>
+      {{ resolvedMessage }}
     </div>
 
     <div v-if="retryable" class="actions">
@@ -12,16 +12,17 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useI18n } from '@/composables/useI18n';
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
-    default: 'Unable to load data',
+    default: '',
   },
   message: {
     type: String,
-    default: 'Something went wrong.',
+    default: '',
   },
   retryable: {
     type: Boolean,
@@ -32,4 +33,7 @@ defineProps({
 defineEmits(['retry']);
 
 const { t } = useI18n();
+
+const resolvedTitle = computed(() => props.title || t('common.error_default_title'));
+const resolvedMessage = computed(() => props.message || t('common.error_default_message'));
 </script>

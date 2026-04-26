@@ -1,38 +1,38 @@
-﻿<template>
+<template>
   <section class="page-section">
     <div class="container stack">
       <UiSectionHeader
-        title="How Makasouk Works"
-        description="A clear order lifecycle for customers, tailors, and operations teams."
+        :title="t('public.how_it_works_title')"
+        :description="t('public.how_it_works_description')"
       />
 
       <div class="grid grid-3">
         <UiCard class="stack">
-          <span class="badge badge-info">Step 1</span>
-          <h3 class="title">Create an order</h3>
-          <p class="subtitle">Customers choose a product, submit measurements, and provide delivery coordinates.</p>
+          <span class="badge badge-info">{{ t('public.how_it_works_step_1_badge') }}</span>
+          <h3 class="title">{{ t('public.how_it_works_step_1_title') }}</h3>
+          <p class="subtitle">{{ t('public.how_it_works_step_1_description') }}</p>
         </UiCard>
 
         <UiCard class="stack">
-          <span class="badge badge-warning">Step 2</span>
-          <h3 class="title">Tailor acceptance</h3>
-          <p class="subtitle">Nearby approved tailors receive realtime notifications and can accept available work.</p>
+          <span class="badge badge-warning">{{ t('public.how_it_works_step_2_badge') }}</span>
+          <h3 class="title">{{ t('public.how_it_works_step_2_title') }}</h3>
+          <p class="subtitle">{{ t('public.how_it_works_step_2_description') }}</p>
         </UiCard>
 
         <UiCard class="stack">
-          <span class="badge badge-success">Step 3</span>
-          <h3 class="title">Track to completion</h3>
-          <p class="subtitle">Order progress moves through controlled statuses until ready and completed.</p>
+          <span class="badge badge-success">{{ t('public.how_it_works_step_3_badge') }}</span>
+          <h3 class="title">{{ t('public.how_it_works_step_3_title') }}</h3>
+          <p class="subtitle">{{ t('public.how_it_works_step_3_description') }}</p>
         </UiCard>
       </div>
 
-      <UiAlert variant="info" title="Realtime contract">
-        Status changes are emitted through private channels and consumed by the web client in near real time.
+      <UiAlert :title="t('public.how_it_works_realtime_title')" variant="info">
+        {{ t('public.how_it_works_realtime_description') }}
       </UiAlert>
 
       <div class="actions">
-        <UiButton :to="{ name: 'publicForCustomers' }" variant="primary">Customer View</UiButton>
-        <UiButton :to="{ name: 'publicForTailors' }" variant="secondary">Tailor View</UiButton>
+        <UiButton :to="{ name: 'publicForCustomers' }" variant="primary">{{ t('public.how_it_works_cta_customers') }}</UiButton>
+        <UiButton :to="{ name: 'publicForTailors' }" variant="secondary">{{ t('public.how_it_works_cta_tailors') }}</UiButton>
       </div>
     </div>
   </section>
@@ -43,4 +43,7 @@ import UiAlert from '@/components/ui/UiAlert.vue';
 import UiButton from '@/components/ui/UiButton.vue';
 import UiCard from '@/components/ui/UiCard.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import { useI18n } from '@/composables/useI18n';
+
+const { t } = useI18n();
 </script>

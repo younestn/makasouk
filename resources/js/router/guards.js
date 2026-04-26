@@ -22,12 +22,25 @@ export function setupRouterGuards(router, pinia) {
     }
 
     if (to.meta.requiresGuest && authStore.isAuthenticated) {
+      if (authStore.needsTailorPhoneVerification) {
+        return { name: 'verifyPhone' };
+      }
+
       return homeRouteForRole(authStore.user?.role);
     }
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       toastStore.info(translate(locale, 'notifications.auth_required'));
       return { name: 'login', query: { redirect: to.fullPath } };
+    }
+
+    if (authStore.isAuthenticated && authStore.needsTailorPhoneVerification && to.name !== 'verifyPhone') {
+      toastStore.warning(translate(locale, 'notifications.phone_verification_required'));
+      return { name: 'verifyPhone' };
+    }
+
+    if (to.name === 'verifyPhone' && authStore.isAuthenticated && !authStore.needsTailorPhoneVerification) {
+      return homeRouteForRole(authStore.user?.role);
     }
 
     if (to.meta.roles && authStore.isAuthenticated) {

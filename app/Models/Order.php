@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
@@ -50,8 +51,16 @@ class Order extends Model
         'measurements',
         'delivery_latitude',
         'delivery_longitude',
+        'delivery_work_wilaya',
+        'delivery_location_label',
         'delivery_location',
         'status',
+        'matched_specialization',
+        'matching_snapshot',
+        'subtotal_amount',
+        'shipping_amount',
+        'platform_commission_amount',
+        'tailor_net_amount',
         'cancellation_reason',
         'accepted_at',
     ];
@@ -62,6 +71,11 @@ class Order extends Model
             'measurements' => 'array',
             'delivery_latitude' => 'float',
             'delivery_longitude' => 'float',
+            'matching_snapshot' => 'array',
+            'subtotal_amount' => 'decimal:2',
+            'shipping_amount' => 'decimal:2',
+            'platform_commission_amount' => 'decimal:2',
+            'tailor_net_amount' => 'decimal:2',
             'accepted_at' => 'datetime',
         ];
     }
@@ -84,5 +98,10 @@ class Order extends Model
     public function review(): HasOne
     {
         return $this->hasOne(Review::class);
+    }
+
+    public function tailorOffers(): HasMany
+    {
+        return $this->hasMany(TailorOrderOffer::class);
     }
 }

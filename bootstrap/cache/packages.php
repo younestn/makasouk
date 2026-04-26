@@ -98,6 +98,13 @@
       0 => 'Laravel\\Sanctum\\SanctumServiceProvider',
     ),
   ),
+  'laravel/tinker' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    ),
+  ),
   'livewire/livewire' => 
   array (
     'aliases' => 

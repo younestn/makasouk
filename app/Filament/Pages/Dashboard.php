@@ -24,12 +24,12 @@ class Dashboard extends BaseDashboard
 
     public function getTitle(): string | HtmlString
     {
-        return new HtmlString('Makasouk Admin Control Center');
+        return new HtmlString('Makasouk Atelier Control Center');
     }
 
     public function getSubheading(): string | HtmlString | null
     {
-        return 'Track platform activity, review recent operations, and access key controls in one place.';
+        return 'Oversee bespoke tailoring operations, monitor order craftsmanship flow, and act quickly on critical tasks.';
     }
 
     /**
@@ -38,6 +38,11 @@ class Dashboard extends BaseDashboard
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('enterStore')
+                ->label('Enter Store')
+                ->icon('heroicon-o-building-storefront')
+                ->url(url('/shop'))
+                ->color('warning'),
             Action::make('addProduct')
                 ->label('Add Product')
                 ->icon('heroicon-o-plus')

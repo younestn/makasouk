@@ -6,6 +6,8 @@ describe('spa routes', () => {
     const routeNames = router.getRoutes().map((route) => route.name).filter(Boolean);
 
     expect(routeNames).toContain('login');
+    expect(routeNames).toContain('register');
+    expect(routeNames).toContain('verifyPhone');
     expect(routeNames).toContain('customerDashboard');
     expect(routeNames).toContain('customerCatalog');
     expect(routeNames).toContain('customerCreateOrder');

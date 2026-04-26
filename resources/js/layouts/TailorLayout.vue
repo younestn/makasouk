@@ -7,7 +7,7 @@
           <p class="app-layout-subtitle">{{ authStore.user?.name }} · {{ authStore.user?.email }}</p>
         </div>
 
-        <nav class="nav-links" aria-label="Tailor navigation">
+        <nav class="nav-links" :aria-label="t('tailors.navigation_aria')">
           <RouterLink class="nav-link" :to="{ name: 'tailorDashboard' }">{{ t('common.dashboard') }}</RouterLink>
           <RouterLink class="nav-link" :to="{ name: 'tailorActiveOrders' }">{{ t('common.active_orders') }}</RouterLink>
           <RouterLink class="nav-link" :to="{ name: 'tailorAvailability' }">{{ t('common.availability') }}</RouterLink>

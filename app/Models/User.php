@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -11,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -30,10 +31,13 @@ class User extends Authenticatable implements FilamentUser
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'role',
         'is_suspended',
         'approved_at',
+        'email_verified_at',
+        'phone_verified_at',
     ];
 
     protected $hidden = [
@@ -45,6 +49,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return [
             'email_verified_at' => 'datetime',
+            'phone_verified_at' => 'datetime',
             'approved_at' => 'datetime',
             'is_suspended' => 'boolean',
             'password' => 'hashed',
@@ -61,6 +66,11 @@ class User extends Authenticatable implements FilamentUser
     public function tailorProfile(): HasOne
     {
         return $this->hasOne(TailorProfile::class);
+    }
+
+    public function phoneVerificationCodes(): HasMany
+    {
+        return $this->hasMany(PhoneVerificationCode::class);
     }
 
     public function customerOrders(): HasMany

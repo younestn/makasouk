@@ -1,13 +1,13 @@
-﻿<template>
+<template>
   <section class="stack">
     <UiSectionHeader
       :title="t('common.active_orders')"
-      description="Realtime-enabled list of your currently active customer orders."
+      :description="t('orders.active_description')"
     />
 
-    <LoadingState v-if="loading" label="Loading active orders..." />
+    <LoadingState v-if="loading" :label="t('orders.loading_active')" />
     <ErrorState v-else-if="error" :message="error" retryable @retry="reloadCurrentPage" />
-    <EmptyState v-else-if="orders.length === 0" message="No active orders yet.">
+    <EmptyState v-else-if="orders.length === 0" :message="t('orders.empty_active')">
       <template #actions>
         <RouterLink class="btn btn-primary" :to="{ name: 'customerCreateOrder' }">{{ t('common.create_order') }}</RouterLink>
       </template>
@@ -96,7 +96,7 @@ async function load(page = pagination.currentPage) {
 
     syncQuery(pagination.currentPage);
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to load active orders.');
+    error.value = getErrorMessage(err, t('messages.orders_active_load_failed'));
   } finally {
     loading.value = false;
   }

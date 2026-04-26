@@ -10,8 +10,8 @@ return [
 
     'timezone' => 'UTC',
 
-    'locale' => env('APP_LOCALE', 'en'),
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', config('localization.default_locale', 'ar')),
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', config('localization.fallback_locale', 'en')),
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
     'key' => env('APP_KEY'),

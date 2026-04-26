@@ -13,7 +13,7 @@ class EnsureUserIsActive
         $user = $request->user();
 
         if ($user && $user->is_suspended) {
-            return response()->json(['message' => 'Your account is suspended.'], 403);
+            return response()->json(['message' => __('messages.middleware.account_suspended')], 403);
         }
 
         return $next($request);

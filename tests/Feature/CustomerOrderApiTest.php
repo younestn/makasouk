@@ -28,7 +28,7 @@ class CustomerOrderApiTest extends TestCase
             ->postJson('/api/customer/orders', [
                 'product_id' => $product->id,
                 'measurements' => ['height' => 170, 'waist' => 80],
-                'customer_location' => ['latitude' => 33.5731, 'longitude' => -7.5898],
+                'customer_location' => ['latitude' => 36.7538, 'longitude' => 3.0588],
             ])
             ->assertCreated()
             ->assertJsonStructure(['message', 'data', 'meta']);

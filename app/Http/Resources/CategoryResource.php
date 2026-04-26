@@ -13,6 +13,7 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'tailor_specialization' => $this->tailor_specialization,
             'description' => $this->description,
             'is_active' => (bool) $this->is_active,
         ];

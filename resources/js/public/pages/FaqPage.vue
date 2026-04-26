@@ -1,36 +1,36 @@
-﻿<template>
+<template>
   <section class="page-section">
     <div class="container stack">
       <UiSectionHeader
-        title="Frequently Asked Questions"
-        description="Practical answers for client-app usage and order tracking."
+        :title="t('public.faq_title')"
+        :description="t('public.faq_description')"
       />
 
       <div class="stack">
         <UiCard class="stack">
-          <h3 class="title">How do I start as a customer?</h3>
-          <p class="subtitle">Open the web app, sign in, browse catalog items, then create your first order.</p>
+          <h3 class="title">{{ t('public.faq_q1') }}</h3>
+          <p class="subtitle">{{ t('public.faq_a1') }}</p>
         </UiCard>
 
         <UiCard class="stack">
-          <h3 class="title">How are tailors selected?</h3>
-          <p class="subtitle">Orders are broadcast to nearby approved tailors, and the first valid acceptance assigns the order.</p>
+          <h3 class="title">{{ t('public.faq_q2') }}</h3>
+          <p class="subtitle">{{ t('public.faq_a2') }}</p>
         </UiCard>
 
         <UiCard class="stack">
-          <h3 class="title">Can I track status without refreshing?</h3>
-          <p class="subtitle">Yes. Customer and tailor pages consume realtime events over authenticated private channels.</p>
+          <h3 class="title">{{ t('public.faq_q3') }}</h3>
+          <p class="subtitle">{{ t('public.faq_a3') }}</p>
         </UiCard>
 
         <UiCard class="stack">
-          <h3 class="title">Where is admin management handled?</h3>
-          <p class="subtitle">All admin workflows run separately in Filament under <code>/admin-panel</code>.</p>
+          <h3 class="title">{{ t('public.faq_q4') }}</h3>
+          <p class="subtitle">{{ t('public.faq_a4') }}</p>
         </UiCard>
       </div>
 
       <div class="actions">
-        <UiButton as="a" href="/app/login" variant="primary">Open App</UiButton>
-        <UiButton :to="{ name: 'publicContact' }" variant="ghost">Contact Support</UiButton>
+        <UiButton as="a" href="/app/login" variant="primary">{{ t('public.faq_cta_open_app') }}</UiButton>
+        <UiButton :to="{ name: 'publicContact' }" variant="ghost">{{ t('public.faq_cta_contact') }}</UiButton>
       </div>
     </div>
   </section>
@@ -40,4 +40,7 @@
 import UiButton from '@/components/ui/UiButton.vue';
 import UiCard from '@/components/ui/UiCard.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
+import { useI18n } from '@/composables/useI18n';
+
+const { t } = useI18n();
 </script>

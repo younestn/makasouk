@@ -1,10 +1,10 @@
-﻿<template>
+<template>
   <section class="stack">
-    <UiSectionHeader :title="t('common.active_orders')" description="Orders currently assigned to you." />
+    <UiSectionHeader :title="t('common.active_orders')" :description="t('tailors.active_orders_description')" />
 
-    <LoadingState v-if="loading" label="Loading active tailor orders..." />
+    <LoadingState v-if="loading" :label="t('tailors.loading_active_orders')" />
     <ErrorState v-else-if="error" :message="error" retryable @retry="reloadCurrentPage" />
-    <EmptyState v-else-if="orders.length === 0" message="No active orders assigned to you." />
+    <EmptyState v-else-if="orders.length === 0" :message="t('tailors.empty_active_orders')" />
 
     <template v-else>
       <div class="stack">
@@ -89,7 +89,7 @@ async function load(page = pagination.currentPage) {
 
     syncQuery(pagination.currentPage);
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to load tailor active orders.');
+    error.value = getErrorMessage(err, t('messages.tailor_active_orders_load_failed'));
   } finally {
     loading.value = false;
   }

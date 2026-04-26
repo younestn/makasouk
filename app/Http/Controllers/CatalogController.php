@@ -33,7 +33,7 @@ class CatalogController extends Controller
         ]);
 
         $products = Product::query()
-            ->with('category')
+            ->with(['category', 'fabric'])
             ->where('is_active', true)
             ->whereHas('category', fn ($query) => $query->where('is_active', true))
             ->when(isset($validated['category_id']), fn ($query) => $query->where('category_id', $validated['category_id']))
@@ -53,13 +53,18 @@ class CatalogController extends Controller
 
     public function showProduct(Product $product)
     {
-        $product->loadMissing('category');
+        $product->loadMissing(['category', 'fabric']);
 
         if (! $product->is_active || ! $product->category?->is_active) {
             abort(404);
         }
 
-        $product->load(['category', 'createdByAdmin']);
+        $product->load([
+            'category',
+            'fabric',
+            'createdByAdmin',
+            'measurements' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name'),
+        ]);
 
         return response()->json([
             'data' => new ProductResource($product),

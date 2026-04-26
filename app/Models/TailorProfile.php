@@ -16,9 +16,16 @@ class TailorProfile extends Model
     protected $fillable = [
         'user_id',
         'category_id',
+        'specialization',
+        'work_wilaya',
+        'years_of_experience',
+        'gender',
+        'workers_count',
+        'commercial_register_path',
         'status',
         'average_rating',
         'total_reviews',
+        'score',
         'latitude',
         'longitude',
         'location',
@@ -28,6 +35,7 @@ class TailorProfile extends Model
         'status' => self::STATUS_OFFLINE,
         'average_rating' => 0,
         'total_reviews' => 0,
+        'score' => 100,
     ];
 
     protected function casts(): array
@@ -36,6 +44,9 @@ class TailorProfile extends Model
             'category_id' => 'integer',
             'average_rating' => 'decimal:2',
             'total_reviews' => 'integer',
+            'score' => 'integer',
+            'years_of_experience' => 'integer',
+            'workers_count' => 'integer',
             'latitude' => 'float',
             'longitude' => 'float',
         ];

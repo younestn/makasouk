@@ -53,6 +53,7 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($admin, 'web')->followingRedirects()->get('/admin-panel/users')->assertOk();
         $this->actingAs($admin, 'web')->followingRedirects()->get('/admin-panel/categories')->assertOk();
+        $this->actingAs($admin, 'web')->followingRedirects()->get('/admin-panel/measurements')->assertOk();
         $this->actingAs($admin, 'web')->followingRedirects()->get('/admin-panel/products')->assertOk();
         $this->actingAs($admin, 'web')->followingRedirects()->get('/admin-panel/orders')->assertOk();
         $this->actingAs($admin, 'web')->followingRedirects()->get('/admin-panel/reviews')->assertOk();

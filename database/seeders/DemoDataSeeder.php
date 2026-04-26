@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Review;
@@ -21,12 +22,14 @@ class DemoDataSeeder extends Seeder
 
         $tailors->each(function (User $tailor) use ($categoryIds): void {
             $categoryId = (int) $categoryIds->random();
-            $lat = fake()->latitude(24, 35);
-            $lng = fake()->longitude(-17, 55);
+            $category = Category::query()->find($categoryId);
+            $lat = fake()->latitude(19, 37);
+            $lng = fake()->longitude(-8, 12);
 
             $profile = TailorProfile::factory()->create([
                 'user_id' => $tailor->id,
                 'category_id' => $categoryId,
+                'specialization' => $category?->tailor_specialization,
                 'status' => TailorProfile::STATUS_ONLINE,
                 'latitude' => $lat,
                 'longitude' => $lng,
@@ -56,6 +59,8 @@ class DemoDataSeeder extends Seeder
                 'measurements' => $order->measurements,
                 'delivery_latitude' => $order->delivery_latitude,
                 'delivery_longitude' => $order->delivery_longitude,
+                'delivery_work_wilaya' => $tailor->tailorProfile?->work_wilaya,
+                'matched_specialization' => $product->category?->tailor_specialization,
                 'status' => $status,
                 'accepted_at' => in_array(
                     $status,

@@ -14,6 +14,7 @@ export const useUiPreferencesStore = defineStore('uiPreferences', {
   actions: {
     initialize() {
       this.locale = normalizeLocale(this.locale);
+      writeStoredLocale(this.locale);
       this.applyDocumentPreferences();
     },
 

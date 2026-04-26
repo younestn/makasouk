@@ -1,16 +1,16 @@
-﻿<template>
+<template>
   <section class="stack">
     <UiSectionHeader
-      title="Customer Dashboard"
-      description="Quick operational snapshot for your account and order activity."
+      :title="t('customers.dashboard_title')"
+      :description="t('customers.dashboard_description')"
     />
 
-    <LoadingState v-if="loading" label="Loading customer dashboard..." hint="Fetching active and history counts." />
+    <LoadingState v-if="loading" :label="t('customers.dashboard_loading_label')" :hint="t('customers.dashboard_loading_hint')" />
     <ErrorState v-else-if="error" :message="error" retryable @retry="load" />
 
     <div v-else class="grid grid-2">
-      <UiStatBlock label="Active Orders" :value="stats.active" hint="Realtime-enabled" tone="info" />
-      <UiStatBlock label="History Orders" :value="stats.history" hint="Completed and cancelled" />
+      <UiStatBlock :label="t('customers.dashboard_active_orders_label')" :value="stats.active" :hint="t('customers.dashboard_active_orders_hint')" tone="info" />
+      <UiStatBlock :label="t('customers.dashboard_history_orders_label')" :value="stats.history" :hint="t('customers.dashboard_history_orders_hint')" />
     </div>
   </section>
 </template>
@@ -23,7 +23,9 @@ import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import UiStatBlock from '@/components/ui/UiStatBlock.vue';
 import { fetchActiveOrders, fetchOrderHistory } from '@/services/customerOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
+import { useI18n } from '@/composables/useI18n';
 
+const { t } = useI18n();
 const loading = ref(false);
 const error = ref('');
 const stats = reactive({ active: 0, history: 0 });
@@ -41,7 +43,7 @@ async function load() {
     stats.active = activeResponse.meta?.total || 0;
     stats.history = historyResponse.meta?.total || 0;
   } catch (err) {
-    error.value = getErrorMessage(err, 'Failed to load dashboard data.');
+    error.value = getErrorMessage(err, t('messages.customer_dashboard_load_failed'));
   } finally {
     loading.value = false;
   }

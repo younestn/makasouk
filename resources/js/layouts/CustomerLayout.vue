@@ -7,7 +7,7 @@
           <p class="app-layout-subtitle">{{ authStore.user?.name }} · {{ authStore.user?.email }}</p>
         </div>
 
-        <nav class="nav-links" aria-label="Customer navigation">
+        <nav class="nav-links" :aria-label="t('customers.navigation_aria')">
           <RouterLink class="nav-link" :to="{ name: 'customerDashboard' }">{{ t('common.dashboard') }}</RouterLink>
           <RouterLink class="nav-link" :to="{ name: 'customerCatalog' }">{{ t('common.catalog') }}</RouterLink>
           <RouterLink class="nav-link" :to="{ name: 'customerCreateOrder' }">{{ t('common.create_order') }}</RouterLink>

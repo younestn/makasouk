@@ -1,6 +1,11 @@
-export function getErrorMessage(error, fallback = 'Something went wrong.') {
+import { readStoredLocale, translate } from '@/i18n';
+
+export function getErrorMessage(error, fallback = '') {
+  const locale = readStoredLocale();
+  const resolvedFallback = fallback || translate(locale, 'messages.unexpected_client_error');
+
   if (!error) {
-    return fallback;
+    return resolvedFallback;
   }
 
   if (typeof error === 'string') {
@@ -19,5 +24,5 @@ export function getErrorMessage(error, fallback = 'Something went wrong.') {
     }
   }
 
-  return fallback;
+  return resolvedFallback;
 }
