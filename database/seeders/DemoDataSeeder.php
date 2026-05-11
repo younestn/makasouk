@@ -9,7 +9,6 @@ use App\Models\Review;
 use App\Models\TailorProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DemoDataSeeder extends Seeder
 {
@@ -37,7 +36,6 @@ class DemoDataSeeder extends Seeder
                 'total_reviews' => 0,
             ]);
 
-            DB::statement('UPDATE tailor_profiles SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?', [$lng, $lat, $profile->id]);
         });
 
         $products = Product::query()->get();
@@ -71,14 +69,6 @@ class DemoDataSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            DB::statement(
-                'UPDATE orders SET delivery_location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?',
-                [
-                    $createdOrder->delivery_longitude,
-                    $createdOrder->delivery_latitude,
-                    $createdOrder->id,
-                ]
-            );
         });
 
         $completedOrders = Order::query()->where('status', Order::STATUS_COMPLETED)->take(5)->get();

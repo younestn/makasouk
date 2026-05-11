@@ -40,6 +40,8 @@ class ShopPageService
             ->published()
             ->whereHas('category', fn (Builder $query) => $query->active())
             ->with(['category:id,name,slug', 'fabric'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->newArrivals()
             ->limit($settings->products_per_section)
             ->get();
@@ -50,8 +52,16 @@ class ShopPageService
             ->published()
             ->whereHas('category', fn (Builder $query) => $query->active())
             ->with(['category:id,name,slug', 'fabric'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->when($bestSellerIds->isNotEmpty(), function (Builder $query) use ($bestSellerIds): void {
-                $query->whereIn('id', $bestSellerIds)->orderByRaw('array_position(ARRAY['.$bestSellerIds->implode(',').']::bigint[], id)');
+                $orderedIds = $bestSellerIds
+                    ->map(fn ($id): int => (int) $id)
+                    ->implode(',');
+
+                $query
+                    ->whereIn('id', $bestSellerIds)
+                    ->orderByRaw('FIELD(id, '.$orderedIds.')');
             }, function (Builder $query): void {
                 $query->bestSeller()->latest('published_at')->latest('created_at');
             })
@@ -68,6 +78,8 @@ class ShopPageService
                 $query->published()
                     ->whereHas('category', fn (Builder $categoryQuery) => $categoryQuery->active())
                     ->with('fabric')
+                    ->withCount('reviews')
+                    ->withAvg('reviews', 'rating')
                     ->orderByDesc('is_featured')
                     ->orderByDesc('published_at')
                     ->orderByDesc('created_at')
@@ -77,6 +89,8 @@ class ShopPageService
 
         $allProducts = $this->buildAllProductsQuery($filters)
             ->with(['category:id,name,slug', 'fabric'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->paginate($settings->all_products_per_page)
             ->withQueryString();
 
@@ -106,10 +120,10 @@ class ShopPageService
             ->when($filters['in_stock'] ?? null, fn (Builder $productsQuery) => $productsQuery->inStock())
             ->when($filters['q'] ?? null, function (Builder $productsQuery, string $search): void {
                 $productsQuery->where(function (Builder $searchQuery) use ($search): void {
-                    $searchQuery->where('name', 'ilike', "%{$search}%")
-                        ->orWhere('short_description', 'ilike', "%{$search}%")
-                        ->orWhere('description', 'ilike', "%{$search}%")
-                        ->orWhere('sku', 'ilike', "%{$search}%");
+                    $searchQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('short_description', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%");
                 });
             })
             ->when($filters['min_price'] ?? null, fn (Builder $productsQuery, mixed $price) => $productsQuery->where('price', '>=', (float) $price))

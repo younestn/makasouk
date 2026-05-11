@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ShippingCompany;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,6 +19,7 @@ class CustomerOrderApiTest extends TestCase
         $customer = User::factory()->create(['role' => User::ROLE_CUSTOMER]);
         $category = Category::factory()->create();
         $admin = User::factory()->admin()->create();
+        $shippingCompany = ShippingCompany::factory()->create();
         $product = Product::factory()->create([
             'category_id' => $category->id,
             'created_by_admin_id' => $admin->id,
@@ -28,7 +30,15 @@ class CustomerOrderApiTest extends TestCase
             ->postJson('/api/customer/orders', [
                 'product_id' => $product->id,
                 'measurements' => ['height' => 170, 'waist' => 80],
-                'customer_location' => ['latitude' => 36.7538, 'longitude' => 3.0588],
+                'customer_location' => ['latitude' => 36.7538, 'longitude' => 3.0588, 'work_wilaya' => 'Algiers'],
+                'shipping' => [
+                    'company_id' => $shippingCompany->id,
+                    'delivery_type' => 'office_pickup',
+                    'commune' => 'Sidi M\'Hamed',
+                    'neighborhood' => 'City Center',
+                    'phone' => '+213555000003',
+                    'email' => 'customer@example.com',
+                ],
             ])
             ->assertCreated()
             ->assertJsonStructure(['message', 'data', 'meta']);

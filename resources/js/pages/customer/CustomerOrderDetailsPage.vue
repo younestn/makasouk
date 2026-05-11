@@ -22,6 +22,34 @@
           <UiStatBlock :label="t('orders.tailor_label')" :value="order.tailor?.name || '-'" />
         </div>
 
+        <div class="ui-card stack">
+          <h2 class="title" style="font-size: 1rem; margin: 0;">{{ t('orders.configuration_title') }}</h2>
+          <div class="grid grid-2">
+            <UiStatBlock
+              :label="t('orders.selected_color_label')"
+              :value="order.configuration?.color?.label || t('common.not_available')"
+            />
+            <UiStatBlock
+              :label="t('orders.selected_fabric_label')"
+              :value="order.configuration?.fabric?.label || t('common.not_available')"
+            />
+          </div>
+        </div>
+
+        <div class="ui-card stack">
+          <h2 class="title" style="font-size: 1rem; margin: 0;">{{ t('orders.shipping_details_title') }}</h2>
+          <div class="grid grid-2">
+            <UiStatBlock :label="t('orders.shipping_company_label')" :value="order.shipping?.company_name || '-'" />
+            <UiStatBlock :label="t('orders.delivery_type_label')" :value="deliveryTypeLabel" />
+            <UiStatBlock :label="t('orders.delivery_wilaya_label')" :value="order.delivery?.work_wilaya || '-'" />
+            <UiStatBlock :label="t('orders.delivery_commune_label')" :value="order.delivery?.commune || '-'" />
+            <UiStatBlock :label="t('orders.delivery_neighborhood_label')" :value="order.delivery?.neighborhood || '-'" />
+            <UiStatBlock :label="t('orders.delivery_location_label_label')" :value="order.delivery?.label || order.delivery?.preview || '-'" />
+            <UiStatBlock :label="t('orders.delivery_phone_label')" :value="order.shipping?.phone || '-'" />
+            <UiStatBlock :label="t('orders.delivery_email_label')" :value="order.shipping?.email || '-'" />
+          </div>
+        </div>
+
         <div v-if="hasFabricInfo" class="ui-card stack" style="border: 1px solid rgba(148, 163, 184, 0.25);">
           <h2 class="title" style="font-size: 1rem; margin: 0;">{{ t('orders.fabric_section_title') }}</h2>
 
@@ -52,7 +80,7 @@
           </div>
         </div>
 
-        <div class="ui-card" v-if="order.lifecycle">
+        <div class="ui-card stack" v-if="order.lifecycle">
           <p class="label">{{ t('orders.lifecycle_hints') }}</p>
           <p class="small">{{ t('orders.customer_can_cancel', { value: booleanText(order.lifecycle.customer_can_cancel) }) }}</p>
           <p class="small">{{ t('orders.is_terminal', { value: booleanText(order.lifecycle.is_terminal) }) }}</p>
@@ -123,10 +151,7 @@ const review = reactive({
   comment: '',
 });
 
-const canSubmitReview = computed(() => {
-  return order.value?.status === 'completed' && !order.value?.review;
-});
-
+const canSubmitReview = computed(() => order.value?.status === 'completed' && !order.value?.review);
 const hasFabricInfo = computed(() => {
   const fabric = order.value?.product;
 
@@ -136,6 +161,13 @@ const hasFabricInfo = computed(() => {
       || fabric?.fabric_description
       || fabric?.fabric_image_url,
   );
+});
+const deliveryTypeLabel = computed(() => {
+  if (order.value?.shipping?.delivery_type === 'office_pickup') {
+    return t('orders.delivery_type_office_pickup');
+  }
+
+  return order.value?.shipping?.delivery_type || '-';
 });
 
 function booleanText(value) {

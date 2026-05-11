@@ -28,11 +28,20 @@ class FabricFactory extends Factory
             'Viscose Comfort',
         ]);
 
-        $name = $baseName . ' ' . fake()->numberBetween(100, 9999);
+        $nameEn = $baseName.' '.fake()->numberBetween(100, 9999);
+        $nameAr = fake()->randomElement([
+            'قطن فاخر',
+            'حرير ساتان',
+            'مزيج كتان',
+            'كريب صوفي',
+            'بروكار تقليدي',
+        ]).' '.fake()->numberBetween(100, 9999);
 
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
+            'name' => $nameEn,
+            'name_en' => $nameEn,
+            'name_ar' => $nameAr,
+            'slug' => Str::slug($nameEn),
             'country' => fake()->randomElement([
                 'Algeria',
                 'Morocco',
@@ -45,6 +54,8 @@ class FabricFactory extends Factory
                 'China',
             ]),
             'description' => fake()->optional()->sentence(12),
+            'description_en' => fake()->optional()->sentence(12),
+            'description_ar' => 'مرجع قماش مناسب للمنتجات المفصلة حسب الطلب.',
             'image_path' => null,
             'is_active' => true,
             'sort_order' => fake()->numberBetween(1, 100),

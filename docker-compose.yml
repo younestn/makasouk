@@ -1,14 +1,15 @@
 services:
-  postgres:
-    image: postgis/postgis:16-3.4
+  mysql:
+    image: mysql:8.4
     environment:
-      POSTGRES_DB: makasouk
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      MYSQL_DATABASE: makasouk
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: makasouk
+      MYSQL_PASSWORD: makasouk
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
 
   redis:
     image: redis:7-alpine
@@ -22,4 +23,4 @@ services:
       - "1025:1025"
 
 volumes:
-  pg_data:
+  mysql_data:

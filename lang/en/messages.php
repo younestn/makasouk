@@ -34,6 +34,9 @@ return [
         'status_transition_not_allowed' => 'Status transition is not allowed.',
         'status_updated_success' => 'Order status updated successfully.',
         'cancelled_by_tailor' => 'Order cancelled by tailor.',
+        'delivery_types' => [
+            'office_pickup' => 'Office pickup only',
+        ],
     ],
     'reviews' => [
         'order_not_completed' => 'Order must be completed before review submission.',
@@ -87,5 +90,10 @@ return [
         'measurements_at_least_one' => 'At least one measurement value is required.',
         'measurements_positive_numeric' => 'Measurements must be positive numeric values in centimeters.',
         'location_must_be_in_algeria' => 'Please choose a location inside Algeria.',
+        'order_configuration_invalid' => 'The selected product configuration is invalid.',
+        'color_selection_required' => 'Please choose a product color before continuing.',
+        'color_selection_invalid' => 'The selected color is not available for this product.',
+        'fabric_selection_required' => 'Please confirm the fabric option before continuing.',
+        'fabric_selection_invalid' => 'The selected fabric option is not available for this product.',
     ],
 ];

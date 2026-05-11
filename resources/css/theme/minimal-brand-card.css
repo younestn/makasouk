@@ -220,3 +220,586 @@
     padding: 1rem;
   }
 }
+
+.fi-panel-admin .fi-simple-layout:has(.mk-admin-login-page) {
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.18), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.22), transparent 30%),
+    linear-gradient(140deg, #081426 0%, #0d2246 38%, #123770 100%);
+}
+
+.fi-panel-admin .fi-simple-main-ctn:has(.mk-admin-login-page) {
+  padding: 1.5rem;
+}
+
+.fi-panel-admin .fi-simple-main:has(.mk-admin-login-page) {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+
+.fi-panel-admin .mk-admin-login-page {
+  width: 100%;
+}
+
+.fi-panel-admin .mk-admin-login-page .fi-simple-header {
+  display: none;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-shell {
+  position: relative;
+  width: min(100%, 1280px);
+  margin-inline: auto;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-shell::before {
+  width: 22rem;
+  height: 22rem;
+  top: -5rem;
+  right: -7rem;
+  background: rgba(56, 189, 248, 0.2);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-shell::after {
+  width: 18rem;
+  height: 18rem;
+  bottom: -5rem;
+  left: -5rem;
+  background: rgba(37, 99, 235, 0.16);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-grid {
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  min-height: min(860px, calc(100vh - 3rem));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 40px 90px -50px rgba(2, 6, 23, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel {
+  position: relative;
+  padding: clamp(2rem, 4vw, 3.25rem);
+  background:
+    radial-gradient(circle at top left, rgba(147, 197, 253, 0.26), transparent 28%),
+    linear-gradient(165deg, rgba(7, 18, 39, 0.92) 0%, rgba(12, 35, 73, 0.9) 42%, rgba(22, 60, 120, 0.82) 100%);
+  border-inline-end: 1px solid rgba(191, 219, 254, 0.14);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel::before,
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel::before {
+  inset: 1.2rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(191, 219, 254, 0.1);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel::after {
+  width: 14rem;
+  height: 14rem;
+  right: -4rem;
+  bottom: -5rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0));
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  gap: 1.35rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-pill {
+  padding: 0.45rem 0.85rem;
+  border-color: rgba(226, 232, 240, 0.2);
+  background: rgba(8, 15, 31, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.36);
+  color: rgba(226, 232, 240, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-status-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #34d399;
+  box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  animation: mk-auth-pulse 1.8s infinite;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-copy {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(191, 219, 254, 0.88);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brandmark {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(191, 219, 254, 0.26);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(59, 130, 246, 0.15)),
+    rgba(15, 23, 42, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 20px 40px -30px rgba(15, 23, 42, 0.95);
+  font-size: 1.15rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-title {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 1.02;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-subtitle {
+  max-width: 52ch;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(226, 232, 240, 0.88);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-workspace-card {
+  display: grid;
+  gap: 1rem;
+  margin-top: 0.3rem;
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(191, 219, 254, 0.14);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.5), rgba(15, 23, 42, 0.28)),
+    rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-workspace-head {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-workspace-label {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-workspace-note {
+  margin: 0;
+  color: rgba(191, 219, 254, 0.78);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-workspace-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-metric-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(191, 219, 254, 0.14);
+  background: rgba(15, 23, 42, 0.38);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-metric-icon,
+.fi-panel-admin .mk-admin-login-page .mk-auth-signal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.75rem;
+  background: rgba(147, 197, 253, 0.14);
+  color: #bfdbfe;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-metric-label {
+  font-size: 0.76rem;
+  color: rgba(226, 232, 240, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-metric-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-signal-card {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem;
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(15, 23, 42, 0.14)),
+    rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(191, 219, 254, 0.1);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-signal-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #eff6ff;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-signal-body {
+  margin: 0;
+  color: rgba(191, 219, 254, 0.75);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-list {
+  gap: 0.75rem;
+  margin-top: auto;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-brand-list li {
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.24);
+  border: 1px solid rgba(191, 219, 254, 0.12);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-trust-note {
+  margin-top: 0.2rem;
+  color: rgba(191, 219, 254, 0.92);
+  font-size: 0.83rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-panel {
+  min-width: 0;
+  padding: clamp(1.4rem, 4vw, 2.5rem);
+  background:
+    radial-gradient(circle at top, rgba(191, 219, 254, 0.28), transparent 25%),
+    linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.84));
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card {
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border-radius: 1.6rem;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 28px 60px -42px rgba(15, 23, 42, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-header {
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 0.34rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(14, 116, 144, 0.08);
+  color: #0f4f97;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-title {
+  font-size: clamp(1.45rem, 2vw, 1.9rem);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-subtitle {
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+  margin-bottom: 1rem;
+  animation: mk-auth-slide-up 0.22s ease-out;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert-success {
+  background: rgba(220, 252, 231, 0.7);
+  border-color: rgba(34, 197, 94, 0.18);
+  color: #166534;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert-danger {
+  background: rgba(254, 242, 242, 0.82);
+  border-color: rgba(239, 68, 68, 0.18);
+  color: #991b1b;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert-title,
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert-body {
+  margin: 0;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-alert-body {
+  margin-top: 0.15rem;
+  font-size: 0.84rem;
+  line-height: 1.55;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-fields {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-fields .fi-fo-field-wrp {
+  margin-bottom: 0.7rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-fo-field-wrp-label label,
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-fo-field-wrp-label span {
+  color: #0f172a;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-fo-field-wrp-hint {
+  font-size: 0.82rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-input-wrp {
+  min-height: 3.25rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(248, 250, 252, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-input-wrp:hover {
+  border-color: rgba(59, 130, 246, 0.24);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-input-wrp:focus-within {
+  border-color: rgba(37, 99, 235, 0.44);
+  box-shadow:
+    0 0 0 4px rgba(59, 130, 246, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-input {
+  min-height: 3.25rem;
+  font-size: 0.96rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-fo-field-wrp-error-message {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-checkbox-input {
+  border-radius: 0.5rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-helper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.15rem 0 0.35rem;
+  font-size: 0.83rem;
+  color: #475569;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-card .fi-form-actions .fi-btn {
+  min-height: 3.4rem;
+  border-radius: 1rem;
+  font-size: 0.96rem;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-submit-button {
+  letter-spacing: 0.01em;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-submit-state {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+  color: #1d4ed8;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.fi-panel-admin .mk-admin-login-page .mk-auth-form-footer {
+  margin-top: 0.85rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+[dir="rtl"] .fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel {
+  border-inline-end: 0;
+  border-inline-start: 1px solid rgba(191, 219, 254, 0.14);
+}
+
+[dir="rtl"] .fi-panel-admin .mk-admin-login-page .mk-auth-brand-topbar {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .fi-panel-admin .mk-admin-login-page .mk-auth-brand-list li {
+  text-align: right;
+}
+
+[dir="rtl"] .fi-panel-admin .mk-admin-login-page .mk-auth-alert,
+[dir="rtl"] .fi-panel-admin .mk-admin-login-page .mk-auth-form-helper {
+  direction: rtl;
+}
+
+@keyframes mk-auth-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(52, 211, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+  }
+}
+
+@keyframes mk-auth-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1100px) {
+  .fi-panel-admin .mk-admin-login-page .mk-auth-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel,
+  .fi-panel-admin .mk-admin-login-page .mk-auth-form-panel {
+    padding: 1.5rem;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-workspace-metrics,
+  .fi-panel-admin .mk-admin-login-page .mk-auth-signal-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel {
+    order: 2;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-form-panel {
+    order: 1;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-workspace-card {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .fi-panel-admin .fi-simple-main-ctn:has(.mk-admin-login-page) {
+    padding: 0.9rem;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-grid {
+    border-radius: 1.4rem;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-brand-panel,
+  .fi-panel-admin .mk-admin-login-page .mk-auth-form-panel {
+    padding: 1.1rem;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-brand-title {
+    font-size: 1.75rem;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-form-card {
+    width: 100%;
+    padding: 1.1rem;
+    border-radius: 1.2rem;
+  }
+
+  .fi-panel-admin .mk-admin-login-page .mk-auth-brand-list li {
+    padding: 0.8rem 0.9rem;
+  }
+}

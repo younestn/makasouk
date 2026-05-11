@@ -8,7 +8,6 @@ use App\Models\Product;
 use App\Models\TailorProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ClientAppFixturesSeeder extends Seeder
@@ -74,12 +73,6 @@ class ClientAppFixturesSeeder extends Seeder
                 'total_reviews' => 12,
             ],
         );
-
-        DB::statement(
-            'UPDATE tailor_profiles SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?',
-            [$longitude, $latitude, $tailorProfile->id],
-        );
-
         Order::query()
             ->where('customer_id', $customer->id)
             ->where('tailor_id', $tailor->id)
@@ -108,10 +101,5 @@ class ClientAppFixturesSeeder extends Seeder
             ],
             'accepted_at' => now()->subHours(2),
         ]);
-
-        DB::statement(
-            'UPDATE orders SET delivery_location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?',
-            [$longitude, $latitude, $order->id],
-        );
     }
 }

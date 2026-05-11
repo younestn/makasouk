@@ -49,11 +49,18 @@ class Order extends Model
         'tailor_id',
         'product_id',
         'measurements',
+        'order_configuration',
         'delivery_latitude',
         'delivery_longitude',
         'delivery_work_wilaya',
+        'delivery_commune',
+        'delivery_neighborhood',
         'delivery_location_label',
-        'delivery_location',
+        'shipping_company_id',
+        'shipping_company_name',
+        'delivery_type',
+        'delivery_phone',
+        'delivery_email',
         'status',
         'matched_specialization',
         'matching_snapshot',
@@ -69,6 +76,7 @@ class Order extends Model
     {
         return [
             'measurements' => 'array',
+            'order_configuration' => 'array',
             'delivery_latitude' => 'float',
             'delivery_longitude' => 'float',
             'matching_snapshot' => 'array',
@@ -93,6 +101,11 @@ class Order extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function shippingCompany(): BelongsTo
+    {
+        return $this->belongsTo(ShippingCompany::class);
     }
 
     public function review(): HasOne

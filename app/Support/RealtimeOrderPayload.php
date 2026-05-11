@@ -37,7 +37,7 @@ class RealtimeOrderPayload
                 'id' => $order->product?->id,
                 'name' => $order->product?->name,
                 'category_id' => $order->product?->category_id,
-                'category_name' => $order->product?->category?->name,
+                'category_name' => $order->product?->category?->display_name,
                 'category_specialization' => $order->product?->category?->tailor_specialization,
                 'price' => $order->product?->price,
                 'pricing_type' => $order->product?->pricing_type,
@@ -57,9 +57,10 @@ class RealtimeOrderPayload
             ],
             'financials' => app(OrderFinancialsService::class)->payload($order),
             'fulfillment' => [
-                'pattern_available' => filled($order->product?->pattern_file_path),
-                'pattern_locked' => filled($order->product?->pattern_file_path),
+                'pattern_available' => (bool) ($order->product?->has_pattern_files ?? false),
+                'pattern_locked' => (bool) ($order->product?->has_pattern_files ?? false),
                 'pattern_file_url' => null,
+                'pattern_file_urls' => [],
             ],
             'matching' => [
                 'matched_specialization' => $order->matched_specialization,

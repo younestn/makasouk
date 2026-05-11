@@ -1,11 +1,11 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ __('shop.meta.title') }}</title>
     <meta name="description" content="{{ __('shop.meta.description') }}">
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/css/theme/shop-product-card.css'])
 </head>
 <body>
 <header class="public-header">
@@ -70,7 +70,7 @@
                                     'message' => __('shop.empty.no_new_arrivals_message'),
                                 ])
                             @else
-                                <div class="grid grid-4">
+                                <div class="storefront-product-grid">
                                     @foreach($newArrivals as $product)
                                         @include('shop.partials.product-card', ['product' => $product])
                                     @endforeach
@@ -95,7 +95,7 @@
                                     'message' => __('shop.empty.no_best_sellers_message'),
                                 ])
                             @else
-                                <div class="grid grid-4">
+                                <div class="storefront-product-grid">
                                     @foreach($bestSellers as $product)
                                         @include('shop.partials.product-card', ['product' => $product])
                                     @endforeach
@@ -125,8 +125,8 @@
                                         <section class="stack">
                                             <div class="row" style="justify-content: space-between; align-items: end;">
                                                 <div>
-                                                    <h3 class="title">{{ $category->name }}</h3>
-                                                    <p class="small">{{ $category->description ?: __('shop.sections.category_fallback_description') }}</p>
+                                                    <h3 class="title">{{ $category->display_name }}</h3>
+                                                    <p class="small">{{ $category->display_description ?: __('shop.sections.category_fallback_description') }}</p>
                                                 </div>
                                                 <a class="ui-btn ui-btn--secondary ui-btn--sm" href="{{ route('shop.category', $category->slug) }}">{{ __('shop.actions.view_more') }}</a>
                                             </div>
@@ -137,7 +137,7 @@
                                                     'message' => __('shop.empty.no_products_in_category_message'),
                                                 ])
                                             @else
-                                                <div class="grid grid-4">
+                                                <div class="storefront-product-grid">
                                                     @foreach($category->products as $product)
                                                         @include('shop.partials.product-card', ['product' => $product])
                                                     @endforeach
@@ -173,7 +173,7 @@
                                             <option value="">{{ __('shop.filters.all_categories') }}</option>
                                             @foreach($categories as $category)
                                                 <option value="{{ $category->slug }}" @selected(($filters['category'] ?? '') === $category->slug)>
-                                                    {{ $category->name }}
+                                                    {{ $category->display_name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -219,7 +219,7 @@
                                     'message' => __('shop.empty.no_products_match_message'),
                                 ])
                             @else
-                                <div class="grid grid-4">
+                                <div class="storefront-product-grid">
                                     @foreach($allProducts as $product)
                                         @include('shop.partials.product-card', ['product' => $product])
                                     @endforeach

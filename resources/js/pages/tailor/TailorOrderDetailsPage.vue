@@ -88,16 +88,19 @@
         <div class="ui-card stack" style="border: 1px solid rgba(148, 163, 184, 0.25);">
           <h2 class="title" style="font-size: 1rem; margin: 0;">{{ t('orders.pattern_section_title') }}</h2>
           <p v-if="order.fulfillment?.pattern_locked" class="small">{{ t('orders.pattern_locked_notice') }}</p>
-          <a
-            v-else-if="order.fulfillment?.pattern_file_url"
-            :href="order.fulfillment.pattern_file_url"
-            class="btn"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="width: fit-content;"
-          >
-            {{ t('orders.open_pattern_file') }}
-          </a>
+          <div v-else-if="availablePatternFiles.length" class="stack" style="gap: 0.55rem;">
+            <a
+              v-for="(patternUrl, index) in availablePatternFiles"
+              :key="`${patternUrl}-${index}`"
+              :href="patternUrl"
+              class="btn"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="width: fit-content;"
+            >
+              {{ availablePatternFiles.length > 1 ? `${t('orders.open_pattern_file')} ${index + 1}` : t('orders.open_pattern_file') }}
+            </a>
+          </div>
           <p v-else class="small">{{ t('orders.pattern_not_available') }}</p>
         </div>
       </div>
@@ -195,6 +198,15 @@ const declineReason = ref('unavailable');
 const declineNote = ref('');
 
 const nextStatusOptions = computed(() => order.value?.lifecycle?.allowed_next_statuses_for_tailor || []);
+const availablePatternFiles = computed(() => {
+  const files = order.value?.fulfillment?.pattern_file_urls;
+
+  if (Array.isArray(files) && files.length) {
+    return files;
+  }
+
+  return order.value?.fulfillment?.pattern_file_url ? [order.value.fulfillment.pattern_file_url] : [];
+});
 const hasFabricInfo = computed(() => {
   const fabric = order.value?.product;
 

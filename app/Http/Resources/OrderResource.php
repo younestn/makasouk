@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Support\OrderLifecycle;
 use App\Services\OrderFinancialsService;
+use App\Support\OrderLifecycle;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -28,19 +28,38 @@ class OrderResource extends JsonResource
             'tailor_id' => $this->tailor_id,
             'product_id' => $this->product_id,
             'measurements' => $this->measurements,
+            'configuration' => [
+                'color' => data_get($this->order_configuration, 'color'),
+                'fabric' => data_get($this->order_configuration, 'fabric'),
+            ],
             'delivery' => [
                 'latitude' => $canSeeSensitiveFulfillment ? $this->delivery_latitude : null,
                 'longitude' => $canSeeSensitiveFulfillment ? $this->delivery_longitude : null,
                 'work_wilaya' => $this->delivery_work_wilaya,
+                'commune' => $this->delivery_commune,
+                'neighborhood' => $this->delivery_neighborhood,
                 'label' => $canSeeSensitiveFulfillment ? $this->delivery_location_label : null,
-                'preview' => trim(collect([$this->delivery_work_wilaya, $canSeeSensitiveFulfillment ? $this->delivery_location_label : null])->filter()->implode(' - ')) ?: null,
+                'preview' => trim(collect([
+                    $this->delivery_work_wilaya,
+                    $this->delivery_commune,
+                    $canSeeSensitiveFulfillment ? ($this->delivery_neighborhood ?: $this->delivery_location_label) : null,
+                ])->filter()->implode(' - ')) ?: null,
+                'is_limited' => ! $canSeeSensitiveFulfillment,
+            ],
+            'shipping' => [
+                'company_id' => $this->shipping_company_id,
+                'company_name' => $this->shipping_company_name ?: $this->shippingCompany?->display_name,
+                'delivery_type' => $this->delivery_type,
+                'phone' => $canSeeSensitiveFulfillment ? $this->delivery_phone : null,
+                'email' => $canSeeSensitiveFulfillment ? $this->delivery_email : null,
                 'is_limited' => ! $canSeeSensitiveFulfillment,
             ],
             'financials' => $financials,
             'fulfillment' => [
                 'pattern_file_url' => $canSeeSensitiveFulfillment ? $this->product?->pattern_file_url : null,
-                'pattern_available' => filled($this->product?->pattern_file_path),
-                'pattern_locked' => filled($this->product?->pattern_file_path) && ! $canSeeSensitiveFulfillment,
+                'pattern_file_urls' => $canSeeSensitiveFulfillment ? ($this->product?->pattern_file_urls ?? []) : [],
+                'pattern_available' => (bool) ($this->product?->has_pattern_files ?? false),
+                'pattern_locked' => (bool) ($this->product?->has_pattern_files ?? false) && ! $canSeeSensitiveFulfillment,
             ],
             'tailor_offer' => $offer ? [
                 'id' => $offer->id,

@@ -29,7 +29,7 @@ class UserResource extends JsonResource
                     'status' => $this->tailorProfile->status,
                     'category_id' => $this->tailorProfile->category_id,
                     'category_name' => $this->tailorProfile->relationLoaded('category')
-                        ? $this->tailorProfile->category?->name
+                        ? $this->tailorProfile->category?->display_name
                         : null,
                     'category_specialization' => $this->tailorProfile->relationLoaded('category')
                         ? $this->tailorProfile->category?->tailor_specialization

@@ -43,10 +43,9 @@ export function readStoredLocale() {
     return 'ar';
   }
 
-  const stored = typeof window !== 'undefined' ? window.localStorage.getItem(LOCALE_STORAGE_KEY) : null;
-
-  if (stored) {
-    return normalizeLocale(stored);
+  const bootLocale = readBootLocale();
+  if (bootLocale) {
+    return bootLocale;
   }
 
   const cookieLocale = readLocaleFromCookie();
@@ -59,6 +58,12 @@ export function readStoredLocale() {
     if (rawDocumentLocale) {
       return normalizeLocale(rawDocumentLocale);
     }
+  }
+
+  const stored = typeof window !== 'undefined' ? window.localStorage.getItem(LOCALE_STORAGE_KEY) : null;
+
+  if (stored) {
+    return normalizeLocale(stored);
   }
 
   const browserLocale = typeof window !== 'undefined' ? window.navigator?.language || 'ar' : 'ar';
@@ -74,9 +79,23 @@ export function writeStoredLocale(locale) {
 
   if (typeof window !== 'undefined') {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, normalized);
+    window.__MAKASOUK__ = {
+      ...(window.__MAKASOUK__ || {}),
+      locale: normalized,
+      direction: getDirection(normalized),
+    };
   }
 
   writeLocaleCookie(normalized);
+}
+
+export function readBootLocale() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const locale = window.__MAKASOUK__?.locale;
+  return locale ? normalizeLocale(locale) : null;
 }
 
 export function readLocaleFromCookie() {

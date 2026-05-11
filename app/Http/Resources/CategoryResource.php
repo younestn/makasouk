@@ -11,10 +11,10 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'name' => $this->display_name,
             'slug' => $this->slug,
             'tailor_specialization' => $this->tailor_specialization,
-            'description' => $this->description,
+            'description' => $this->display_description,
             'is_active' => (bool) $this->is_active,
         ];
     }

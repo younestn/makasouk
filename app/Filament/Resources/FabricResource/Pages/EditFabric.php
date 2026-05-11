@@ -5,7 +5,6 @@ namespace App\Filament\Resources\FabricResource\Pages;
 use App\Filament\Resources\FabricResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Illuminate\Support\Str;
 
 class EditFabric extends EditRecord
 {
@@ -18,12 +17,13 @@ class EditFabric extends EditRecord
         ];
     }
 
+    protected function getSavedNotificationTitle(): ?string
+    {
+        return __('admin.notifications.fabric_saved');
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
-        if (blank($data['slug'] ?? null) && filled($data['name'] ?? null)) {
-            $data['slug'] = Str::slug((string) $data['name']);
-        }
-
-        return $data;
+        return FabricResource::normalizeFormData($data);
     }
 }

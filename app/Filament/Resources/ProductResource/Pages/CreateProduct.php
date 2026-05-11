@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\Filament\Resources\ProductResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateProduct extends CreateRecord
@@ -13,6 +14,13 @@ class CreateProduct extends CreateRecord
     {
         $data['created_by_admin_id'] = auth()->id();
 
-        return $data;
+        return ProductResource::normalizeFormData($data);
+    }
+
+    protected function getCreatedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->success()
+            ->title(__('admin.notifications.product_created'));
     }
 }

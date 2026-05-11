@@ -16,6 +16,12 @@
     <meta name="twitter:title" content="{{ __('shop.meta.public_title') }}">
     <meta name="twitter:description" content="{{ __('shop.meta.public_description') }}">
     <link rel="canonical" href="{{ url()->current() }}">
+    <script>
+        window.__MAKASOUK__ = {
+            locale: @js(app()->getLocale()),
+            direction: @js(app()->getLocale() === 'ar' ? 'rtl' : 'ltr'),
+        };
+    </script>
     @vite(['resources/css/app.css', 'resources/js/public/main.js'])
 </head>
 <body>

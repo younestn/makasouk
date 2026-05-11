@@ -9,7 +9,6 @@ use App\Models\TailorProfile;
 use App\Support\OrderLifecycle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -97,18 +96,6 @@ class ProfileController extends Controller
             'latitude' => $latitude,
             'longitude' => $longitude,
         ])->save();
-
-        if ($latitude !== null && $longitude !== null) {
-            DB::statement(
-                'UPDATE tailor_profiles SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?',
-                [(float) $longitude, (float) $latitude, $profile->id],
-            );
-        } else {
-            DB::statement(
-                'UPDATE tailor_profiles SET location = NULL WHERE id = ?',
-                [$profile->id],
-            );
-        }
 
         $profile->refresh()->load('category');
 

@@ -29,7 +29,6 @@ class OrderFactory extends Factory
             'delivery_longitude' => fake()->longitude(-8, 12),
             'delivery_work_wilaya' => null,
             'delivery_location_label' => null,
-            'delivery_location' => null,
             'status' => Order::STATUS_SEARCHING_FOR_TAILOR,
             'matched_specialization' => null,
             'matching_snapshot' => null,

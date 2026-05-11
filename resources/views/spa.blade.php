@@ -6,6 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ __('shop.meta.web_client_title') }}</title>
     <meta name="robots" content="noindex,nofollow">
+    <script>
+        window.__MAKASOUK__ = {
+            locale: @js(app()->getLocale()),
+            direction: @js(app()->getLocale() === 'ar' ? 'rtl' : 'ltr'),
+        };
+    </script>
     @vite(['resources/css/app.css', 'resources/js/main.js'])
 </head>
 <body>

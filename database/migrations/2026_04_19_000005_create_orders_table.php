@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -35,9 +34,6 @@ return new class extends Migration {
             $table->index(['customer_id', 'status']);
             $table->index(['tailor_id', 'status']);
         });
-
-        DB::statement('ALTER TABLE orders ADD COLUMN delivery_location geometry(Point, 4326)');
-        DB::statement('CREATE INDEX orders_delivery_location_gist ON orders USING GIST (delivery_location)');
     }
 
     public function down(): void

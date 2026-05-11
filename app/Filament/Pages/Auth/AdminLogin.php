@@ -2,9 +2,12 @@
 
 namespace App\Filament\Pages\Auth;
 
+use Filament\Actions\Action;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Auth\Login;
+use Filament\Support\Enums\ActionSize;
+use Filament\Support\Enums\IconPosition;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
@@ -53,5 +56,19 @@ class AdminLogin extends Login
             ->autocomplete('current-password')
             ->required()
             ->extraInputAttributes(['tabindex' => 2]);
+    }
+
+    protected function getAuthenticateFormAction(): Action
+    {
+        return Action::make('authenticate')
+            ->label(__('admin_login.submit'))
+            ->icon('heroicon-o-arrow-right-end-on-rectangle')
+            ->iconPosition(IconPosition::After)
+            ->size(ActionSize::Large)
+            ->extraAttributes([
+                'class' => 'mk-auth-submit-button',
+                'data-auth-submit' => 'admin-login',
+            ])
+            ->submit('authenticate');
     }
 }

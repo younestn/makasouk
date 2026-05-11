@@ -43,28 +43,15 @@
         align="center"
       />
 
-      <div v-if="bestSellers.length" class="premium-product-grid">
-        <a
-          v-for="product in bestSellers"
+      <div v-if="bestSellerCards.length" class="storefront-product-grid">
+        <ProductCard
+          v-for="product in bestSellerCards"
           :key="product.id"
-          class="premium-product-card"
-          :href="product.url"
-        >
-          <div class="premium-product-media">
-            <img v-if="product.image_url" :src="product.image_url" :alt="product.name" />
-            <div v-else class="shop-category-placeholder">{{ initials(product.name) }}</div>
-            <span class="premium-product-badge">{{ t('public.home_best_seller_badge') }}</span>
-          </div>
-          <div class="stack" style="gap: 0.45rem;">
-            <p class="small">{{ product.category || t('public.home_product_category_fallback') }}</p>
-            <h3 class="title" style="font-size: 1.05rem;">{{ product.name }}</h3>
-            <p v-if="product.fabric_type" class="small">{{ product.fabric_type }}</p>
-            <div class="row" style="justify-content: space-between;">
-              <strong>{{ formatPrice(product.price) }}</strong>
-              <span class="premium-link">{{ t('public.home_view_product') }}</span>
-            </div>
-          </div>
-        </a>
+          :product="product"
+          :detail-href="product.url"
+          :detail-label="t('public.home_view_product')"
+          :show-order-action="false"
+        />
       </div>
 
       <UiCard v-else class="stack" style="text-align: center;">
@@ -159,11 +146,12 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import UiButton from '@/components/ui/UiButton.vue';
 import UiCard from '@/components/ui/UiCard.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import UiStatBlock from '@/components/ui/UiStatBlock.vue';
+import ProductCard from '@/components/catalog/ProductCard.vue';
 import { useI18n } from '@/composables/useI18n';
 import { apiClient } from '@/services/http';
 
@@ -174,10 +162,28 @@ const homepage = ref(null);
 const hero = computed(() => homepage.value?.hero || {});
 const stats = computed(() => homepage.value?.stats || {});
 const bestSellers = computed(() => homepage.value?.best_sellers || []);
+const bestSellerCards = computed(() => bestSellers.value.map((product) => ({
+  ...product,
+  main_image_url: product.image_url || '',
+  category: product.category ? { name: product.category } : { name: t('public.home_product_category_fallback') },
+  details: product.fabric_type || '',
+  description: product.fabric_type || '',
+  sale_price: null,
+  reviews_count: 0,
+  rating_average: null,
+  is_featured: false,
+  is_best_seller: true,
+})));
 const testimonials = computed(() => homepage.value?.testimonials || []);
 const settings = computed(() => homepage.value?.settings || {});
 
-onMounted(async () => {
+onMounted(loadHomepage);
+
+watch(locale, () => {
+  loadHomepage();
+});
+
+async function loadHomepage() {
   try {
     const { data } = await apiClient.get('/public/homepage');
     homepage.value = data.data;
@@ -190,7 +196,7 @@ onMounted(async () => {
       testimonials: [],
     };
   }
-});
+}
 
 function isSectionVisible(section) {
   const enabledMap = {
@@ -204,16 +210,8 @@ function isSectionVisible(section) {
   return enabledMap[section] !== false;
 }
 
-function initials(value) {
-  return String(value || 'MK').slice(0, 2).toUpperCase();
-}
-
 function formatNumber(value) {
   return new Intl.NumberFormat(locale.value).format(Number(value || 0));
-}
-
-function formatPrice(value) {
-  return `${new Intl.NumberFormat(locale.value, { maximumFractionDigits: 2 }).format(Number(value || 0))} MAD`;
 }
 
 function ratingStars(rating) {

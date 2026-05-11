@@ -51,8 +51,28 @@ class ShopController extends Controller
     {
         abort_unless($product->is_active && $product->category?->is_active, 404);
 
+        $product->loadMissing(['category:id,name,slug', 'fabric']);
+        $product->loadCount('reviews');
+        $product->loadAvg('reviews', 'rating');
+
+        $similarProducts = Product::query()
+            ->published()
+            ->where('category_id', $product->category_id)
+            ->whereKeyNot($product->id)
+            ->whereHas('category', fn ($query) => $query->active())
+            ->with(['category:id,name,slug', 'fabric'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->orderByDesc('is_best_seller')
+            ->orderByDesc('is_featured')
+            ->orderByDesc('published_at')
+            ->orderByDesc('created_at')
+            ->limit(4)
+            ->get();
+
         return view('shop.product-show', [
-            'product' => $product->load(['category:id,name,slug', 'fabric']),
+            'product' => $product,
+            'similarProducts' => $similarProducts,
         ]);
     }
 }

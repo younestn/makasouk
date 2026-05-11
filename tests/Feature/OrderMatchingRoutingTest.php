@@ -5,10 +5,10 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ShippingCompany;
 use App\Models\TailorProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class OrderMatchingRoutingTest extends TestCase
@@ -19,6 +19,7 @@ class OrderMatchingRoutingTest extends TestCase
     {
         $customer = User::factory()->create(['role' => User::ROLE_CUSTOMER]);
         $admin = User::factory()->admin()->create();
+        $shippingCompany = ShippingCompany::factory()->create();
 
         $targetCategory = Category::factory()->create([
             'tailor_specialization' => 'Traditionnel',
@@ -35,7 +36,7 @@ class OrderMatchingRoutingTest extends TestCase
         $farTailor = User::factory()->tailor()->create(['approved_at' => now()]);
         $wrongSpecializationTailor = User::factory()->tailor()->create(['approved_at' => now()]);
 
-        $nearProfile = TailorProfile::factory()->create([
+        TailorProfile::factory()->create([
             'user_id' => $nearTailor->id,
             'category_id' => $targetCategory->id,
             'specialization' => 'Traditionnel',
@@ -45,7 +46,7 @@ class OrderMatchingRoutingTest extends TestCase
             'longitude' => 3.0588,
         ]);
 
-        $farProfile = TailorProfile::factory()->create([
+        TailorProfile::factory()->create([
             'user_id' => $farTailor->id,
             'category_id' => $targetCategory->id,
             'specialization' => 'Traditionnel',
@@ -55,7 +56,7 @@ class OrderMatchingRoutingTest extends TestCase
             'longitude' => -0.6308,
         ]);
 
-        $wrongProfile = TailorProfile::factory()->create([
+        TailorProfile::factory()->create([
             'user_id' => $wrongSpecializationTailor->id,
             'category_id' => $targetCategory->id,
             'specialization' => 'Moderne',
@@ -64,16 +65,6 @@ class OrderMatchingRoutingTest extends TestCase
             'latitude' => 36.7538,
             'longitude' => 3.0588,
         ]);
-
-        DB::statement(
-            'UPDATE tailor_profiles SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id IN (?, ?, ?)',
-            [3.0588, 36.7538, $nearProfile->id, $farProfile->id, $wrongProfile->id],
-        );
-
-        DB::statement(
-            'UPDATE tailor_profiles SET location = ST_SetSRID(ST_MakePoint(?, ?), 4326) WHERE id = ?',
-            [-0.6308, 35.6971, $farProfile->id],
-        );
 
         $response = $this->actingAs($customer, 'sanctum')
             ->postJson('/api/customer/orders', [
@@ -84,6 +75,14 @@ class OrderMatchingRoutingTest extends TestCase
                     'longitude' => 3.0588,
                     'work_wilaya' => 'Algiers',
                     'label' => 'Algiers center',
+                ],
+                'shipping' => [
+                    'company_id' => $shippingCompany->id,
+                    'delivery_type' => 'office_pickup',
+                    'commune' => 'Sidi M\'Hamed',
+                    'neighborhood' => 'City Center',
+                    'phone' => '+213555000004',
+                    'email' => 'customer@example.com',
                 ],
             ])
             ->assertCreated();

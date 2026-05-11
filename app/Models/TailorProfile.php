@@ -28,7 +28,6 @@ class TailorProfile extends Model
         'score',
         'latitude',
         'longitude',
-        'location',
     ];
 
     protected $attributes = [

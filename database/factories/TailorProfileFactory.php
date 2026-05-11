@@ -39,7 +39,6 @@ class TailorProfileFactory extends Factory
             'total_reviews' => fake()->numberBetween(0, 50),
             'latitude' => $lat,
             'longitude' => $lng,
-            'location' => null,
         ];
     }
 }

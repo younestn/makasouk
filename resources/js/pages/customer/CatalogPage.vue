@@ -44,7 +44,7 @@
     </EmptyState>
 
     <template v-else>
-      <div class="grid grid-2">
+      <div class="storefront-product-grid">
         <ProductCard v-for="product in products" :key="product.id" :product="product" />
       </div>
 

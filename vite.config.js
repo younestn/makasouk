@@ -11,11 +11,12 @@ export default defineConfig(({ mode }) => {
             !isVitest &&
                 laravel({
                     input: [
-    'resources/css/app.css',
-    'resources/js/main.js',
-    'resources/js/public/main.js',
-    'resources/css/filament/admin/theme.css',
-],
+                        'resources/css/app.css',
+                        'resources/css/theme/shop-product-card.css',
+                        'resources/js/main.js',
+                        'resources/js/public/main.js',
+                        'resources/css/filament/admin/theme.css',
+                    ],
                     refresh: true,
                 }),
             vue(),

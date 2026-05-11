@@ -23,19 +23,25 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { apiClient } from '@/services/http';
 import { useI18n } from '@/composables/useI18n';
 
-const { t } = useI18n();
+const { locale, t } = useI18n();
 const footerPages = ref([]);
 
-onMounted(async () => {
+onMounted(loadFooterPages);
+
+watch(locale, () => {
+  loadFooterPages();
+});
+
+async function loadFooterPages() {
   try {
     const { data } = await apiClient.get('/public/footer-pages');
     footerPages.value = data.data || [];
   } catch {
     footerPages.value = [];
   }
-});
+}
 </script>

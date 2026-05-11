@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     });
 
     Route::prefix('customer')->group(function () {
+        Route::get('orders-metadata', [CustomerOrderController::class, 'metadata']);
         Route::get('orders-active', [CustomerOrderController::class, 'active']);
         Route::post('orders', [CustomerOrderController::class, 'store']);
         Route::get('orders/{order}', [CustomerOrderController::class, 'show']);

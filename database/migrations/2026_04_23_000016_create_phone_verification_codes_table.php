@@ -13,10 +13,10 @@ return new class extends Migration {
             $table->string('phone', 32);
             $table->string('code_hash', 128);
             $table->unsignedSmallInteger('attempts')->default(0);
-            $table->timestamp('sent_at');
-            $table->timestamp('expires_at');
-            $table->timestamp('verified_at')->nullable();
-            $table->timestamps();
+            $table->dateTime('sent_at');
+$table->dateTime('expires_at');
+$table->dateTime('verified_at')->nullable();
+$table->timestamps();
 
             $table->index(['user_id', 'expires_at']);
             $table->index(['phone', 'expires_at']);

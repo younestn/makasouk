@@ -14,13 +14,13 @@
                                 ? $category->image_path
                                 : \Illuminate\Support\Facades\Storage::url($category->image_path);
                         @endphp
-                        <img src="{{ $categoryImage }}" alt="{{ $category->name }}" loading="lazy">
+                        <img src="{{ $categoryImage }}" alt="{{ $category->display_name }}" loading="lazy">
                     @else
-                        <div class="shop-category-placeholder">{{ \Illuminate\Support\Str::of($category->name)->substr(0, 2)->upper() }}</div>
+                        <div class="shop-category-placeholder">{{ \Illuminate\Support\Str::of($category->display_name)->substr(0, 2)->upper() }}</div>
                     @endif
                 </div>
                 <div class="stack" style="gap:0.35rem;">
-                    <strong>{{ $category->name }}</strong>
+                    <strong>{{ $category->display_name }}</strong>
                     <p class="small">{{ __('shop.sections.category_products_count', ['count' => $category->products_count]) }}</p>
                 </div>
             </a>

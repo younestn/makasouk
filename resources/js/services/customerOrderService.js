@@ -5,6 +5,11 @@ export async function createOrder(payload) {
   return data;
 }
 
+export async function fetchOrderMetadata() {
+  const { data } = await apiClient.get('/customer/orders-metadata');
+  return data;
+}
+
 export async function fetchActiveOrders(params = {}) {
   const { data } = await apiClient.get('/customer/orders-active', { params });
   return data;

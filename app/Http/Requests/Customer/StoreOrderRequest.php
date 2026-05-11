@@ -21,11 +21,21 @@ class StoreOrderRequest extends FormRequest
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'measurements' => ['required', 'array', 'min:1'],
             'measurements.*' => ['nullable'],
+            'configuration' => ['nullable', 'array'],
+            'configuration.color' => ['nullable', 'string', 'max:100'],
+            'configuration.fabric' => ['nullable', 'string', 'max:100'],
             'customer_location' => ['required', 'array'],
             'customer_location.latitude' => ['required', 'numeric', 'between:-90,90'],
             'customer_location.longitude' => ['required', 'numeric', 'between:-180,180'],
-            'customer_location.work_wilaya' => ['nullable', Rule::in(TailorOnboardingOptions::WILAYAS)],
+            'customer_location.work_wilaya' => ['required', Rule::in(TailorOnboardingOptions::WILAYAS)],
             'customer_location.label' => ['nullable', 'string', 'max:255'],
+            'shipping' => ['required', 'array'],
+            'shipping.company_id' => ['required', 'integer', Rule::exists('shipping_companies', 'id')->where(fn ($query) => $query->where('is_active', true))],
+            'shipping.delivery_type' => ['required', Rule::in(['office_pickup'])],
+            'shipping.commune' => ['required', 'string', 'max:120'],
+            'shipping.neighborhood' => ['required', 'string', 'max:120'],
+            'shipping.phone' => ['required', 'string', 'max:40'],
+            'shipping.email' => ['required', 'email', 'max:255'],
         ];
     }
 
@@ -97,6 +107,45 @@ class StoreOrderRequest extends FormRequest
                     'measurements',
                     __('messages.validation.measurements_invalid_fields'),
                 );
+            }
+
+            $configuration = $this->input('configuration', []);
+
+            if (! is_array($configuration)) {
+                $validator->errors()->add('configuration', __('messages.validation.order_configuration_invalid'));
+                return;
+            }
+
+            $availableColorKeys = collect($product->color_options ?? [])
+                ->filter(fn ($option): bool => is_array($option) && filled($option['key'] ?? null))
+                ->map(fn ($option): string => (string) $option['key'])
+                ->values()
+                ->all();
+
+            if ($availableColorKeys !== []) {
+                $selectedColor = (string) ($configuration['color'] ?? '');
+
+                if ($selectedColor === '') {
+                    $validator->errors()->add('configuration.color', __('messages.validation.color_selection_required'));
+                } elseif (! in_array($selectedColor, $availableColorKeys, true)) {
+                    $validator->errors()->add('configuration.color', __('messages.validation.color_selection_invalid'));
+                }
+            }
+
+            $availableFabricKeys = collect($product->availableFabricOptions())
+                ->pluck('key')
+                ->filter()
+                ->values()
+                ->all();
+
+            if ($availableFabricKeys !== []) {
+                $selectedFabric = (string) ($configuration['fabric'] ?? '');
+
+                if ($selectedFabric === '') {
+                    $validator->errors()->add('configuration.fabric', __('messages.validation.fabric_selection_required'));
+                } elseif (! in_array($selectedFabric, $availableFabricKeys, true)) {
+                    $validator->errors()->add('configuration.fabric', __('messages.validation.fabric_selection_invalid'));
+                }
             }
         });
     }

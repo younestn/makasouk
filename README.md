@@ -3,15 +3,13 @@
 ## Required software
 - PHP 8.2+
 - Composer 2+
-- PostgreSQL 14+ with PostGIS extension
+- MySQL 8.0+ / 8.4+
 - Redis 6+
 - Node.js 20+ (required for the Phase 5 Vue web client)
 
-## PostgreSQL + PostGIS setup
+## MySQL setup
 ```sql
-CREATE DATABASE makasouk;
-\c makasouk;
-CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE DATABASE makasouk CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 ## Redis requirement
@@ -23,7 +21,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Edit `.env` for Postgres, Redis, Sanctum domains, and Reverb keys.
+Edit `.env` for MySQL, Redis, Sanctum domains, and Reverb keys.
 
 ## Install dependencies
 ```bash
@@ -253,7 +251,7 @@ npm run e2e
   - `quality-gates`: composer install, npm install, migrate/seed, frontend tests, frontend build, backend tests
   - `e2e`: Playwright browser install + browser E2E suite
 - Services:
-  - PostgreSQL + PostGIS (`postgis/postgis:16-3.4`)
+  - MySQL 8.4 (`mysql:8.4`)
   - Redis (`redis:7-alpine`)
 
 ### Release and deployment runbooks

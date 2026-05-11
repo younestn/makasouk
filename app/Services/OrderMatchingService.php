@@ -59,11 +59,24 @@ class OrderMatchingService
 
         if ($deliveryLongitude !== null && $deliveryLatitude !== null) {
             $query->selectRaw(
-                'CASE WHEN tp.location IS NULL THEN NULL ELSE ST_Distance(tp.location::geography, ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography) / 1000 END as distance_km',
-                [(float) $deliveryLongitude, (float) $deliveryLatitude],
+                'CASE
+                    WHEN tp.latitude IS NULL OR tp.longitude IS NULL THEN NULL
+                    ELSE (
+                        6371 * ACOS(
+                            LEAST(1, GREATEST(-1,
+                                COS(RADIANS(?))
+                                * COS(RADIANS(tp.latitude))
+                                * COS(RADIANS(tp.longitude) - RADIANS(?))
+                                + SIN(RADIANS(?))
+                                * SIN(RADIANS(tp.latitude))
+                            ))
+                        )
+                    )
+                END as distance_km',
+                [(float) $deliveryLatitude, (float) $deliveryLongitude, (float) $deliveryLatitude],
             );
         } else {
-            $query->selectRaw('NULL::numeric as distance_km');
+            $query->selectRaw('NULL as distance_km');
         }
 
         if (filled($deliveryWilaya)) {
@@ -77,7 +90,7 @@ class OrderMatchingService
 
         return $query
             ->orderBy('wilaya_rank')
-            ->orderByRaw('CASE WHEN tp.location IS NULL THEN 1 ELSE 0 END')
+            ->orderByRaw('CASE WHEN tp.latitude IS NULL OR tp.longitude IS NULL THEN 1 ELSE 0 END')
             ->orderBy('distance_km')
             ->limit(20)
             ->get();

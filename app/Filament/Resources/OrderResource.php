@@ -134,9 +134,11 @@ class OrderResource extends Resource
                     ->label('Recommended Tailor')
                     ->placeholder('-')
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('delivery_location')
-                    ->label('Delivery Location')
-                    ->limit(48)
+                Tables\Columns\TextColumn::make('delivery_coordinates')
+                    ->label('Delivery Coordinates')
+                    ->state(fn (Order $record): string => filled($record->delivery_latitude) && filled($record->delivery_longitude)
+                        ? $record->delivery_latitude.', '.$record->delivery_longitude
+                        : '-')
                     ->placeholder('-')
                     ->toggleable(),
             ])

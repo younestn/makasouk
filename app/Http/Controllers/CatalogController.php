@@ -18,6 +18,7 @@ class CatalogController extends Controller
 
         $categories = Category::query()
             ->where('is_active', true)
+            ->orderBy('sort_order')
             ->orderBy('name')
             ->paginate($validated['per_page'] ?? 50);
 
@@ -34,6 +35,8 @@ class CatalogController extends Controller
 
         $products = Product::query()
             ->with(['category', 'fabric'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
             ->where('is_active', true)
             ->whereHas('category', fn ($query) => $query->where('is_active', true))
             ->when(isset($validated['category_id']), fn ($query) => $query->where('category_id', $validated['category_id']))
@@ -41,8 +44,9 @@ class CatalogController extends Controller
                 filled($validated['q'] ?? null),
                 fn ($query) => $query->where(function ($searchQuery) use ($validated): void {
                     $searchQuery
-                        ->where('name', 'ILIKE', '%'.$validated['q'].'%')
-                        ->orWhere('description', 'ILIKE', '%'.$validated['q'].'%');
+                        ->where('name', 'like', '%'.$validated['q'].'%')
+                        ->orWhere('short_description', 'like', '%'.$validated['q'].'%')
+                        ->orWhere('description', 'like', '%'.$validated['q'].'%');
                 })
             )
             ->orderBy('name')
@@ -66,8 +70,29 @@ class CatalogController extends Controller
             'measurements' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name'),
         ]);
 
+        $product->loadCount('reviews');
+        $product->loadAvg('reviews', 'rating');
+
+        $similarProducts = Product::query()
+            ->with(['category', 'fabric'])
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->published()
+            ->whereKeyNot($product->id)
+            ->where('category_id', $product->category_id)
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->orderByDesc('is_best_seller')
+            ->orderByDesc('is_featured')
+            ->orderByDesc('published_at')
+            ->orderByDesc('created_at')
+            ->limit(4)
+            ->get();
+
         return response()->json([
             'data' => new ProductResource($product),
+            'meta' => [
+                'similar_products' => ProductResource::collection($similarProducts)->resolve(),
+            ],
         ]);
     }
 }
