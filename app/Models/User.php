@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
@@ -32,6 +33,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'name',
         'email',
         'phone',
+        'avatar_path',
         'password',
         'role',
         'is_suspended',
@@ -96,5 +98,20 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     public function receivedReviews(): HasMany
     {
         return $this->hasMany(Review::class, 'tailor_id');
+    }
+
+    public function customOrders(): HasMany
+    {
+        return $this->hasMany(CustomOrder::class, 'customer_id');
+    }
+
+    public function assignedCustomOrders(): HasMany
+    {
+        return $this->hasMany(CustomOrder::class, 'tailor_id');
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return filled($this->avatar_path) ? Storage::disk('public')->url($this->avatar_path) : null;
     }
 }

@@ -5,6 +5,18 @@
       :description="t('orders.create_description')"
     />
 
+    <div class="ui-card stack">
+      <div class="row" style="justify-content: space-between; align-items: center;">
+        <div class="stack" style="gap: 0.2rem;">
+          <strong>{{ t('custom_orders.discovery_title') }}</strong>
+          <p class="small">{{ t('custom_orders.discovery_description') }}</p>
+        </div>
+        <RouterLink class="btn btn-primary" :to="{ name: 'customerCustomOrders' }">
+          {{ t('customers.custom_orders_nav') }}
+        </RouterLink>
+      </div>
+    </div>
+
     <div class="order-flow-steps">
       <div class="order-flow-step" :class="{ 'is-active': currentStep === 1, 'is-complete': currentStep > 1 }">
         <span class="order-flow-step__index">1</span>
@@ -375,7 +387,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import LocationPickerMap from '@/components/maps/LocationPickerMap.vue';
 import UiFormField from '@/components/ui/UiFormField.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';

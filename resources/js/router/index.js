@@ -75,6 +75,11 @@ export const router = createRouter({
           component: () => import('@/pages/customer/CreateOrderPage.vue'),
         },
         {
+          path: 'purchased-products',
+          name: 'customerPurchasedProducts',
+          component: () => import('@/pages/customer/CustomerPurchasedProductsPage.vue'),
+        },
+        {
           path: 'orders/active',
           name: 'customerActiveOrders',
           component: () => import('@/pages/customer/CustomerActiveOrdersPage.vue'),
@@ -88,6 +93,26 @@ export const router = createRouter({
           path: 'orders/:id',
           name: 'customerOrderDetails',
           component: () => import('@/pages/customer/CustomerOrderDetailsPage.vue'),
+        },
+        {
+          path: 'custom-orders',
+          name: 'customerCustomOrders',
+          component: () => import('@/pages/customer/CustomerCustomOrdersPage.vue'),
+        },
+        {
+          path: 'profile',
+          name: 'customerProfile',
+          component: () => import('@/pages/customer/CustomerProfilePage.vue'),
+        },
+        {
+          path: 'security',
+          name: 'customerSecurity',
+          component: () => import('@/pages/customer/CustomerPasswordPage.vue'),
+        },
+        {
+          path: 'reviews',
+          name: 'customerReviews',
+          component: () => import('@/pages/customer/CustomerReviewsPage.vue'),
         },
       ],
     },

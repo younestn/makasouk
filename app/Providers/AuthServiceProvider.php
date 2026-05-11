@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\User;
+use App\Models\CustomOrder;
+use App\Policies\CustomOrderPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\ReviewPolicy;
 use App\Policies\UserPolicy;
@@ -14,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
 {
     protected $policies = [
         Order::class => OrderPolicy::class,
+        CustomOrder::class => CustomOrderPolicy::class,
         Review::class => ReviewPolicy::class,
         User::class => UserPolicy::class,
     ];

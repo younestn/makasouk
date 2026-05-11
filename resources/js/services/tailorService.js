@@ -46,6 +46,11 @@ export async function updateOrderStatus(orderId, status) {
   return data;
 }
 
+export async function updateOrderTrackingStage(orderId, payload) {
+  const { data } = await apiClient.patch(`/tailor/orders/${orderId}/tracking-stage`, payload);
+  return data;
+}
+
 export async function cancelTailorOrder(orderId, reason) {
   const { data } = await apiClient.patch(`/tailor/orders/${orderId}/cancel`, { reason });
   return data;

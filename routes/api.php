@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\Customer\CustomOrderController as CustomerCustomOrderController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
+use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
 use App\Http\Controllers\MapConfigController;
 use App\Http\Controllers\PublicHomepageController;
@@ -40,13 +42,24 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
     });
 
     Route::prefix('customer')->group(function () {
+        Route::get('profile', [CustomerProfileController::class, 'show']);
+        Route::post('profile', [CustomerProfileController::class, 'update']);
+        Route::patch('profile/password', [CustomerProfileController::class, 'updatePassword']);
         Route::get('orders-metadata', [CustomerOrderController::class, 'metadata']);
         Route::get('orders-active', [CustomerOrderController::class, 'active']);
+        Route::get('orders-purchased', [CustomerOrderController::class, 'purchased']);
         Route::post('orders', [CustomerOrderController::class, 'store']);
         Route::get('orders/{order}', [CustomerOrderController::class, 'show']);
         Route::patch('orders/{order}/cancel', [CustomerOrderController::class, 'cancel']);
         Route::get('orders-history', [CustomerOrderController::class, 'history']);
+        Route::get('reviews', [CustomerReviewController::class, 'index']);
         Route::post('orders/{order}/reviews', [CustomerReviewController::class, 'store']);
+        Route::get('custom-orders-metadata', [CustomerCustomOrderController::class, 'metadata']);
+        Route::get('custom-orders', [CustomerCustomOrderController::class, 'index']);
+        Route::post('custom-orders', [CustomerCustomOrderController::class, 'store']);
+        Route::get('custom-orders/{customOrder}', [CustomerCustomOrderController::class, 'show']);
+        Route::post('custom-orders/{customOrder}/accept-quote', [CustomerCustomOrderController::class, 'acceptQuote']);
+        Route::post('custom-orders/{customOrder}/reject-quote', [CustomerCustomOrderController::class, 'rejectQuote']);
     });
 
     Route::prefix('tailor')->middleware('tailor.approved')->group(function () {
@@ -60,6 +73,7 @@ Route::middleware(['auth:sanctum', 'active'])->group(function () {
         Route::post('orders/{order}/decline', [TailorOrderController::class, 'decline']);
         Route::post('orders/{order}/not-my-specialty', [TailorOrderController::class, 'notMySpecialty']);
         Route::patch('orders/{order}/status', [TailorOrderController::class, 'updateStatus']);
+        Route::patch('orders/{order}/tracking-stage', [TailorOrderController::class, 'updateTrackingStage']);
         Route::patch('orders/{order}/cancel', [TailorOrderController::class, 'cancel']);
         Route::get('orders-history', [TailorOrderController::class, 'history']);
         Route::patch('availability/toggle', [TailorProfileController::class, 'toggleAvailability']);

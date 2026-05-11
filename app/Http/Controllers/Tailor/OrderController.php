@@ -11,12 +11,15 @@ use App\Http\Requests\Tailor\CancelOrderRequest;
 use App\Http\Requests\Tailor\DeclineOrderOfferRequest;
 use App\Http\Requests\Tailor\NotMySpecialtyRequest;
 use App\Http\Requests\Tailor\UpdateOrderStatusRequest;
+use App\Http\Requests\Tailor\UpdateOrderTrackingStageRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\TailorOrderOffer;
 use App\Services\OrderMatchingService;
 use App\Services\TailorScoringService;
+use App\Services\TrackingEventRecorder;
 use App\Support\OrderLifecycle;
+use App\Support\OrderTracking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -28,6 +31,7 @@ class OrderController extends Controller
     public function __construct(
         private readonly OrderMatchingService $orderMatchingService,
         private readonly TailorScoringService $tailorScoringService,
+        private readonly TrackingEventRecorder $trackingEventRecorder,
     )
     {
     }
@@ -36,7 +40,7 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load(['customer', 'tailor.tailorProfile.category', 'product.category', 'product.fabric', 'review']);
+        $order->load(['customer', 'tailor.tailorProfile.category', 'product.category', 'product.fabric', 'review', 'trackingEvents']);
 
         if ($request->user()?->role === \App\Models\User::ROLE_TAILOR) {
             $offer = TailorOrderOffer::query()
@@ -126,6 +130,7 @@ class OrderController extends Controller
             $lockedOrder->update([
                 'tailor_id' => $tailorId,
                 'status' => Order::STATUS_ACCEPTED,
+                'tracking_stage' => OrderTracking::STAGE_ASSIGNED_TO_TAILOR,
                 'accepted_at' => now(),
             ]);
 
@@ -172,6 +177,12 @@ class OrderController extends Controller
             ->all();
 
         Event::dispatch(new OrderAccepted($result['order'], $tailorId, $notifiedTailorIds));
+        $this->trackingEventRecorder->record(
+            $result['order'],
+            OrderTracking::STAGE_ASSIGNED_TO_TAILOR,
+            OrderTracking::ROLE_TAILOR,
+            __('messages.orders.timeline.assigned_to_tailor'),
+        );
         $this->tailorScoringService->record($tailor, TailorScoringService::EVENT_ACCEPTED, $result['order']);
 
         return response()->json([
@@ -223,10 +234,69 @@ class OrderController extends Controller
             ], 422);
         }
 
-        $order->update(['status' => $nextStatus]);
-        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review']);
+        $defaultTrackingStage = OrderTracking::defaultOrderStageForStatus($order->forceFill(['status' => $nextStatus]));
+
+        $order->update([
+            'status' => $nextStatus,
+            'tracking_stage' => $defaultTrackingStage ?: $order->tracking_stage,
+        ]);
+
+        if ($defaultTrackingStage !== null) {
+            $this->trackingEventRecorder->record(
+                $order,
+                $defaultTrackingStage,
+                OrderTracking::ROLE_TAILOR,
+                __('messages.orders.timeline.'.$defaultTrackingStage),
+            );
+        }
+
+        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review', 'trackingEvents']);
 
         if ($nextStatus === Order::STATUS_COMPLETED && $order->tailor_id !== null) {
+            $this->tailorScoringService->record((int) $order->tailor_id, TailorScoringService::EVENT_COMPLETED, $order);
+        }
+
+        Event::dispatch(new OrderStatusUpdated($order));
+
+        return response()->json([
+            'message' => __('messages.orders.status_updated_success'),
+            'data' => new OrderResource($order),
+        ]);
+    }
+
+    public function updateTrackingStage(UpdateOrderTrackingStageRequest $request, Order $order): JsonResponse
+    {
+        $this->authorize('updateByTailor', $order);
+
+        $stage = $request->validated('stage');
+        $allowedStages = OrderTracking::allowedTailorTrackingStagesForOrder($order);
+
+        if (! in_array($stage, $allowedStages, true)) {
+            return response()->json([
+                'message' => __('messages.orders.tracking_stage_not_allowed'),
+                'meta' => [
+                    'allowed_stages' => $allowedStages,
+                ],
+            ], 422);
+        }
+
+        $impliedStatus = OrderTracking::impliedOrderStatusForStage($stage);
+
+        $order->forceFill([
+            'tracking_stage' => $stage,
+            'status' => $impliedStatus ?? $order->status,
+        ])->save();
+
+        $this->trackingEventRecorder->record(
+            $order,
+            $stage,
+            OrderTracking::ROLE_TAILOR,
+            $request->validated('description') ?: __('messages.orders.timeline.'.$stage),
+        );
+
+        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review', 'trackingEvents']);
+
+        if ($order->status === Order::STATUS_COMPLETED && $order->tailor_id !== null) {
             $this->tailorScoringService->record((int) $order->tailor_id, TailorScoringService::EVENT_COMPLETED, $order);
         }
 
@@ -254,12 +324,20 @@ class OrderController extends Controller
 
         $order->update([
             'status' => Order::STATUS_CANCELLED_BY_TAILOR,
+            'tracking_stage' => OrderTracking::STAGE_CANCELLED,
             'cancellation_reason' => $request->validated('reason'),
         ]);
 
         $this->tailorScoringService->record((int) $order->tailor_id, TailorScoringService::EVENT_ACCEPTED_THEN_CANCELLED, $order, $request->validated('reason'));
 
-        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review']);
+        $this->trackingEventRecorder->record(
+            $order,
+            OrderTracking::STAGE_CANCELLED,
+            OrderTracking::ROLE_TAILOR,
+            $request->validated('reason'),
+        );
+
+        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review', 'trackingEvents']);
 
         Event::dispatch(new OrderCancelledByTailor($order));
 
@@ -274,7 +352,7 @@ class OrderController extends Controller
         $orders = Order::query()
             ->where('tailor_id', $request->user()->id)
             ->whereIn('status', OrderLifecycle::tailorActiveStatuses())
-            ->with(['customer', 'product.category', 'product.fabric'])
+            ->with(['customer', 'product.category', 'product.fabric', 'trackingEvents'])
             ->latest('updated_at')
             ->paginate(20);
 
@@ -288,7 +366,7 @@ class OrderController extends Controller
         $orders = Order::query()
             ->where('tailor_id', $request->user()->id)
             ->whereIn('status', OrderLifecycle::tailorHistoryStatuses())
-            ->with(['customer', 'product.category', 'product.fabric', 'review'])
+            ->with(['customer', 'product.category', 'product.fabric', 'review', 'trackingEvents'])
             ->latest('updated_at')
             ->paginate(20);
 

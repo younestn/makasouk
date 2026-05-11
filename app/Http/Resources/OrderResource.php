@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Services\OrderFinancialsService;
 use App\Support\OrderLifecycle;
+use App\Support\OrderTracking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,10 +21,17 @@ class OrderResource extends JsonResource
             ? $this->tailorOffers->firstWhere('tailor_id', $user->id)
             : null;
         $financials = app(OrderFinancialsService::class)->payload($this->resource);
+        $trackingStage = (string) ($this->tracking_stage ?: OrderTracking::defaultOrderStageForStatus($this->resource));
+        $timeline = OrderTracking::buildTimeline(
+            $this->resource,
+            $this->relationLoaded('trackingEvents') ? $this->trackingEvents : collect(),
+            $trackingStage,
+        );
 
         return [
             'id' => $this->id,
             'status' => $status,
+            'tracking_stage' => $trackingStage,
             'customer_id' => $this->customer_id,
             'tailor_id' => $this->tailor_id,
             'product_id' => $this->product_id,
@@ -92,11 +100,25 @@ class OrderResource extends JsonResource
                 'name' => $this->tailor->name,
             ]),
             'review' => new ReviewResource($this->whenLoaded('review')),
+            'tracking' => [
+                'current_stage' => $trackingStage,
+                'timeline' => $timeline,
+                'available_stage_updates_for_tailor' => $isAcceptedTailor
+                    ? OrderTracking::allowedTailorTrackingStagesForOrder($this->resource)
+                    : [],
+            ],
+            'permissions' => [
+                'can_review' => OrderTracking::canReviewOrder($this->resource),
+            ],
             'lifecycle' => [
                 'allowed_next_statuses_for_tailor' => OrderLifecycle::allowedTailorNextStatuses($status),
                 'customer_can_cancel' => in_array($status, OrderLifecycle::customerCancellableStatuses(), true),
                 'tailor_can_cancel' => in_array($status, OrderLifecycle::tailorCancellableStatuses(), true),
                 'is_terminal' => in_array($status, OrderLifecycle::terminalStatuses(), true),
+                'allowed_actions_for_customer' => array_values(array_filter([
+                    in_array($status, OrderLifecycle::customerCancellableStatuses(), true) ? 'cancel' : null,
+                    OrderTracking::canReviewOrder($this->resource) ? 'review' : null,
+                ])),
             ],
         ];
     }

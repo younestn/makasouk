@@ -24,6 +24,17 @@ class ReviewResource extends JsonResource
                 'id' => $this->tailor->id,
                 'name' => $this->tailor->name,
             ]),
+            'order' => $this->whenLoaded('order', fn (): array => [
+                'id' => $this->order->id,
+                'status' => $this->order->status,
+                'product' => $this->order->relationLoaded('product') && $this->order->product
+                    ? [
+                        'id' => $this->order->product->id,
+                        'name' => $this->order->product->name,
+                        'main_image_url' => $this->order->product->main_image_url,
+                    ]
+                    : null,
+            ]),
             'created_at' => optional($this->created_at)?->toISOString(),
             'updated_at' => optional($this->updated_at)?->toISOString(),
         ];

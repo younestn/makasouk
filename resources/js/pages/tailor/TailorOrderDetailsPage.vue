@@ -12,7 +12,10 @@
       <div class="ui-card stack">
         <div class="row" style="justify-content: space-between; align-items: flex-start;">
           <UiSectionHeader :title="t('orders.order_reference', { id: order.id })" :description="t('tailors.order_details_description')" />
-          <OrderStatusBadge :status="order.status" />
+          <div class="stack" style="gap: 0.35rem; align-items: flex-end;">
+            <OrderStatusBadge :status="order.status" />
+            <span class="badge badge-neutral">{{ trackingStageLabel }}</span>
+          </div>
         </div>
 
         <div class="grid grid-2">
@@ -21,6 +24,11 @@
           <UiStatBlock :label="t('orders.created_at')" :value="formatDate(order.timestamps?.created_at)" />
           <UiStatBlock :label="t('orders.accepted_at')" :value="formatDate(order.timestamps?.accepted_at)" />
         </div>
+
+        <OrderTimeline
+          v-if="order.tracking?.timeline?.length"
+          :items="order.tracking.timeline"
+        />
 
         <div class="ui-card stack" style="border: 1px solid rgba(184, 135, 45, 0.35); background: rgba(184, 135, 45, 0.08);">
           <h2 class="title" style="font-size: 1rem; margin: 0;">{{ t('orders.financial_breakdown_title') }}</h2>
@@ -138,14 +146,32 @@
         </div>
       </div>
 
-      <div class="ui-card stack" v-if="nextStatusOptions.length > 0">
-        <h2 class="title" style="font-size: 1rem;">{{ t('tailors.update_status_title') }}</h2>
-        <select v-model="nextStatus" class="select">
-          <option v-for="status in nextStatusOptions" :key="status" :value="status">{{ status }}</option>
-        </select>
-        <button class="btn btn-primary" :disabled="actionLoading || !nextStatus" @click="updateCurrentStatus">
-          {{ actionLoading ? t('tailors.updating_status') : t('tailors.update_status_action') }}
-        </button>
+      <div class="customer-dashboard-grid" v-if="nextStatusOptions.length > 0 || trackingStageOptions.length > 0">
+        <div class="ui-card stack" v-if="nextStatusOptions.length > 0">
+          <h2 class="title" style="font-size: 1rem;">{{ t('tailors.update_status_title') }}</h2>
+          <select v-model="nextStatus" class="select">
+            <option v-for="status in nextStatusOptions" :key="status" :value="status">{{ status }}</option>
+          </select>
+          <button class="btn btn-primary" :disabled="actionLoading || !nextStatus" @click="updateCurrentStatus">
+            {{ actionLoading ? t('tailors.updating_status') : t('tailors.update_status_action') }}
+          </button>
+        </div>
+
+        <div class="ui-card stack" v-if="trackingStageOptions.length > 0">
+          <h2 class="title" style="font-size: 1rem;">{{ t('tailors.update_tracking_title') }}</h2>
+          <p class="small">{{ t('tailors.update_tracking_description') }}</p>
+          <select v-model="trackingStage" class="select">
+            <option v-for="stage in trackingStageOptions" :key="stage" :value="stage">
+              {{ t(`orders.timeline_labels.${stage}`) }}
+            </option>
+          </select>
+          <UiFormField :label="t('tailors.update_tracking_note_label')" field-id="tracking-description">
+            <textarea id="tracking-description" v-model="trackingDescription" class="textarea" rows="3"></textarea>
+          </UiFormField>
+          <button class="btn btn-primary" :disabled="actionLoading || !trackingStage" @click="updateCurrentTrackingStage">
+            {{ actionLoading ? t('tailors.updating_status') : t('tailors.update_tracking_action') }}
+          </button>
+        </div>
       </div>
 
       <div class="ui-card stack" v-if="order.lifecycle?.tailor_can_cancel">
@@ -165,6 +191,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import LoadingState from '@/components/common/LoadingState.vue';
 import ErrorState from '@/components/common/ErrorState.vue';
 import OrderStatusBadge from '@/components/orders/OrderStatusBadge.vue';
+import OrderTimeline from '@/components/orders/OrderTimeline.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import UiFormField from '@/components/ui/UiFormField.vue';
 import UiStatBlock from '@/components/ui/UiStatBlock.vue';
@@ -175,6 +202,7 @@ import {
   fetchTailorOrder,
   markOrderNotMySpecialty,
   updateOrderStatus,
+  updateOrderTrackingStage,
 } from '@/services/tailorService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';
@@ -193,11 +221,19 @@ const source = ref('');
 
 const actionLoading = ref(false);
 const nextStatus = ref('');
+const trackingStage = ref('');
+const trackingDescription = ref('');
 const cancelReason = ref('');
 const declineReason = ref('unavailable');
 const declineNote = ref('');
 
 const nextStatusOptions = computed(() => order.value?.lifecycle?.allowed_next_statuses_for_tailor || []);
+const trackingStageOptions = computed(() => order.value?.tracking?.available_stage_updates_for_tailor || []);
+const trackingStageLabel = computed(() => (
+  order.value?.tracking?.current_stage
+    ? t(`orders.timeline_labels.${order.value.tracking.current_stage}`)
+    : t('common.not_available')
+));
 const availablePatternFiles = computed(() => {
   const files = order.value?.fulfillment?.pattern_file_urls;
 
@@ -243,6 +279,12 @@ function findOrderFromOffers(orderId) {
   return realtimeStore.tailorOffers.find((item) => Number(item.order.id) === Number(orderId));
 }
 
+function syncActionDefaults() {
+  nextStatus.value = nextStatusOptions.value[0] || '';
+  trackingStage.value = trackingStageOptions.value[0] || '';
+  trackingDescription.value = '';
+}
+
 async function load() {
   loading.value = true;
   error.value = '';
@@ -255,7 +297,7 @@ async function load() {
     if (offer) {
       order.value = offer.order;
       source.value = 'offer';
-      nextStatus.value = '';
+      syncActionDefaults();
       return;
     }
 
@@ -264,7 +306,7 @@ async function load() {
     order.value = response.data;
     source.value = 'api';
     realtimeStore.markOfferRead(orderId);
-    nextStatus.value = nextStatusOptions.value[0] || '';
+    syncActionDefaults();
   } catch (err) {
     error.value = getErrorMessage(err, t('messages.tailor_order_details_load_failed'));
   } finally {
@@ -329,7 +371,7 @@ async function acceptCurrentOrder() {
     order.value = response.data;
     source.value = 'api';
     realtimeStore.removeOffer(order.value.id);
-    nextStatus.value = nextStatusOptions.value[0] || '';
+    syncActionDefaults();
     successToast(response.message || t('notifications.tailor_order_accepted'));
   } catch (err) {
     errorToast(getErrorMessage(err, t('messages.tailor_accept_order_failed')));
@@ -348,7 +390,30 @@ async function updateCurrentStatus() {
   try {
     const response = await updateOrderStatus(order.value.id, nextStatus.value);
     order.value = response.data;
-    nextStatus.value = nextStatusOptions.value[0] || '';
+    syncActionDefaults();
+    successToast(response.message || t('notifications.tailor_status_updated'));
+  } catch (err) {
+    errorToast(getErrorMessage(err, t('messages.tailor_update_status_failed')));
+  } finally {
+    actionLoading.value = false;
+  }
+}
+
+async function updateCurrentTrackingStage() {
+  if (!order.value || !trackingStage.value) {
+    return;
+  }
+
+  actionLoading.value = true;
+
+  try {
+    const response = await updateOrderTrackingStage(order.value.id, {
+      stage: trackingStage.value,
+      description: trackingDescription.value || null,
+    });
+
+    order.value = response.data;
+    syncActionDefaults();
     successToast(response.message || t('notifications.tailor_status_updated'));
   } catch (err) {
     errorToast(getErrorMessage(err, t('messages.tailor_update_status_failed')));

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Order extends Model
 {
@@ -62,6 +63,7 @@ class Order extends Model
         'delivery_phone',
         'delivery_email',
         'status',
+        'tracking_stage',
         'matched_specialization',
         'matching_snapshot',
         'subtotal_amount',
@@ -80,6 +82,7 @@ class Order extends Model
             'delivery_latitude' => 'float',
             'delivery_longitude' => 'float',
             'matching_snapshot' => 'array',
+            'tracking_stage' => 'string',
             'subtotal_amount' => 'decimal:2',
             'shipping_amount' => 'decimal:2',
             'platform_commission_amount' => 'decimal:2',
@@ -116,5 +119,10 @@ class Order extends Model
     public function tailorOffers(): HasMany
     {
         return $this->hasMany(TailorOrderOffer::class);
+    }
+
+    public function trackingEvents(): MorphMany
+    {
+        return $this->morphMany(TrackingEvent::class, 'trackable')->orderBy('occurred_at')->orderBy('id');
     }
 }

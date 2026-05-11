@@ -10,6 +10,7 @@ use App\Models\TailorProfile;
 use App\Models\TailorOrderOffer;
 use App\Models\User;
 use App\Services\Mail\MailConfigurationService;
+use App\Support\OrderLifecycle;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
@@ -25,19 +26,41 @@ class OrderMatchingService
 
         $order->loadMissing(['product.category']);
 
-        $categoryId = (int) ($order->product?->category_id ?? 0);
-        $resolvedSpecialization = $this->resolveTargetSpecialization($order);
-        $deliveryLatitude = $order->delivery_latitude;
-        $deliveryLongitude = $order->delivery_longitude;
-        $deliveryWilaya = $order->delivery_work_wilaya;
+        return $this->findTailorsForRequirement(
+            specialization: $this->resolveTargetSpecialization($order),
+            fallbackCategoryId: (int) ($order->product?->category_id ?? 0),
+            deliveryLatitude: $order->delivery_latitude,
+            deliveryLongitude: $order->delivery_longitude,
+            deliveryWilaya: $order->delivery_work_wilaya,
+        );
+    }
 
+    /**
+     * @return Collection<int, User>
+     */
+    public function findTailorsForRequirement(
+        ?string $specialization,
+        ?int $fallbackCategoryId = null,
+        ?float $deliveryLatitude = null,
+        ?float $deliveryLongitude = null,
+        ?string $deliveryWilaya = null,
+        int $limit = 20,
+    ): Collection {
         $query = User::query()
             ->select('users.*')
             ->addSelect([
                 'tp.work_wilaya as tailor_work_wilaya',
                 'tp.specialization as tailor_specialization',
                 'tp.category_id as tailor_category_id',
+                'tp.score as tailor_score',
             ])
+            ->selectSub(
+                Order::query()
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('orders.tailor_id', 'users.id')
+                    ->whereIn('orders.status', OrderLifecycle::tailorActiveStatuses()),
+                'active_orders_count',
+            )
             ->join('tailor_profiles as tp', 'tp.user_id', '=', 'users.id')
             ->where('users.role', User::ROLE_TAILOR)
             ->where('users.is_suspended', false)
@@ -50,11 +73,11 @@ class OrderMatchingService
             });
         }
 
-        if ($resolvedSpecialization !== null) {
-            $query->where('tp.specialization', $resolvedSpecialization);
-        } elseif ($categoryId > 0) {
+        if (filled($specialization)) {
+            $query->where('tp.specialization', $specialization);
+        } elseif (($fallbackCategoryId ?? 0) > 0) {
             // Legacy fallback when category specialization has not been configured yet.
-            $query->where('tp.category_id', $categoryId);
+            $query->where('tp.category_id', (int) $fallbackCategoryId);
         }
 
         if ($deliveryLongitude !== null && $deliveryLatitude !== null) {
@@ -90,9 +113,11 @@ class OrderMatchingService
 
         return $query
             ->orderBy('wilaya_rank')
+            ->orderBy('active_orders_count')
             ->orderByRaw('CASE WHEN tp.latitude IS NULL OR tp.longitude IS NULL THEN 1 ELSE 0 END')
             ->orderBy('distance_km')
-            ->limit(20)
+            ->orderByDesc('tailor_score')
+            ->limit($limit)
             ->get();
     }
 
@@ -122,6 +147,8 @@ class OrderMatchingService
                     'tailor_id' => $tailor->id,
                     'distance_km' => $this->normalizedDistance($tailor),
                     'work_wilaya' => $tailor->getAttribute('tailor_work_wilaya'),
+                    'active_orders_count' => (int) ($tailor->getAttribute('active_orders_count') ?? 0),
+                    'score' => (int) ($tailor->getAttribute('tailor_score') ?? 100),
                 ])
                 ->values()
                 ->all(),

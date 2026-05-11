@@ -13,6 +13,8 @@ use App\Models\ShippingCompany;
 use App\Services\OrderMatchingService;
 use App\Services\OrderFinancialsService;
 use App\Support\OrderLifecycle;
+use App\Support\OrderTracking;
+use App\Services\TrackingEventRecorder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +25,7 @@ class OrderController extends Controller
     public function __construct(
         private readonly OrderMatchingService $orderMatchingService,
         private readonly OrderFinancialsService $orderFinancialsService,
+        private readonly TrackingEventRecorder $trackingEventRecorder,
     )
     {
     }
@@ -98,10 +101,12 @@ class OrderController extends Controller
                 'platform_commission_amount' => $financials['platform_commission_amount'],
                 'tailor_net_amount' => $financials['tailor_net_amount'],
                 'status' => Order::STATUS_SEARCHING_FOR_TAILOR,
+                'tracking_stage' => OrderTracking::STAGE_TAILOR_ASSIGNMENT_PENDING,
             ]);
         });
 
-        $order->load(['customer', 'product.category', 'product.fabric', 'shippingCompany']);
+        $order->load(['customer', 'product.category', 'product.fabric', 'shippingCompany', 'trackingEvents']);
+        $this->trackingEventRecorder->seedInitialOrderTimeline($order);
         $tailors = $this->orderMatchingService->findNearbyTailors($order, 20);
         $matchingSnapshot = $this->orderMatchingService->buildMatchingSnapshot($order, $tailors);
 
@@ -142,7 +147,7 @@ class OrderController extends Controller
     {
         $this->authorize('view', $order);
 
-        $order->load(['customer', 'product.category', 'product.fabric', 'tailor.tailorProfile.category', 'review', 'shippingCompany']);
+        $order->load(['customer', 'product.category', 'product.fabric', 'tailor.tailorProfile.category', 'review', 'shippingCompany', 'trackingEvents']);
 
         return response()->json([
             'data' => new OrderResource($order),
@@ -154,7 +159,7 @@ class OrderController extends Controller
         $orders = Order::query()
             ->where('customer_id', $request->user()->id)
             ->whereIn('status', OrderLifecycle::customerActiveStatuses())
-            ->with(['tailor.tailorProfile.category', 'product.category', 'product.fabric', 'shippingCompany'])
+            ->with(['tailor.tailorProfile.category', 'product.category', 'product.fabric', 'shippingCompany', 'trackingEvents'])
             ->latest('updated_at')
             ->paginate(20);
 
@@ -168,12 +173,25 @@ class OrderController extends Controller
         $orders = Order::query()
             ->where('customer_id', $request->user()->id)
             ->whereIn('status', OrderLifecycle::customerHistoryStatuses())
-            ->with(['tailor.tailorProfile.category', 'product.category', 'product.fabric', 'review', 'shippingCompany'])
+            ->with(['tailor.tailorProfile.category', 'product.category', 'product.fabric', 'review', 'shippingCompany', 'trackingEvents'])
             ->latest('updated_at')
             ->paginate(20);
 
         return OrderResource::collection($orders)->additional([
             'meta' => ['scope' => 'history'],
+        ]);
+    }
+
+    public function purchased(Request $request)
+    {
+        $orders = Order::query()
+            ->where('customer_id', $request->user()->id)
+            ->with(['tailor.tailorProfile.category', 'product.category', 'product.fabric', 'review', 'shippingCompany', 'trackingEvents'])
+            ->latest('updated_at')
+            ->paginate(12);
+
+        return OrderResource::collection($orders)->additional([
+            'meta' => ['scope' => 'purchased'],
         ]);
     }
 
@@ -197,10 +215,18 @@ class OrderController extends Controller
 
         $order->update([
             'status' => Order::STATUS_CANCELLED_BY_CUSTOMER,
+            'tracking_stage' => OrderTracking::STAGE_CANCELLED,
             'cancellation_reason' => $request->validated('reason'),
         ]);
 
-        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review', 'shippingCompany']);
+        $this->trackingEventRecorder->record(
+            $order,
+            OrderTracking::STAGE_CANCELLED,
+            OrderTracking::ROLE_CUSTOMER,
+            $request->validated('reason'),
+        );
+
+        $order->refresh()->load(['customer', 'tailor', 'product.category', 'product.fabric', 'review', 'shippingCompany', 'trackingEvents']);
 
         if ($order->tailor_id !== null) {
             Event::dispatch(new OrderCancelled($order));

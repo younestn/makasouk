@@ -1,29 +1,82 @@
 <template>
   <section class="stack">
     <UiSectionHeader
-      :title="t('common.active_orders')"
+      :eyebrow="t('customers.dashboard_badge')"
+      :title="t('customers.tracking_page_title')"
       :description="t('orders.active_description')"
     />
 
     <LoadingState v-if="loading" :label="t('orders.loading_active')" />
     <ErrorState v-else-if="error" :message="error" retryable @retry="reloadCurrentPage" />
-    <EmptyState v-else-if="orders.length === 0" :message="t('orders.empty_active')">
-      <template #actions>
-        <RouterLink class="btn btn-primary" :to="{ name: 'customerCreateOrder' }">{{ t('common.create_order') }}</RouterLink>
-      </template>
-    </EmptyState>
 
     <template v-else>
-      <div class="stack">
-        <OrderCard
-          v-for="order in orders"
-          :key="order.id"
-          :order="order"
-          details-route-name="customerOrderDetails"
-        />
-      </div>
+      <div class="customer-dashboard-grid">
+        <div class="ui-card stack">
+          <div class="row" style="justify-content: space-between; align-items: center;">
+            <div class="stack" style="gap: 0.2rem;">
+              <strong>{{ t('customers.dashboard_tracking_title') }}</strong>
+              <p class="small">{{ t('customers.dashboard_tracking_description') }}</p>
+            </div>
+            <RouterLink class="btn" :to="{ name: 'customerPurchasedProducts' }">{{ t('customers.purchased_products_nav') }}</RouterLink>
+          </div>
 
-      <UiPagination :pagination="pagination" @page-change="load" />
+          <EmptyState v-if="orders.length === 0" :message="t('orders.empty_active')">
+            <template #actions>
+              <RouterLink class="btn btn-primary" :to="{ name: 'customerCreateOrder' }">{{ t('common.create_order') }}</RouterLink>
+            </template>
+          </EmptyState>
+
+          <div v-else class="stack">
+            <OrderCard
+              v-for="order in orders"
+              :key="order.id"
+              :order="order"
+              details-route-name="customerOrderDetails"
+            />
+
+            <UiPagination :pagination="pagination" @page-change="load" />
+          </div>
+        </div>
+
+        <div class="ui-card stack">
+          <div class="row" style="justify-content: space-between; align-items: center;">
+            <div class="stack" style="gap: 0.2rem;">
+              <strong>{{ t('customers.dashboard_quotes_title') }}</strong>
+              <p class="small">{{ t('customers.dashboard_quotes_description') }}</p>
+            </div>
+            <RouterLink class="btn btn-primary" :to="{ name: 'customerCustomOrders' }">{{ t('customers.custom_orders_nav') }}</RouterLink>
+          </div>
+
+          <EmptyState v-if="customOrders.length === 0" :message="t('customers.empty_custom_orders')" />
+
+          <div v-else class="stack">
+            <article v-for="item in customOrders" :key="item.id" class="customer-custom-order-card customer-custom-order-card--compact">
+              <div class="row" style="justify-content: space-between; align-items: flex-start;">
+                <div class="stack" style="gap: 0.2rem;">
+                  <strong>{{ item.title }}</strong>
+                  <p class="small">{{ formatDate(item.timestamps?.created_at) }}</p>
+                </div>
+                <CustomOrderStatusBadge :status="item.status" />
+              </div>
+
+              <p class="small">{{ item.quote?.note || item.notes || t('customers.custom_order_note_empty') }}</p>
+
+              <div class="row">
+                <span class="badge badge-neutral">{{ item.tailor_specialty }}</span>
+                <span v-if="item.quote?.amount" class="badge badge-warning">{{ formatMoney(item.quote.amount) }}</span>
+              </div>
+
+              <OrderTimeline
+                v-if="item.timeline?.length"
+                :items="item.timeline"
+                namespace="custom_orders"
+                compact
+                :limit="4"
+              />
+            </article>
+          </div>
+        </div>
+      </div>
     </template>
   </section>
 </template>
@@ -37,7 +90,10 @@ import EmptyState from '@/components/common/EmptyState.vue';
 import UiSectionHeader from '@/components/ui/UiSectionHeader.vue';
 import UiPagination from '@/components/ui/UiPagination.vue';
 import OrderCard from '@/components/orders/OrderCard.vue';
+import OrderTimeline from '@/components/orders/OrderTimeline.vue';
+import CustomOrderStatusBadge from '@/components/orders/CustomOrderStatusBadge.vue';
 import { fetchActiveOrders } from '@/services/customerOrderService';
+import { fetchCustomerCustomOrders } from '@/services/customerCustomOrderService';
 import { getErrorMessage } from '@/services/errorMessage';
 import { useRealtimeStore } from '@/stores/realtime';
 import { defaultPagination, normalizePagination } from '@/utils/pagination';
@@ -51,6 +107,7 @@ const { t } = useI18n();
 const loading = ref(false);
 const error = ref('');
 const orders = ref([]);
+const customOrders = ref([]);
 const pagination = reactive(defaultPagination({ perPage: 10 }));
 
 function queryPage() {
@@ -79,16 +136,23 @@ async function load(page = pagination.currentPage) {
   const safePage = Math.max(1, Number(page || 1));
 
   try {
-    const response = await fetchActiveOrders({
-      page: safePage,
-      per_page: pagination.perPage,
-    });
+    const [ordersResponse, customOrdersResponse] = await Promise.all([
+      fetchActiveOrders({
+        page: safePage,
+        per_page: pagination.perPage,
+      }),
+      fetchCustomerCustomOrders({
+        scope: 'active',
+        per_page: 10,
+      }),
+    ]);
 
-    orders.value = response.data || [];
+    orders.value = ordersResponse.data || [];
+    customOrders.value = customOrdersResponse.data || [];
 
     Object.assign(
       pagination,
-      normalizePagination(response, {
+      normalizePagination(ordersResponse, {
         ...pagination,
         currentPage: safePage,
       }),
@@ -104,6 +168,14 @@ async function load(page = pagination.currentPage) {
 
 function reloadCurrentPage() {
   load(pagination.currentPage);
+}
+
+function formatDate(value) {
+  return value ? new Date(value).toLocaleString() : '-';
+}
+
+function formatMoney(value) {
+  return `${new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(Number(value || 0))} MAD`;
 }
 
 watch(

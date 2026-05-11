@@ -8,16 +8,33 @@ use App\Http\Resources\ReviewResource;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\TailorProfile;
+use App\Support\OrderTracking;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
+    public function index(Request $request)
+    {
+        $reviews = Review::query()
+            ->where('customer_id', $request->user()->id)
+            ->with(['tailor', 'order.product'])
+            ->latest()
+            ->paginate(12);
+
+        return ReviewResource::collection($reviews)->additional([
+            'meta' => [
+                'scope' => 'customer_reviews',
+            ],
+        ]);
+    }
+
     public function store(StoreReviewRequest $request, Order $order): JsonResponse
     {
         $this->authorize('create', [Review::class, $order]);
 
-        if ($order->status !== Order::STATUS_COMPLETED) {
+        if (! OrderTracking::canReviewOrder($order)) {
             return response()->json(['message' => __('messages.reviews.order_not_completed')], 422);
         }
 
